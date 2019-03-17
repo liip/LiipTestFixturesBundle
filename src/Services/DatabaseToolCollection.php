@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Services;
+namespace Liip\TestFixturesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Liip\FunctionalTestBundle\Annotations\DisableDatabaseCache;
-use Liip\FunctionalTestBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,12 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\Test;
+namespace Liip\TestFixturesBundle\Tests\Test;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Test PHPCR.
@@ -30,6 +31,8 @@ use Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
  */
 class WebTestCaseConfigPhpcrTest extends WebTestCase
 {
+    use FixturesTrait;
+
     protected static function getKernelClass(): string
     {
         return AppConfigPhpcrKernel::class;
@@ -41,7 +44,7 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
         }
 
-        // https://github.com/liip/LiipFunctionalTestBundle#non-sqlite
+        // https://github.com/liip/LiipTestFixturesBundle#non-sqlite
         $em = $this->getContainer()->get('doctrine')->getManager();
         if (!isset($metadatas)) {
             $metadatas = $em->getMetadataFactory()->getAllMetadata();
@@ -59,7 +62,7 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
     public function testLoadFixturesPhPCr(): void
     {
         $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
+            'Liip\TestFixturesBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
         ], false, null, 'doctrine_phpcr');
 
         $this->assertInstanceOf(

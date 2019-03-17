@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\Test;
+namespace Liip\TestFixturesBundle\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Liip\FunctionalTestBundle\Tests\App\AppKernel;
-use PHPUnit\Framework\AssertionFailedError;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Tests\App\AppKernel;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @IgnoreAnnotation("depends")
@@ -25,13 +25,11 @@ use PHPUnit\Framework\AssertionFailedError;
  */
 class WebTestCaseTest extends WebTestCase
 {
-    /** @var \Symfony\Bundle\FrameworkBundle\Client client */
-    private $client = null;
+    use FixturesTrait;
 
     public function setUp(): void
     {
         static::$class = AppKernel::class;
-        $this->client = static::makeClient();
     }
 
     public static function getKernelClass()
@@ -39,249 +37,6 @@ class WebTestCaseTest extends WebTestCase
         return AppKernel::class;
     }
 
-    /**
-     * Call methods from the parent class.
-     */
-    public function testGetContainer(): void
-    {
-        $this->assertInstanceOf(
-            'Symfony\Component\DependencyInjection\ContainerInterface',
-            $this->getContainer()
-        );
-    }
-
-    public function testMakeClient(): void
-    {
-        $this->assertInstanceOf(
-            'Symfony\Bundle\FrameworkBundle\Client',
-            static::makeClient()
-        );
-    }
-
-    public function testGetUrl(): void
-    {
-        $path = $this->getUrl(
-            'liipfunctionaltestbundle_user',
-            [
-                'userId' => 1,
-                'get_parameter' => 'abc',
-            ]
-        );
-
-        $this->assertInternalType('string', $path);
-
-        $this->assertSame($path, '/user/1?get_parameter=abc');
-    }
-
-    /**
-     * Call methods from Symfony to ensure the Controller works.
-     */
-    public function testIndex(): void
-    {
-        $path = '/';
-
-        /** @var \Symfony\Component\DomCrawler\Crawler $crawler */
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Not logged in.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-    }
-
-    /**
-     * Call methods from the parent class.
-     */
-
-    /**
-     * @depends testIndex
-     */
-    public function testIndexAssertStatusCode(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/';
-
-        $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-    }
-
-    /**
-     * Check the failure message returned by assertStatusCode().
-     */
-    public function testAssertStatusCodeFail(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/';
-
-        $this->client->request('GET', $path);
-
-        try {
-            $this->assertStatusCode(-1, $this->client);
-        } catch (AssertionFailedError $e) {
-            $this->assertStringStartsWith(
-                'HTTP/1.1 200 OK',
-                $e->getMessage()
-            );
-
-            $this->assertStringEndsWith(
-                'Failed asserting that 200 matches expected -1.',
-                $e->getMessage()
-            );
-
-            return;
-        }
-
-        $this->fail('Test failed.');
-    }
-
-    /**
-     * Check the failure message returned by assertStatusCode().
-     */
-    public function testAssertStatusCodeException(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/user/2';
-
-        $this->client->request('GET', $path);
-
-        try {
-            $this->assertStatusCode(-1, $this->client);
-        } catch (AssertionFailedError $e) {
-            $string = <<<'EOF'
-No user found
-Failed asserting that 404 matches expected -1.
-EOF;
-            $this->assertSame($string, $e->getMessage());
-
-            return;
-        }
-
-        $this->fail('Test failed.');
-    }
-
-    /**
-     * @depends testIndex
-     */
-    public function testIndexIsSuccesful(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/';
-
-        $this->client->request('GET', $path);
-
-        $this->isSuccessful($this->client->getResponse());
-    }
-
-    /**
-     * @depends testIndex
-     */
-    public function testIndexFetchCrawler(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/';
-
-        $crawler = $this->fetchCrawler($path);
-
-        $this->assertInstanceOf(
-            'Symfony\Component\DomCrawler\Crawler',
-            $crawler
-        );
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Not logged in.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-    }
-
-    /**
-     * @depends testIndex
-     */
-    public function testIndexFetchContent(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/';
-
-        $content = $this->fetchContent($path);
-
-        $this->assertInternalType('string', $content);
-
-        $this->assertContains(
-            '<h1>LiipFunctionalTestBundle</h1>',
-            $content
-        );
-    }
-
-    public function test404Error(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/missing_page';
-
-        $this->client->request('GET', $path);
-
-        $this->assertStatusCode(404, $this->client);
-
-        $this->isSuccessful($this->client->getResponse(), false);
-    }
-
-    /**
-     * Throw an Exception in the try/catch block and check the failure message
-     * returned by assertStatusCode().
-     */
-    public function testIsSuccessfulException(): void
-    {
-        $this->loadFixtures([]);
-
-        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')
-            ->disableOriginalConstructor()
-            ->setMethods(['getContent'])
-            ->getMock();
-
-        $response->expects($this->any())
-            ->method('getContent')
-            ->will($this->throwException(new \Exception('foo')));
-
-        try {
-            $this->isSuccessful($response);
-        } catch (AssertionFailedError $e) {
-            $string = <<<'EOF'
-The Response was not successful: foo
-Failed asserting that false is true.
-EOF;
-            $this->assertSame($string, $e->getMessage());
-
-            return;
-        }
-
-        $this->fail('Test failed.');
-    }
-
-    /**
-     * Data fixtures.
-     */
     public function testLoadEmptyFixtures(): void
     {
         $fixtures = $this->loadFixtures([]);
@@ -305,7 +60,7 @@ EOF;
     public function testLoadFixtures(): void
     {
         $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
         $this->assertInstanceOf(
@@ -320,7 +75,7 @@ EOF;
             $repository
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user1 */
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
         $user1 = $repository->getReference('user');
 
         $this->assertSame(1, $user1->getId());
@@ -329,10 +84,10 @@ EOF;
         $this->assertTrue($user1->getEnabled());
 
         // Load data from database
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         // There are 2 users.
@@ -341,8 +96,8 @@ EOF;
             count($users)
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -360,11 +115,11 @@ EOF;
     public function testAppendFixtures(): void
     {
         $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
         $this->loadFixtures(
-            ['Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
+            ['Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
         );
 
@@ -372,8 +127,8 @@ EOF;
         $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -387,8 +142,8 @@ EOF;
             $user->getEnabled()
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 3,
             ]);
@@ -409,7 +164,7 @@ EOF;
     public function testLoadDependentFixtures(): void
     {
         $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ]);
 
         $this->assertInstanceOf(
@@ -417,10 +172,10 @@ EOF;
             $fixtures
         );
 
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
@@ -436,7 +191,7 @@ EOF;
     public function testLoadDependentFixturesWithDependencyInjected(): void
     {
         $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserWithServiceData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadDependentUserWithServiceData',
         ]);
 
         $this->assertInstanceOf(
@@ -444,10 +199,10 @@ EOF;
             $fixtures
         );
 
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
@@ -477,10 +232,10 @@ EOF;
             $fixtures
         );
 
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         $this->assertSame(
@@ -488,8 +243,8 @@ EOF;
             count($users)
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -498,7 +253,7 @@ EOF;
             $user->getEnabled()
         );
 
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 10,
             ]);
@@ -543,7 +298,7 @@ EOF;
         );
 
         $id = 1;
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
         foreach ($fixtures as $user) {
             $this->assertSame($id++, $user->getId());
         }
@@ -555,7 +310,7 @@ EOF;
     public function testLoadFixturesFilesPaths(): void
     {
         $fixtures = $this->loadFixtureFiles([
-            $this->client->getContainer()->get('kernel')->locateResource(
+            $this->getContainer()->get('kernel')->locateResource(
                 '@AcmeBundle/DataFixtures/ORM/user.yml'
             ),
         ]);
@@ -571,16 +326,16 @@ EOF;
             $fixtures
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user1 */
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
         $user1 = $fixtures['id1'];
 
         $this->assertInternalType('string', $user1->getUsername());
         $this->assertTrue($user1->getEnabled());
 
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         $this->assertSame(
@@ -588,8 +343,8 @@ EOF;
             count($users)
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
+        $user = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -619,10 +374,10 @@ EOF;
             $fixtures
         );
 
-        $em = $this->client->getContainer()
+        $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipFunctionalTestBundle:User')
+        $users = $em->getRepository('LiipTestFixturesBundle:User')
             ->findAll();
 
         $this->assertSame(
@@ -640,209 +395,5 @@ EOF;
     {
         $path = ['/nonexistent.yml'];
         $this->loadFixtureFiles($path);
-    }
-
-    public function testUserWithFixtures(): void
-    {
-        $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
-            $fixtures
-        );
-
-        $path = '/user/1';
-
-        $this->client->enableProfiler();
-
-        /** @var \Symfony\Component\DomCrawler\Crawler $crawler */
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        if ($profile = $this->client->getProfile()) {
-            // One query
-            $this->assertSame(1,
-                $profile->getCollector('db')->getQueryCount());
-        } else {
-            $this->markTestIncomplete(
-                'Profiler is disabled.'
-            );
-        }
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Not logged in.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-
-        $this->assertSame(
-            'Name: foo bar',
-            $crawler->filter('div#content p')->eq(0)->text()
-        );
-        $this->assertSame(
-            'Email: foo@bar.com',
-            $crawler->filter('div#content p')->eq(1)->text()
-        );
-    }
-
-    /**
-     * Form.
-     */
-    public function testForm(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/form';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $form = $crawler->selectButton('Submit')->form();
-        $crawler = $this->client->submit($form);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertValidationErrors(['children[name].data'], $this->client->getContainer());
-
-        // Try again with the fields filled out.
-        $form = $crawler->selectButton('Submit')->form();
-        $form->setValues(['form[name]' => 'foo bar']);
-        $crawler = $this->client->submit($form);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertContains(
-            'Name submitted.',
-            $crawler->filter('div.flash-notice')->text()
-        );
-    }
-
-    /**
-     * Ensure form validation helpers still work with embedded controllers.
-     *
-     * @see https://github.com/liip/LiipFunctionalTestBundle/issues/273
-     */
-    public function testFormWithEmbed(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/form-with-embed';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $form = $crawler->selectButton('Submit')->form();
-        $crawler = $this->client->submit($form);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertValidationErrors(['children[name].data'], $this->client->getContainer());
-
-        // Try again with the fields filled out.
-        $form = $crawler->selectButton('Submit')->form();
-        $form->setValues(['form[name]' => 'foo bar']);
-        $crawler = $this->client->submit($form);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertContains(
-            'Name submitted.',
-            $crawler->filter('div.flash-notice')->text()
-        );
-    }
-
-    /**
-     * @depends testForm
-     *
-     * @expectedException \PHPUnit\Framework\ExpectationFailedException
-     */
-    public function testFormWithException(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/form';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $form = $crawler->selectButton('Submit')->form();
-        $this->client->submit($form);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertValidationErrors([''], $this->client->getContainer());
-    }
-
-    /**
-     * Check the failure message returned by assertStatusCode()
-     * when an invalid form is submitted.
-     */
-    public function testFormWithExceptionAssertStatusCode(): void
-    {
-        $this->loadFixtures([]);
-
-        $path = '/form';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $form = $crawler->selectButton('Submit')->form();
-
-        $this->client->submit($form);
-
-        try {
-            $this->assertStatusCode(-1, $this->client);
-        } catch (AssertionFailedError $e) {
-            $string = <<<'EOF'
-Unexpected validation errors:
-+ children[name].data: This value should not be blank.
-
-Failed asserting that 200 matches expected -1.
-EOF;
-            $this->assertSame($string, $e->getMessage());
-
-            return;
-        }
-
-        $this->fail('Test failed.');
-    }
-
-    /**
-     * Call isSuccessful() with "application/json" content type.
-     */
-    public function testJsonIsSuccesful(): void
-    {
-        $this->loadFixtures([]);
-
-        $this->client = static::makeClient();
-
-        $path = '/json';
-
-        $this->client->request('GET', $path);
-
-        $this->isSuccessful(
-            $this->client->getResponse(),
-            true,
-            'application/json'
-        );
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->client = null;
     }
 }

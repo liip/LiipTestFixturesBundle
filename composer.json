@@ -1,6 +1,6 @@
 {
-    "name": "liip/functional-test-bundle",
-    "description": "This bundles provides additional functional test-cases for Symfony applications",
+    "name": "liip/test-fixtures-bundle",
+    "description": "This bundles enables efficient loading of Doctrine fixtures in functional test-cases for Symfony applications",
     "keywords": ["symfony", "testing", "fixtures"],
     "type": "symfony-bundle",
     "license": "MIT",
@@ -11,7 +11,7 @@
         },
         {
             "name": "Community contributions",
-            "homepage": "https://github.com/liip/LiipFunctionalTestBundle/contributors"
+            "homepage": "https://github.com/liip/LiipTestFixturesBundle/contributors"
         }
     ],
     "require": {
@@ -30,11 +30,9 @@
         "symfony/monolog-bundle": "^3.1",
         "symfony/phpunit-bridge": "^3.4 || ^4.1",
         "symfony/symfony": "^3.4 || ^4.1",
-        "theofidry/alice-data-fixtures": "^1.0.1",
-        "twig/twig": "^2.0"
+        "theofidry/alice-data-fixtures": "^1.0.1"
     },
     "suggest": {
-        "brianium/paratest": "Required when using paratest to parallelize tests",
         "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
         "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
         "doctrine/orm": "Required when using the fixture loading functionality with an ORM and SQLite",
@@ -43,12 +41,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Liip\\FunctionalTestBundle\\": "src/"
+            "Liip\\TestFixturesBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Liip\\FunctionalTestBundle\\Tests\\": "tests/"
+            "Liip\\TestFixturesBundle\\Tests\\": "tests/"
         }
     },
     "config": {
@@ -56,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev"
+            "dev-master": "1.x-dev"
         }
     }
 }

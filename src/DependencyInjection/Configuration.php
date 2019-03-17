@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\DependencyInjection;
+namespace Liip\TestFixturesBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -27,12 +27,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         if (method_exists(TreeBuilder::class, 'getRootNode')) {
-            $treeBuilder = new TreeBuilder('liip_functional_test');
+            $treeBuilder = new TreeBuilder('liip_test_fixtures');
             $rootNode = $treeBuilder->getRootNode();
         } else {
             // BC layer for symfony/config 4.1 and older
             $treeBuilder = new TreeBuilder();
-            $rootNode = $treeBuilder->root('liip_functional_test', 'array');
+            $rootNode = $treeBuilder->root('liip_test_fixtures', 'array');
         }
 
         $rootNode
@@ -43,38 +43,6 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('sqlite')
                             ->defaultNull()
-                        ->end()
-                    ->end()
-                ->end()
-                ->scalarNode('command_verbosity')->defaultValue('normal')->end()
-                ->booleanNode('command_decoration')->defaultTrue()->end()
-                ->arrayNode('query')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('max_query_count')
-                            ->defaultNull()
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('authentication')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('username')
-                            ->defaultValue('')
-                        ->end()
-                        ->scalarNode('password')
-                            ->defaultValue('')
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('paratest')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('process')
-                            ->defaultValue(5)
-                        ->end()
-                        ->scalarNode('phpunit')
-                            ->defaultValue('./bin/phpunit')
                         ->end()
                     ->end()
                 ->end()

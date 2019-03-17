@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\Test;
+namespace Liip\TestFixturesBundle\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Liip\FunctionalTestBundle\Annotations\DisableDatabaseCache;
-use Liip\FunctionalTestBundle\Annotations\QueryCount;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Liip\FunctionalTestBundle\Tests\AppConfig\AppConfigKernel;
+use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Tests\AppConfig\AppConfigKernel;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -36,171 +36,14 @@ use Liip\FunctionalTestBundle\Tests\AppConfig\AppConfigKernel;
  */
 class WebTestCaseConfigTest extends WebTestCase
 {
+    use FixturesTrait;
+
     /** @var \Symfony\Bundle\FrameworkBundle\Client client */
     private $client = null;
 
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
-    }
-
-    /**
-     * Log in as an user.
-     */
-    public function testIndexAuthenticationArray(): void
-    {
-        $this->loadFixtures([]);
-
-        $this->client = static::makeClient([
-            'username' => 'foobar',
-            'password' => '12341234',
-        ]);
-
-        $path = '/';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Logged in as foobar.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-    }
-
-    /**
-     * Log in as the user defined in the
-     * "liip_functional_test.authentication"
-     * node from the configuration file.
-     */
-    public function testIndexAuthenticationTrue(): void
-    {
-        $this->loadFixtures([]);
-
-        $this->client = static::makeClient(true);
-
-        $path = '/';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Logged in as foobar.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-    }
-
-    /**
-     * Log in as the user defined in the Data Fixture.
-     */
-    public function testIndexAuthenticationLoginAs(): void
-    {
-        $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        /** @var \Doctrine\Common\DataFixtures\ReferenceRepository $repository */
-        $repository = $fixtures->getReferenceRepository();
-
-        $loginAs = $this->loginAs($repository->getReference('user'),
-            'secured_area');
-
-        $this->assertInstanceOf(
-            'Liip\FunctionalTestBundle\Test\WebTestCase',
-            $loginAs
-        );
-
-        $this->client = static::makeClient();
-
-        $path = '/';
-
-        $crawler = $this->client->request('GET', $path);
-
-        $this->assertStatusCode(200, $this->client);
-
-        $this->assertSame(1,
-            $crawler->filter('html > body')->count());
-
-        $this->assertSame(
-            'Logged in as foo bar.',
-            $crawler->filter('p#user')->text()
-        );
-
-        $this->assertSame(
-            'LiipFunctionalTestBundle',
-            $crawler->filter('h1')->text()
-        );
-    }
-
-    /**
-     * Log in as the user defined in the Data Fixtures and except an
-     * AllowedQueriesExceededException exception.
-     *
-     * There will be 2 queries, in the configuration the limit is 1,
-     * an Exception will be thrown.
-     *
-     * @expectedException \Liip\FunctionalTestBundle\Exception\AllowedQueriesExceededException
-     */
-    public function testAllowedQueriesExceededException(): void
-    {
-        $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        /** @var \Doctrine\Common\DataFixtures\ReferenceRepository $repository */
-        $repository = $fixtures->getReferenceRepository();
-
-        // There will be one query to log in the first user.
-        $this->loginAs($repository->getReference('user'),
-            'secured_area');
-
-        $this->client = static::makeClient();
-
-        // One another query to load the second user.
-        $path = '/user/2';
-
-        $this->client->request('GET', $path);
-    }
-
-    /**
-     * Expect an exception due to the QueryCount annotation.
-     *
-     * @QueryCount(0)
-     *
-     * There will be 1 query, in the annotation the limit is 0,
-     * an Exception will be thrown.
-     *
-     * @expectedException \Liip\FunctionalTestBundle\Exception\AllowedQueriesExceededException
-     */
-    public function testAnnotationAndException(): void
-    {
-        $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        $this->client = static::makeClient();
-
-        // One query to load the second user
-        $path = '/user/1';
-
-        $this->client->request('GET', $path);
     }
 
     /**
@@ -224,7 +67,7 @@ class WebTestCaseConfigTest extends WebTestCase
             $fixtures
         );
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
         $user = $fixtures['id1'];
 
         // The custom provider has not been used successfully.
@@ -238,7 +81,7 @@ class WebTestCaseConfigTest extends WebTestCase
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
         ]);
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user */
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user */
         $user = $fixtures['id1'];
 
         // The custom provider "foo" has been loaded and used successfully.
@@ -253,12 +96,8 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testCacheCanBeDisabled(): void
     {
-        // MD5 hash corresponding to these fixtures files.
-        $md5 = '0ded9d8daaeaeca1056b18b9d0d433b2';
-        $databaseFilePath = $this->getContainer()->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
-
         $fixtures = [
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
         $this->loadFixtures($fixtures);
@@ -266,8 +105,8 @@ class WebTestCaseConfigTest extends WebTestCase
         // Load data from database
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipFunctionalTestBundle:User')->findOneBy(['id' => 1]);
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
+        $user1 = $em->getRepository('LiipTestFixturesBundle:User')->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
         $user1Salt = $user1->getSalt();
@@ -277,8 +116,8 @@ class WebTestCaseConfigTest extends WebTestCase
         // Reload the fixtures.
         $this->loadFixtures($fixtures);
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipFunctionalTestBundle:User')->findOneBy(['id' => 1]);
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
+        $user1 = $em->getRepository('LiipTestFixturesBundle:User')->findOneBy(['id' => 1]);
 
         //The salt are not the same because cache were not used
         $this->assertNotSame($user1Salt, $user1->getSalt());
@@ -293,7 +132,7 @@ class WebTestCaseConfigTest extends WebTestCase
         $md5 = '0ded9d8daaeaeca1056b18b9d0d433b2';
 
         $fixtures = [
-            'Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
         $this->loadFixtures($fixtures);
@@ -301,8 +140,8 @@ class WebTestCaseConfigTest extends WebTestCase
         // Load data from database
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\FunctionalTestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipFunctionalTestBundle:User')
+        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
+        $user1 = $em->getRepository('LiipTestFixturesBundle:User')
             ->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
@@ -341,7 +180,7 @@ class WebTestCaseConfigTest extends WebTestCase
             'File modification time of the backup has been updated.'
         );
 
-        $user1 = $em->getRepository('LiipFunctionalTestBundle:User')->findOneBy(['id' => 1]);
+        $user1 = $em->getRepository('LiipTestFixturesBundle:User')->findOneBy(['id' => 1]);
 
         // Check that random data has not been changed, to ensure that backup was created and loaded successfully.
         $this->assertSame($user1Salt, $user1->getSalt());
@@ -367,7 +206,7 @@ class WebTestCaseConfigTest extends WebTestCase
             'File modification time of the backup has not been updated.'
         );
 
-        $user1 = $em->getRepository('LiipFunctionalTestBundle:User')->findOneBy(['id' => 1]);
+        $user1 = $em->getRepository('LiipTestFixturesBundle:User')->findOneBy(['id' => 1]);
 
         // Check that random data has been changed, to ensure that backup was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());

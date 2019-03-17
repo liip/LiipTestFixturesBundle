@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -9,15 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Services\DatabaseTools;
+namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
-use Liip\FunctionalTestBundle\Services\DatabaseBackup\DatabaseBackupInterface;
-use Liip\FunctionalTestBundle\Services\FixturesLoaderFactory;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
+use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -113,7 +113,7 @@ abstract class AbstractDatabaseTool
 
     protected function getBackupService(): ?DatabaseBackupInterface
     {
-        $backupServiceParamName = strtolower('liip_functional_test.cache_db.'.(
+        $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
             ('ORM' === $this->registry->getName())
                 ? $this->connection->getDatabasePlatform()->getName()
                 : $this->getType()

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\AppConfigMysqlCacheDb;
+namespace Liip\TestFixturesBundle\Tests\AppConfigMysqlCacheDb;
 
-use Liip\FunctionalTestBundle\Tests\AppConfigMysql\AppConfigMysqlKernel;
+use Liip\TestFixturesBundle\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppConfigMysqlKernelCacheDb extends AppConfigMysqlKernel

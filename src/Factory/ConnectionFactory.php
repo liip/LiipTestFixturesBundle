@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Factory;
+namespace Liip\TestFixturesBundle\Factory;
 
 use Doctrine\Bundle\DoctrineBundle\ConnectionFactory as BaseConnectionFactory;
 use Doctrine\Common\EventManager;

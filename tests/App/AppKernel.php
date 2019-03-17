@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\App;
+namespace Liip\TestFixturesBundle\Tests\App;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,8 +28,8 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new \Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
-            new \Liip\FunctionalTestBundle\Tests\App\AcmeBundle(),
+            new \Liip\TestFixturesBundle\LiipTestFixturesBundle(),
+            new \Liip\TestFixturesBundle\Tests\App\AcmeBundle(),
             new \Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle(),
             new \Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle(),
         ];
@@ -60,6 +60,6 @@ class AppKernel extends Kernel
 
     protected function getBaseDir()
     {
-        return sys_get_temp_dir().'/LiipFunctionalTestBundle/'.(new \ReflectionClass($this))->getShortName().'/var/';
+        return sys_get_temp_dir().'/LiipTestFixturesBundle/'.(new \ReflectionClass($this))->getShortName().'/var/';
     }
 }

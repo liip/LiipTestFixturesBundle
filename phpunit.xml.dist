@@ -10,14 +10,12 @@
 >
 
     <php>
-        <server name="KERNEL_CLASS" value="Liip\FunctionalTestBundle\Tests\App\AppKernel" />
+        <server name="KERNEL_CLASS" value="Liip\TestFixturesBundle\Tests\App\AppKernel" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests/Command</directory>
-            <directory>tests/DependencyInjection</directory>
             <directory>tests/Test</directory>
         </testsuite>
     </testsuites>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\Document;
+namespace Liip\TestFixturesBundle\Tests\AppConfigPhpcr\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 

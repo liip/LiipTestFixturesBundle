@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR;
+namespace Liip\TestFixturesBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\Document\Task;
+use Liip\TestFixturesBundle\Tests\AppConfigPhpcr\Document\Task;
 
 class LoadTaskData implements FixtureInterface
 {

@@ -17,7 +17,7 @@ filter:
     - Test/*
     - Utils/*
     - Validator/*
-    - LiipFunctionalTestBundle.php
+    - LiipTestFixturesBundle.php
     - QueryCountClient.php
     - QueryCounter.php
 
