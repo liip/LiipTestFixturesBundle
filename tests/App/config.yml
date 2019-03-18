@@ -41,21 +41,21 @@ doctrine:
             default:
                 connection: default
                 mappings:
-                    LiipTestFixturesBundle:
+                    LiipAcme:
                         type: php
                         dir: "%kernel.root_dir%/../App/Entity"
-                        prefix: 'Liip\TestFixturesBundle\Tests\App\Entity'
-                    LiipTestFixturesBundleYml:
+                        prefix: 'Liip\Acme\Tests\App\Entity'
+                    LiipAcmeYml:
                         type: "yml"
                         dir: "%kernel.root_dir%/../App/Resources/config/doctrine"
-                        prefix: 'Liip\TestFixturesBundle\Tests\App\Entity'
+                        prefix: 'Liip\Acme\Tests\App\Entity'
 
 security:
     encoders:
         # in_memory users
         Symfony\Component\Security\Core\User\User: plaintext
         # User entity
-        Liip\TestFixturesBundle\Tests\App\Entity\User: plaintext
+        Liip\Acme\Tests\App\Entity\User: plaintext
     providers:
         chain_provider:
             chain:
@@ -67,7 +67,7 @@ security:
                         password: "12341234"
                         roles: 'ROLE_USER'
         main:
-            entity: { class: Liip\TestFixturesBundle\Tests\App\Entity\User, property: id }
+            entity: { class: Liip\Acme\Tests\App\Entity\User, property: id }
     firewalls:
         secured_area:
             pattern:  ^/
@@ -82,7 +82,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-    Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\:
+    Liip\Acme\Tests\App\DataFixtures\ORM\:
         resource: 'DataFixtures/ORM/*'
         tags: ['doctrine.fixture.orm']
 

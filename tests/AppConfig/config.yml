@@ -15,5 +15,5 @@ liip_test_fixtures:
 services:
     # HautelookAliceBundle: custom Faker provider
     faker.provider.foo:
-        class: Liip\TestFixturesBundle\Tests\AppConfig\DataFixtures\Faker\Provider\FooProvider
+        class: Liip\Acme\Tests\AppConfig\DataFixtures\Faker\Provider\FooProvider
         tags: [ { name: nelmio_alice.faker.provider } ]

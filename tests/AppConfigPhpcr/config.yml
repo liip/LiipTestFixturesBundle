@@ -9,12 +9,12 @@ doctrine_phpcr:
         document_managers:
             default:
                 mappings:
-                    LiipTestFixturesBundle:
+                    LiipAcme:
                         type: annotation
                         dir: "%kernel.root_dir%/../AppConfigPhpcr/Document"
-                        prefix: 'Liip\TestFixturesBundle\Tests\AppConfigPhpcr\Document'
+                        prefix: 'Liip\Acme\Tests\AppConfigPhpcr\Document'
 
 services:
-    Liip\TestFixturesBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR\:
+    Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\:
         resource: 'DataFixtures/PHPCR/*'
         tags: ['doctrine.fixture.orm']

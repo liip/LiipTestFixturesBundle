@@ -11,18 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\TestFixturesBundle\Tests\AppConfig;
+namespace Liip\Acme\Tests\AppConfig;
 
-/*
- * This file is part of the Liip/TestFixturesBundle
- *
- * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
-use Liip\TestFixturesBundle\Tests\App\AppKernel;
+use Liip\Acme\Tests\App\AppKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppConfigKernel extends AppKernel

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\TestFixturesBundle\Tests\Test;
+namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Liip\TestFixturesBundle\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
+use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -47,14 +47,14 @@ class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
     public function testLoadFixturesAndCheckBackup(): void
     {
         $this->loadFixtures([
-            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
         // Load data from database
         $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $users = $em->getRepository('LiipTestFixturesBundle:User')
+        $users = $em->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been saved to database
@@ -63,8 +63,8 @@ class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
             $users
         );
 
-        /** @var \Liip\TestFixturesBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipTestFixturesBundle:User')
+        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        $user1 = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -84,7 +84,7 @@ class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
         // Clean database
         $this->loadFixtures();
 
-        $users = $em->getRepository('LiipTestFixturesBundle:User')
+        $users = $em->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been removed from database
@@ -95,10 +95,10 @@ class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
 
         // Load fixtures again
         $this->loadFixtures([
-            'Liip\TestFixturesBundle\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $em->getRepository('LiipTestFixturesBundle:User')
+        $users = $em->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been loaded again in database
@@ -107,7 +107,7 @@ class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
             $users
         );
 
-        $user1 = $em->getRepository('LiipTestFixturesBundle:User')
+        $user1 = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
