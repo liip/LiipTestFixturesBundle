@@ -17,7 +17,9 @@ use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Test PHPCR.
@@ -55,8 +57,7 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
             $schemaTool->createSchema($metadatas);
         }
 
-        // Needed to define the PHPCR root, used in fixtures.
-        $this->runCommand('doctrine:phpcr:repository:init');
+        $this->initRepository();
     }
 
     public function testLoadFixturesPhPCr(): void
@@ -75,6 +76,22 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
             $repository
+        );
+    }
+
+    /**
+     * Define the PHPCR root, used in fixtures.
+     */
+    private function initRepository(): void
+    {
+        $kernel = $this->getContainer()->get('kernel');
+
+        $application = new Application($kernel);
+
+        $command = $application->find('doctrine:phpcr:repository:init');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            ['command' => $command->getName()]
         );
     }
 }
