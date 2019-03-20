@@ -28,7 +28,7 @@ monolog:
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
 
-liip_functional_test: ~
+liip_test_fixtures: ~
 
 doctrine:
     dbal:
@@ -41,21 +41,21 @@ doctrine:
             default:
                 connection: default
                 mappings:
-                    LiipFunctionalTestBundle:
+                    LiipAcme:
                         type: php
                         dir: "%kernel.root_dir%/../App/Entity"
-                        prefix: 'Liip\FunctionalTestBundle\Tests\App\Entity'
-                    LiipFunctionalTestBundleYml:
+                        prefix: 'Liip\Acme\Tests\App\Entity'
+                    LiipAcmeYml:
                         type: "yml"
                         dir: "%kernel.root_dir%/../App/Resources/config/doctrine"
-                        prefix: 'Liip\FunctionalTestBundle\Tests\App\Entity'
+                        prefix: 'Liip\Acme\Tests\App\Entity'
 
 security:
     encoders:
         # in_memory users
         Symfony\Component\Security\Core\User\User: plaintext
         # User entity
-        Liip\FunctionalTestBundle\Tests\App\Entity\User: plaintext
+        Liip\Acme\Tests\App\Entity\User: plaintext
     providers:
         chain_provider:
             chain:
@@ -67,7 +67,7 @@ security:
                         password: "12341234"
                         roles: 'ROLE_USER'
         main:
-            entity: { class: Liip\FunctionalTestBundle\Tests\App\Entity\User, property: id }
+            entity: { class: Liip\Acme\Tests\App\Entity\User, property: id }
     firewalls:
         secured_area:
             pattern:  ^/
@@ -82,10 +82,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-    Liip\FunctionalTestBundle\Tests\App\DataFixtures\ORM\:
+    Liip\Acme\Tests\App\DataFixtures\ORM\:
         resource: 'DataFixtures/ORM/*'
         tags: ['doctrine.fixture.orm']
-    Liip\FunctionalTestBundle\Tests\App\Command\TestCommand:
-        tags: ['console.command']
-    Liip\FunctionalTestBundle\Tests\App\Command\TestStatusCodeCommand:
-        tags: ['console.command']
+

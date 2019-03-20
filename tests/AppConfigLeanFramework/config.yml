@@ -1,5 +1,0 @@
-# inherits configuration from ../App/config.yml
-
-framework:
-    form: false
-    validation: false

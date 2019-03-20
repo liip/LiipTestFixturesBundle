@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,18 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\AppConfig;
+namespace Liip\Acme\Tests\AppConfig;
 
-/*
- * This file is part of the Liip/FunctionalTestBundle
- *
- * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
-use Liip\FunctionalTestBundle\Tests\App\AppKernel;
+use Liip\Acme\Tests\App\AppKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppConfigKernel extends AppKernel
@@ -35,7 +26,7 @@ class AppConfigKernel extends AppKernel
         // Load the default file.
         parent::registerContainerConfiguration($loader);
 
-        // Load the file with "liip_functional_test" parameters
+        // Load the file with "liip_test_fixtures" parameters
         $loader->load(__DIR__.'/config.yml');
     }
 }

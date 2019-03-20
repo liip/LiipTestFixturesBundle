@@ -12,7 +12,7 @@ Installation
     following command to download the latest stable version of this bundle:
 
     ```bash
-    $ composer require --dev liip/functional-test-bundle:~2.0@alpha
+    $ composer require --dev liip/test-fixtures-bundle:~0.1@alpha
     ```
 
     This command requires you to have Composer installed globally, as explained
@@ -37,7 +37,7 @@ Installation
             if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
                 // ...
                 if ('test' === $this->getEnvironment()) {
-                    $bundles[] = new Liip\FunctionalTestBundle\LiipFunctionalTestBundle();
+                    $bundles[] = new Liip\TestFixturesBundle\LiipTestFixturesBundle();
                 }
             }
 
@@ -53,25 +53,10 @@ Installation
     * For symfony 3:
         ```yaml
         # app/config/config_test.yml
-        liip_functional_test: ~
-        ```
- 
-        ```yaml
-        # app/config/config_test.yml
-        framework:
-            test: ~
-            session:
-                storage_id: session.storage.mock_file
-                name: MOCKSESSION
+        liip_test_fixtures: ~
         ```
     * For symfony 4:
         ```yaml
         # config/packages/test/framework.yaml
-        framework:
-            test: true
-            session:
-                storage_id: session.storage.mock_file
-                name: MOCKSESSION
-
-        liip_functional_test: ~
+        liip_test_fixtures: ~
         ```

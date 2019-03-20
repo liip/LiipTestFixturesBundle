@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,12 +11,15 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\Test;
+namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
+use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Test PHPCR.
@@ -30,6 +33,8 @@ use Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
  */
 class WebTestCaseConfigPhpcrTest extends WebTestCase
 {
+    use FixturesTrait;
+
     protected static function getKernelClass(): string
     {
         return AppConfigPhpcrKernel::class;
@@ -41,7 +46,7 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
         }
 
-        // https://github.com/liip/LiipFunctionalTestBundle#non-sqlite
+        // https://github.com/liip/LiipTestFixturesBundle/blob/master/doc/database.md#non-sqlite
         $em = $this->getContainer()->get('doctrine')->getManager();
         if (!isset($metadatas)) {
             $metadatas = $em->getMetadataFactory()->getAllMetadata();
@@ -52,14 +57,13 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
             $schemaTool->createSchema($metadatas);
         }
 
-        // Needed to define the PHPCR root, used in fixtures.
-        $this->runCommand('doctrine:phpcr:repository:init');
+        $this->initRepository();
     }
 
     public function testLoadFixturesPhPCr(): void
     {
         $fixtures = $this->loadFixtures([
-            'Liip\FunctionalTestBundle\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
+            'Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
         ], false, null, 'doctrine_phpcr');
 
         $this->assertInstanceOf(
@@ -72,6 +76,22 @@ class WebTestCaseConfigPhpcrTest extends WebTestCase
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
             $repository
+        );
+    }
+
+    /**
+     * Define the PHPCR root, used in fixtures.
+     */
+    private function initRepository(): void
+    {
+        $kernel = $this->getContainer()->get('kernel');
+
+        $application = new Application($kernel);
+
+        $command = $application->find('doctrine:phpcr:repository:init');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            ['command' => $command->getName()]
         );
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -11,14 +11,14 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\DependencyInjection;
+namespace Liip\TestFixturesBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class LiipFunctionalTestExtension extends Extension
+class LiipTestFixturesExtension extends Extension
 {
     /**
      * Loads the services based on your application configuration.
@@ -31,19 +31,14 @@ class LiipFunctionalTestExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('commands.xml');
-        $loader->load('functional_test.xml');
         $loader->load('database_tools.xml');
-        if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
-            $loader->load('validator.xml');
-        }
 
         foreach ($config as $key => $value) {
             // If the node is an array,
-            // e.g. "liip_functional_test.query.max_query_count",
+            // e.g. "liip_test_fixtures.query.max_query_count",
             // set the value as
-            // "liip_functional_test.query.max_query_count"
-            // instead of an array "liip_functional_test.query"
+            // "liip_test_fixtures.query.max_query_count"
+            // instead of an array "liip_test_fixtures.query"
             // with a "max_query_count" key.
             if (is_array($value)) {
                 foreach ($value as $key2 => $value2) {
@@ -54,8 +49,5 @@ class LiipFunctionalTestExtension extends Extension
                 $container->setParameter($this->getAlias().'.'.$key, $value);
             }
         }
-
-        $definition = $container->getDefinition('liip_functional_test.query.count_client');
-        $definition->setShared(false);
     }
 }

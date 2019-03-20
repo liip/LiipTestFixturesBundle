@@ -1,6 +1,6 @@
 <?php
 
-namespace Liip\FunctionalTestBundle\Services;
+namespace Liip\TestFixturesBundle\Services;
 
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Loader;

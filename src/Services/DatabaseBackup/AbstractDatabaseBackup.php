@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Liip/FunctionalTestBundle
+ * This file is part of the Liip/TestFixturesBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  *
@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Services\DatabaseBackup;
+namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
-use Liip\FunctionalTestBundle\Services\FixturesLoaderFactory;
+use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -6,24 +6,14 @@ framework:
         collect: true
 
 # Define all the available parameters in this Bundle
-liip_functional_test:
+liip_test_fixtures:
     cache_db:
-        sqlite: liip_functional_test.services_database_backup.sqlite
-        mysql: liip_functional_test.services_database_backup.mysql
-        mongodb: liip_functional_test.services_database_backup.mongodb
-    command_verbosity: "very_verbose"
-    command_decoration: false
-    query:
-        max_query_count: 1
-    authentication:
-        username: "foobar"
-        password: "12341234"
-    paratest:
-        process: 3
-        phpunit: 'vendor/bin/phpunit'
+        sqlite: liip_test_fixtures.services_database_backup.sqlite
+        mysql: liip_test_fixtures.services_database_backup.mysql
+        mongodb: liip_test_fixtures.services_database_backup.mongodb
 
 services:
     # HautelookAliceBundle: custom Faker provider
     faker.provider.foo:
-        class: Liip\FunctionalTestBundle\Tests\AppConfig\DataFixtures\Faker\Provider\FooProvider
+        class: Liip\Acme\Tests\AppConfig\DataFixtures\Faker\Provider\FooProvider
         tags: [ { name: nelmio_alice.faker.provider } ]

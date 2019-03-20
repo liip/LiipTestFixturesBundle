@@ -55,35 +55,35 @@ Tips for Fixture Loading Tests
     ```yaml
     # sf3: app/config/config_test.yml
     # sf4: config/packages/test/framework.yaml
-    liip_functional_test:
+    liip_test_fixtures:
         cache_db:
-            sqlite: liip_functional_test.services_database_backup.sqlite
+            sqlite: liip_test_fixtures.services_database_backup.sqlite
     ```
 
  3. For create custom database cache service:
  
-    Create cache class, implement `\Liip\FunctionalTestBundle\Services\DatabaseBackup\DatabaseBackupInterface` and add it to config
+    Create cache class, implement `\Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface` and add it to config
 
     For example:
     ```yaml
     # app/config/config_test.yml
-    liip_functional_test:
+    liip_test_fixtures:
         cache_db:
-            mysql: liip_functional_test.services_database_backup.mysql
-            mongodb: liip_functional_test.services_database_backup.mongodb
+            mysql: liip_test_fixtures.services_database_backup.mysql
+            mongodb: liip_test_fixtures.services_database_backup.mongodb
             phpcr: ...
             db2: ...
             [Other \Doctrine\DBAL\Platforms\AbstractPlatform name]: ...
     ```
 
-    **Attention: `liip_functional_test.services_database_backup.mysql` required `mysql-client` installed on server.**
+    **Attention: `liip_test_fixtures.services_database_backup.mysql` required `mysql-client` installed on server.**
 
-    **Attention: `liip_functional_test.services_database_backup.mongodb` required `mongodb-clients` installed on server.**
+    **Attention: `liip_test_fixtures.services_database_backup.mongodb` required `mongodb-clients` installed on server.**
  
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-    use Liip\FunctionalTestBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
@@ -108,7 +108,7 @@ Tips for Fixture Loading Tests
     `loadFixtures` without any argument.
 
     ```php
-    use Liip\FunctionalTestBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
@@ -128,7 +128,7 @@ Tips for Fixture Loading Tests
     to the `setExcludedDoctrineTables` method before loading the fixtures.
 
     ```php
-    use Liip\FunctionalTestBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
@@ -147,7 +147,7 @@ Tips for Fixture Loading Tests
  to consider use the second parameter $append with value true.
 
     ```php
-        use Liip\FunctionalTestBundle\Test\WebTestCase;
+        use Liip\TestFixturesBundle\Test\WebTestCase;
 
         class MyControllerTest extends WebTestCase
         {
@@ -166,7 +166,7 @@ Tips for Fixture Loading Tests
     specify the service id of the registry manager:
 
     ```php
-    use Liip\FunctionalTestBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
@@ -185,7 +185,7 @@ Tips for Fixture Loading Tests
 
 ### Loading Fixtures Using Alice
 If you would like to setup your fixtures with yml files using [Alice](https://github.com/nelmio/alice),
-[`Liip\FunctionalTestBundle\Test\WebTestCase`](Test/WebTestCase.php) has a helper function `loadFixtureFiles`
+[`Liip\TestFixturesBundle\Test\WebTestCase`](Test/WebTestCase.php) has a helper function `loadFixtureFiles`
 which takes an array of resources, or paths to yml files, and returns an array of objects.
 This method uses the [Theofidry AliceDataFixtures loader](https://github.com/theofidry/AliceDataFixtures#doctrine-orm)
 rather than the FunctionalTestBundle's load methods.
@@ -250,7 +250,7 @@ automatically, you'll need to do that yourself. For example, you could write a
 
 ```php
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Test\WebTestCase;
 
 class AccountControllerTest extends WebTestCase
 {

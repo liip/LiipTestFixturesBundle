@@ -18,13 +18,13 @@ This is the list of actions that you need to take when upgrading this bundle fro
 
  *  Changed config format for cache database, use:
     ```
-        liip_functional_test:
+        liip_test_fixtures:
             cache_db:
-                sqlite: liip_functional_test.services_database_backup.sqlite
+                sqlite: liip_test_fixtures.services_database_backup.sqlite
     ```
     instead of:
     ```
-        liip_functional_test:
+        liip_test_fixtures:
             cache_sqlite_db: true
     ```
 
