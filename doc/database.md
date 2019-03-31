@@ -83,10 +83,13 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-    use Liip\TestFixturesBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\FixturesTrait;
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
+        use FixturesTrait;
+
         public function testIndex()
         {
             // add all your fixtures classes that implement
@@ -108,10 +111,13 @@ Tips for Fixture Loading Tests
     `loadFixtures` without any argument.
 
     ```php
-    use Liip\TestFixturesBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\FixturesTrait;    
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
+        use FixturesTrait;
+
         public function testIndex()
         {
             $this->loadFixtures();
@@ -128,10 +134,13 @@ Tips for Fixture Loading Tests
     to the `setExcludedDoctrineTables` method before loading the fixtures.
 
     ```php
-    use Liip\TestFixturesBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\FixturesTrait;    
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
+        use FixturesTrait;
+
         public function testIndex()
         {
             $this->setExcludedDoctrineTables(array('my_tablename_not_to_be_purged'));
@@ -147,10 +156,13 @@ Tips for Fixture Loading Tests
  to consider use the second parameter $append with value true.
 
     ```php
-        use Liip\TestFixturesBundle\Test\WebTestCase;
+        use Liip\TestFixturesBundle\Test\FixturesTrait;    
+        use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
         class MyControllerTest extends WebTestCase
         {
+            use FixturesTrait;
+
             public function testIndex()
             {
                 $this->loadFixtures(array(
@@ -166,10 +178,13 @@ Tips for Fixture Loading Tests
     specify the service id of the registry manager:
 
     ```php
-    use Liip\TestFixturesBundle\Test\WebTestCase;
+    use Liip\TestFixturesBundle\Test\FixturesTrait;    
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
+        use FixturesTrait;
+
         public function testIndex()
         {
             $fixtures = array(
@@ -248,12 +263,15 @@ automatically, you'll need to do that yourself. For example, you could write a
 `setUp()` function in your test, like so:
 
 
-```php
+```php 
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\TestFixturesBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Test\FixturesTrait;    
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccountControllerTest extends WebTestCase
 {
+    use FixturesTrait;
+
     public function setUp()
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
