@@ -6,6 +6,8 @@
     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
     colors="true"
     beStrictAboutOutputDuringTests="true"
+    executionOrder="random"
+    resolveDependencies="true"
 >
 
     <php>
