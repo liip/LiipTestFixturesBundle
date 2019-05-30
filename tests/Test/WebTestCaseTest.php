@@ -15,7 +15,7 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Liip\Acme\Tests\App\AppKernel;
+use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -29,12 +29,12 @@ class WebTestCaseTest extends WebTestCase
 
     public function setUp(): void
     {
-        static::$class = AppKernel::class;
+        static::$class = AppConfigSqliteKernel::class;
     }
 
     public static function getKernelClass()
     {
-        return AppKernel::class;
+        return AppConfigSqliteKernel::class;
     }
 
     public function testLoadEmptyFixtures(): void

@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\Acme\Tests\AppConfig;
+namespace Liip\Acme\Tests\AppConfigSqlite;
 
-use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\Acme\Tests\App\AppKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class AppConfigKernel extends AppConfigSqliteKernel
+class AppConfigSqliteKernel extends AppKernel
 {
     /**
      * Load the config.yml from the current directory.
@@ -26,7 +26,7 @@ class AppConfigKernel extends AppConfigSqliteKernel
         // Load the default file.
         parent::registerContainerConfiguration($loader);
 
-        // Load the file with "liip_test_fixtures" parameters
+        // Load the file with SQLite configuration
         $loader->load(__DIR__.'/config.yml');
     }
 }
