@@ -14,6 +14,7 @@ Documentation
 * [Installation](doc/installation.md)
 * [Database test](doc/database.md)
 * [Examples](doc/examples.md)
+* [Caveats](doc/caveats.md)
 
 [Travis Master]: https://travis-ci.com/liip/LiipTestFixturesBundle
 [Travis Master image]: https://travis-ci.com/liip/LiipTestFixturesBundle.svg?branch=master
