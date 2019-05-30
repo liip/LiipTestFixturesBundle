@@ -38,9 +38,6 @@ class WebTestCaseConfigTest extends WebTestCase
 {
     use FixturesTrait;
 
-    /** @var \Symfony\Bundle\FrameworkBundle\Client client */
-    private $client = null;
-
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
