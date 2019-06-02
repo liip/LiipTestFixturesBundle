@@ -1,0 +1,6 @@
+# inherits configuration from ../App/config.yml
+
+doctrine:
+    dbal:
+        url: 'mysql://root:@127.0.0.1:3306/foobar'
+        driver: pdo_mysql
