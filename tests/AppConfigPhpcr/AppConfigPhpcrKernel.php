@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\AppConfigPhpcr;
 
-use Liip\Acme\Tests\App\AppKernel;
+use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class AppConfigPhpcrKernel extends AppKernel
+class AppConfigPhpcrKernel extends AppConfigSqliteKernel
 {
     public function registerBundles(): array
     {

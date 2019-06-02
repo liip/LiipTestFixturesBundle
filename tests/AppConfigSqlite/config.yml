@@ -1,0 +1,7 @@
+# inherits configuration from ../App/config.yml
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path: "%kernel.cache_dir%/test.db"
+        charset: UTF8
