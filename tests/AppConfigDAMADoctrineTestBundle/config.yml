@@ -1,5 +1,9 @@
 # inherits configuration from ../AppConfigMysql/config.yml
 
+doctrine:
+  dbal:
+    dbname: acme_dama
+
 dama_doctrine_test:
   enable_static_connection: true
   enable_static_meta_data_cache: true
