@@ -125,17 +125,21 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         }
 
         // TODO: handle case when using persistent connections. Fail loudly?
-        $schemaTool = new SchemaTool($this->om);
-        if (count($this->excludedDoctrineTables) > 0 || true === $append) {
-            if (!empty($this->getMetadatas())) {
-                $schemaTool->updateSchema($this->getMetadatas());
-            }
-        } else {
-            $schemaTool->dropDatabase();
-            if (!empty($this->getMetadatas())) {
-                $schemaTool->createSchema($this->getMetadatas());
+        if (false === $this->getKeepDatabaseAndSchemaParameter()) {
+
+            $schemaTool = new SchemaTool($this->om);
+            if (count($this->excludedDoctrineTables) > 0 || true === $append) {
+                if (!empty($this->getMetadatas())) {
+                    $schemaTool->updateSchema($this->getMetadatas());
+                }
+            } else {
+                $schemaTool->dropDatabase();
+                if (!empty($this->getMetadatas())) {
+                    $schemaTool->createSchema($this->getMetadatas());
+                }
             }
         }
+
         $this->webTestCase->postFixtureSetup();
 
         $executor = $this->getExecutor($this->getPurger());

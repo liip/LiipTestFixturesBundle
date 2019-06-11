@@ -4,19 +4,15 @@
 
 ### DAMADoctrineTestBundle
 
-Due to conflicting operations with databases, this bundle has compatibility issues with [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle). 
-
-This triggers the following error:
+Due to conflicting operations with databases, this bundle can trigger the following error with [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle): 
 
 ```
 Doctrine\DBAL\Driver\PDOException: SQLSTATE[42000]: Syntax error or access violation: 1305 SAVEPOINT DOCTRINE2_SAVEPOINT_2 does not exist
 ``` 
 
-Use the following configuration to avoid this issue:
+To avoid this, disable automatic changes to database and schema:
 
 ```
-dama_doctrine_test:
-    enable_static_connection: false
+liip_test_fixtures:
+    keep_database_and_schema: true
 ```
-
-See https://github.com/liip/LiipFunctionalTestBundle/issues/423 and https://github.com/dmaicher/doctrine-test-bundle/issues/58 for reference
