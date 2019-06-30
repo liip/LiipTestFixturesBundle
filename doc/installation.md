@@ -42,16 +42,3 @@ Installation
         // ...
     }
     ```
-
- 3. Enable the `functionalTest` service adding the following empty configuration, ensuring that the framework sets the session name and is using the filesystem for session storage:
-
-    * For symfony 3:
-        ```yaml
-        # app/config/config_test.yml
-        liip_test_fixtures: ~
-        ```
-    * For symfony 4:
-        ```yaml
-        # config/packages/test/framework.yaml
-        liip_test_fixtures: ~
-        ```
