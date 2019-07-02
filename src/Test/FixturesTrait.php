@@ -148,9 +148,8 @@ trait FixturesTrait
      *
      * @return WebTestCase
      */
-    public function postFixtureBackupRestore($backupFilePath): self
+    public function postFixtureBackupRestore($backupFilePath): void
     {
-        return $this;
     }
 
     /**
@@ -166,8 +165,7 @@ trait FixturesTrait
         ObjectManager $manager,
         ProxyReferenceRepository $referenceRepository,
         string $backupFilePath
-    ): self {
-        return $this;
+    ): void {
     }
 
     /**
@@ -179,9 +177,8 @@ trait FixturesTrait
      *
      * @return WebTestCase|null
      */
-    public function postReferenceSave(ObjectManager $manager, AbstractExecutor $executor, string $backupFilePath): self
+    public function postReferenceSave(ObjectManager $manager, AbstractExecutor $executor, string $backupFilePath): void
     {
-        return $this;
     }
 
     /**
@@ -193,9 +190,8 @@ trait FixturesTrait
      *
      * @return WebTestCase|null
      */
-    public function preReferenceSave(ObjectManager $manager, AbstractExecutor $executor, ?string $backupFilePath): self
+    public function preReferenceSave(ObjectManager $manager, AbstractExecutor $executor, ?string $backupFilePath): void
     {
-        return $this;
     }
 
     /**
