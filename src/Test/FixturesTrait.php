@@ -30,19 +30,6 @@ trait FixturesTrait
 
     protected $containers;
 
-    // 5 * 1024 * 1024 KB
-    protected $maxMemory = 5242880;
-
-    // RUN COMMAND
-    protected $verbosityLevel;
-
-    protected $decorated;
-
-    /**
-     * @var array
-     */
-    private $firewallLogins = [];
-
     /**
      * @var array
      */
