@@ -51,8 +51,6 @@ trait FixturesTrait
     /**
      * Get an instance of the dependency injection container.
      * (this creates a kernel *without* parameters).
-     *
-     * @return ContainerInterface
      */
     protected function getContainer(): ContainerInterface
     {
@@ -90,14 +88,6 @@ trait FixturesTrait
      *
      * Depends on the doctrine data-fixtures library being available in the
      * class path.
-     *
-     * @param array  $classNames   List of fully qualified class names of fixtures to load
-     * @param bool   $append
-     * @param string $omName       The name of object manager to use
-     * @param string $registryName The service id of manager registry to use
-     * @param int    $purgeMode    Sets the ORM purge mode
-     *
-     * @return null|AbstractExecutor
      */
     protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
     {
@@ -110,17 +100,6 @@ trait FixturesTrait
         return $dbTool->loadFixtures($classNames, $append);
     }
 
-    /**
-     * @param array  $paths        Either symfony resource locators (@ BundleName/etc) or actual file paths
-     * @param bool   $append
-     * @param null   $omName
-     * @param string $registryName
-     * @param int    $purgeMode
-     *
-     * @throws \BadMethodCallException
-     *
-     * @return array
-     */
     public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null)
     {
         /** @var ContainerInterface $container */
@@ -145,8 +124,6 @@ trait FixturesTrait
      * Callback function to be executed after Schema restore.
      *
      * @param string $backupFilePath Path of file used to backup the references of the data fixtures
-     *
-     * @return WebTestCase
      */
     public function postFixtureBackupRestore($backupFilePath): void
     {
@@ -154,12 +131,6 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed before Schema restore.
-     *
-     * @param ObjectManager            $manager             The object manager
-     * @param ProxyReferenceRepository $referenceRepository The reference repository
-     * @param string                   $backupFilePath      Path of file used to backup the references of the data fixtures
-     *
-     * @return WebTestCase
      */
     public function preFixtureBackupRestore(
         ObjectManager $manager,
@@ -170,12 +141,6 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed after save of references.
-     *
-     * @param ObjectManager    $manager        The object manager
-     * @param AbstractExecutor $executor       Executor of the data fixtures
-     * @param string           $backupFilePath Path of file used to backup the references of the data fixtures
-     *
-     * @return WebTestCase|null
      */
     public function postReferenceSave(ObjectManager $manager, AbstractExecutor $executor, string $backupFilePath): void
     {
@@ -183,20 +148,11 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed before save of references.
-     *
-     * @param ObjectManager    $manager        The object manager
-     * @param AbstractExecutor $executor       Executor of the data fixtures
-     * @param string           $backupFilePath Path of file used to backup the references of the data fixtures
-     *
-     * @return WebTestCase|null
      */
     public function preReferenceSave(ObjectManager $manager, AbstractExecutor $executor, ?string $backupFilePath): void
     {
     }
 
-    /**
-     * @param array $excludedDoctrineTables
-     */
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
     {
         $this->excludedDoctrineTables = $excludedDoctrineTables;
