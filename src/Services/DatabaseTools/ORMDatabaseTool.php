@@ -115,11 +115,17 @@ class ORMDatabaseTool extends AbstractDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                if (method_exists($this->testCase, 'preFixtureBackupRestore')) {
+                    $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                }
+
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor, $this->excludedDoctrineTables);
-                $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
+
+                if (method_exists($this->testCase, 'postFixtureBackupRestore')) {
+                    $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
+                }
 
                 return $executor;
             }
@@ -141,7 +147,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             }
         }
 
-        $this->testCase->postFixtureSetup();
+        if (method_exists($this->testCase, 'postFixtureSetup')) {
+            $this->testCase->postFixtureSetup();
+        }
 
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
@@ -155,9 +163,15 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $executor->execute($loader->getFixtures(), true);
 
         if ($backupService) {
-            $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+            if (method_exists($this->testCase, 'preReferenceSave')) {
+                $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+            }
+
             $backupService->backup($executor);
-            $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+
+            if (method_exists($this->testCase, 'postReferenceSave')) {
+                $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+            }
         }
 
         return $executor;

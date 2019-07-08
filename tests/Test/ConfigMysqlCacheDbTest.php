@@ -15,6 +15,7 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
+use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -30,11 +31,10 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class ConfigMysqlCacheDbTest extends ConfigMysqlTest
+class ConfigMysqlCacheDbTest extends ConfigMysqlTest implements ServiceContainerTestCase
 {
     protected static function getKernelClass(): string
     {
@@ -46,15 +46,12 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesAndCheckBackup(): void
     {
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
         // Load data from database
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been saved to database
@@ -64,7 +61,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
 
         /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -82,9 +79,9 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         $salt = $user1->getSalt();
 
         // Clean database
-        $this->loadFixtures();
+        $this->databaseTool->loadFixtures();
 
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been removed from database
@@ -94,11 +91,11 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
 
         // Load fixtures again
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been loaded again in database
@@ -107,7 +104,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             $users
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);

@@ -20,10 +20,15 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 }
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\ORM\EntityManager;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -32,7 +37,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  *
  * Avoid conflict with PHPUnit annotation when reading QueryCount
@@ -40,13 +44,45 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  *
  * @IgnoreAnnotation("expectedException")
  */
-class ConfigTest extends KernelTestCase
+class ConfigTest extends KernelTestCase implements ServiceContainerTestCase
 {
-    use FixturesTrait;
+    use SymfonyTestContainer;
+
+    /**
+     * @var EntityManager
+     * @inject doctrine
+     */
+    private $entityManager;
+
+    /**
+     * @var ContainerInterface
+     * @inject
+     */
+    private $containerTest;
+
+    /**
+     * @var DatabaseToolCollection
+     * @inject liip_test_fixtures.services.database_tool_collection
+     */
+    private $databaseToolCollection;
+
+    /**
+     * @var AbstractDatabaseTool
+     */
+    private $databaseTool;
 
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertInstanceOf(DatabaseToolCollection::class, $this->databaseToolCollection);
+
+        $this->databaseTool = $this->databaseToolCollection->get();
     }
 
     /**
@@ -55,7 +91,7 @@ class ConfigTest extends KernelTestCase
     public function testLoadFixturesFilesWithCustomProvider(): void
     {
         // Load default Data Fixtures.
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
@@ -77,7 +113,7 @@ class ConfigTest extends KernelTestCase
         );
 
         // Load Data Fixtures with custom loader defined in configuration.
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
         ]);
 
@@ -100,13 +136,11 @@ class ConfigTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
         $user1Salt = $user1->getSalt();
@@ -114,10 +148,10 @@ class ConfigTest extends KernelTestCase
         sleep(2);
 
         // Reload the fixtures.
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         //The salt are not the same because cache were not used
         $this->assertNotSame($user1Salt, $user1->getSalt());
@@ -135,25 +169,23 @@ class ConfigTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
         $user1Salt = $user1->getSalt();
 
-        $dependentFixtureFilePath = $this->getContainer()->get('kernel')->locateResource(
+        $dependentFixtureFilePath = static::$kernel->locateResource(
             '@AcmeBundle/DataFixtures/ORM/LoadUserData.php'
         );
 
         $dependentFixtureFilemtime = filemtime($dependentFixtureFilePath);
 
-        $databaseFilePath = $this->getContainer()->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
+        $databaseFilePath = $this->containerTest->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
 
         if (!is_file($databaseFilePath)) {
             $this->markTestSkipped($databaseFilePath.' is not a file.');
@@ -164,7 +196,7 @@ class ConfigTest extends KernelTestCase
         sleep(2);
 
         // Reload the fixtures.
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // The mtime of the file has not changed.
         $this->assertSame(
@@ -180,7 +212,7 @@ class ConfigTest extends KernelTestCase
             'File modification time of the backup has been updated.'
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Check that random data has not been changed, to ensure that backup was created and loaded successfully.
         $this->assertSame($user1Salt, $user1->getSalt());
@@ -190,7 +222,7 @@ class ConfigTest extends KernelTestCase
         // Update the filemtime of the fixture file used as a dependency.
         touch($dependentFixtureFilePath);
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // The mtime of the fixture file has been updated.
         $this->assertGreaterThan(
@@ -206,7 +238,7 @@ class ConfigTest extends KernelTestCase
             'File modification time of the backup has not been updated.'
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Check that random data has been changed, to ensure that backup was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());

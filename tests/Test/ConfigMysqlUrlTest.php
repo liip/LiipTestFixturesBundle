@@ -29,7 +29,6 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
 class ConfigMysqlUrlTest extends ConfigMysqlTest

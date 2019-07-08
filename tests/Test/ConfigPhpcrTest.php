@@ -14,12 +14,16 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Test PHPCR.
@@ -28,12 +32,28 @@ use Symfony\Component\Console\Tester\CommandTester;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class ConfigPhpcrTest extends KernelTestCase
+class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
 {
-    use FixturesTrait;
+    use SymfonyTestContainer;
+
+    /**
+     * @var EntityManager
+     * @inject doctrine
+     */
+    private $entityManager;
+
+    /**
+     * @var DatabaseToolCollection
+     * @inject liip_test_fixtures.services.database_tool_collection
+     */
+    private $databaseToolCollection;
+
+    /**
+     * @var AbstractDatabaseTool
+     */
+    private $databaseTool;
 
     protected static function getKernelClass(): string
     {
@@ -46,10 +66,15 @@ class ConfigPhpcrTest extends KernelTestCase
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
         }
 
+        parent::setUp();
+
+        $this->assertInstanceOf(DatabaseToolCollection::class, $this->databaseToolCollection);
+
+        $this->databaseTool = $this->databaseToolCollection->get();
+
         // https://github.com/liip/LiipTestFixturesBundle/blob/master/doc/database.md#non-sqlite
-        $em = $this->getContainer()->get('doctrine')->getManager();
         if (!isset($metadatas)) {
-            $metadatas = $em->getMetadataFactory()->getAllMetadata();
+            $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
         }
         $schemaTool = new SchemaTool($em);
         $schemaTool->dropDatabase();
@@ -62,7 +87,7 @@ class ConfigPhpcrTest extends KernelTestCase
 
     public function testLoadFixturesPhPCr(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
         ], false, null, 'doctrine_phpcr');
 
@@ -84,7 +109,7 @@ class ConfigPhpcrTest extends KernelTestCase
      */
     private function initRepository(): void
     {
-        $kernel = $this->getContainer()->get('kernel');
+        $kernel = static::$kernel;
 
         $application = new Application($kernel);
 

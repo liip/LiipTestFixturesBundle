@@ -39,7 +39,7 @@ class ExampleFunctionalTest extends WebTestCase
         // If you need a client, you must create it before loading fixtures because
         // creating the client boots the kernel, which is used by loadFixtures
         $client = $this->createClient();
-        $this->loadFixtures(['Liip\FooBundle\Tests\Fixtures\LoadUserData']);
+        $this->databaseTool->loadFixtures(['Liip\FooBundle\Tests\Fixtures\LoadUserData']);
 
         $crawler = $client->request('GET', '/users/foo');
         

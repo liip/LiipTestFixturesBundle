@@ -15,9 +15,13 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
@@ -39,13 +43,38 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class ConfigMysqlTest extends KernelTestCase
+class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
 {
-    use FixturesTrait;
+    use SymfonyTestContainer;
+
+    /**
+     * @var EntityManager
+     * @inject doctrine
+     */
+    protected $entityManager;
+
+    /**
+     * @var DatabaseToolCollection
+     * @inject liip_test_fixtures.services.database_tool_collection
+     */
+    private $databaseToolCollection;
+
+    /**
+     * @var AbstractDatabaseTool
+     */
+    protected $databaseTool;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertInstanceOf(DatabaseToolCollection::class, $this->databaseToolCollection);
+
+        $this->databaseTool = $this->databaseToolCollection->get();
+    }
 
     protected static function getKernelClass(): string
     {
@@ -59,7 +88,7 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadEmptyFixtures(): void
     {
-        $fixtures = $this->loadFixtures([]);
+        $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -72,7 +101,7 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixtures(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -96,11 +125,8 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertTrue($user1->getEnabled());
 
         // Load data from database
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
         /** @var \Liip\Acme\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipAcme:User')
+        $user = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -120,20 +146,17 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testAppendFixtures(): void
     {
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $this->loadFixtures(
+        $this->databaseTool->loadFixtures(
             ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
         );
 
         // Load data from database
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that there are 3 users.
@@ -143,7 +166,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var \Liip\Acme\Tests\App\Entity\User $user */
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -160,7 +183,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var \Liip\Acme\Tests\App\Entity\User $user */
-        $user3 = $em->getRepository('LiipAcme:User')
+        $user3 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 3,
             ]);
@@ -187,7 +210,7 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -196,23 +219,20 @@ class ConfigMysqlTest extends KernelTestCase
             $fixtures
         );
 
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
         // Check that there are 2 users.
         $this->assertSame(
             2,
-            count($em->getRepository('LiipAcme:User')
+            count($this->entityManager->getRepository('LiipAcme:User')
                 ->findAll())
         );
 
-        $this->setExcludedDoctrineTables(['liip_user']);
-        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
+        $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
+        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
         // The exclusion from purge worked, the user table is still alive and well.
         $this->assertSame(
             2,
-            count($em->getRepository('LiipAcme:User')
+            count($this->entityManager->getRepository('LiipAcme:User')
                 ->findAll())
         );
     }
@@ -227,7 +247,7 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndPurge(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -236,10 +256,7 @@ class ConfigMysqlTest extends KernelTestCase
             $fixtures
         );
 
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that there are 2 users.
@@ -248,10 +265,10 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_DELETE);
+        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_DELETE);
 
         // The purge worked: there is no user.
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         $this->assertCount(
@@ -260,11 +277,11 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         // Reload fixtures
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that there are 2 users.
@@ -273,12 +290,12 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
+        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
         // The purge worked: there is no user.
         $this->assertSame(
             0,
-            count($em->getRepository('LiipAcme:User')
+            count($this->entityManager->getRepository('LiipAcme:User')
                 ->findAll())
         );
     }
@@ -290,7 +307,7 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
@@ -302,10 +319,7 @@ class ConfigMysqlTest extends KernelTestCase
             $fixtures
         );
 
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         $this->assertSame(
@@ -314,16 +328,18 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var \Liip\Acme\Tests\App\Entity\User $user */
-        $user = $em->getRepository('LiipAcme:User')
+        $user = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
+
+        $this->assertNotNull($user);
 
         $this->assertTrue(
             $user->getEnabled()
         );
 
-        $user = $em->getRepository('LiipAcme:User')
+        $user = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 10,
             ]);

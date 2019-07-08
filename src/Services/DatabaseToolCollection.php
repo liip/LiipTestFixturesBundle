@@ -43,7 +43,7 @@ final class DatabaseToolCollection
         $this->items[$databaseTool->getType()][$databaseTool->getDriverName()] = $databaseTool;
     }
 
-    public function get($omName = null, $registryName = 'doctrine', int $purgeMode = null, KernelTestCase $testCase = null): AbstractDatabaseTool
+    public function get($omName = null, $registryName = 'doctrine', int $purgeMode = null, ?KernelTestCase $testCase = null): AbstractDatabaseTool
     {
         /** @var ManagerRegistry $registry */
         $registry = $this->container->get($registryName);
@@ -56,7 +56,9 @@ final class DatabaseToolCollection
         $databaseTool->setRegistry($registry);
         $databaseTool->setObjectManagerName($omName);
         $databaseTool->setPurgeMode($purgeMode);
-        $databaseTool->setTestCase($testCase);
+        if (null !== $testCase) {
+            $databaseTool->setTestCase($testCase);
+        }
 
         $databaseTool->setDatabaseCacheEnabled($this->isCacheEnabled());
 

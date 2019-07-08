@@ -30,7 +30,6 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
 class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
