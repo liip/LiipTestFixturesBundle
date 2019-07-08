@@ -221,10 +221,7 @@ class WebTestCaseTest extends WebTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
+        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
@@ -265,11 +262,11 @@ class WebTestCaseTest extends WebTestCase
 
     /**
      * Load nonexistent resource.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testLoadNonexistentFixturesFiles(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/nonexistent.yml',
         ]);
@@ -286,10 +283,7 @@ class WebTestCaseTest extends WebTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ], true, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
+        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
@@ -315,10 +309,7 @@ class WebTestCaseTest extends WebTestCase
             ),
         ]);
 
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
+        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
@@ -329,7 +320,7 @@ class WebTestCaseTest extends WebTestCase
         /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
         $user1 = $fixtures['id1'];
 
-        $this->assertInternalType('string', $user1->getUsername());
+        $this->assertIsString($user1->getUsername());
         $this->assertTrue($user1->getEnabled());
 
         $em = $this->getContainer()
@@ -363,10 +354,7 @@ class WebTestCaseTest extends WebTestCase
             __DIR__.'/../App/DataFixtures/ORM/user.yml',
         ]);
 
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
+        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
@@ -388,12 +376,13 @@ class WebTestCaseTest extends WebTestCase
 
     /**
      * Load nonexistent file with full path.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testLoadNonexistentFixturesFilesPaths(): void
     {
         $path = ['/nonexistent.yml'];
+
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->loadFixtureFiles($path);
     }
 }

@@ -53,10 +53,7 @@ class WebTestCaseConfigTest extends WebTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
+        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
