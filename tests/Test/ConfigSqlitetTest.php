@@ -17,13 +17,13 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * @IgnoreAnnotation("depends")
  * @IgnoreAnnotation("expectedException")
  */
-class WebTestCaseTest extends WebTestCase
+class ConfigSqlitetTest extends KernelTestCase
 {
     use FixturesTrait;
 

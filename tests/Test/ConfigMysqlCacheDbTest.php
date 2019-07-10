@@ -34,7 +34,7 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class WebTestCaseConfigMysqlCacheDbTest extends WebTestCaseConfigMysqlTest
+class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
     protected static function getKernelClass(): string
     {

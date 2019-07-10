@@ -17,7 +17,7 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Test MySQL database.
@@ -37,7 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class WebTestCaseConfigMysqlTest extends WebTestCase
+class ConfigMysqlTest extends KernelTestCase
 {
     use FixturesTrait;
 
