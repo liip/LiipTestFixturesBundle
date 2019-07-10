@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,9 +57,9 @@ abstract class AbstractDatabaseTool
     protected $purgeMode;
 
     /**
-     * @var WebTestCase
+     * @var KernelTestCase
      */
-    protected $webTestCase;
+    protected $testCase;
 
     /**
      * @var bool
@@ -101,9 +101,9 @@ abstract class AbstractDatabaseTool
         $this->purgeMode = $purgeMode;
     }
 
-    public function setWebTestCase(WebTestCase $webTestCase): void
+    public function setTestCase(KernelTestCase $testCase): void
     {
-        $this->webTestCase = $webTestCase;
+        $this->testCase = $testCase;
     }
 
     abstract public function getType(): string;
