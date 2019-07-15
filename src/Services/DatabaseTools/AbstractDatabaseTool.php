@@ -25,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class AbstractDatabaseTool
 {
+    const KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME = 'liip_test_fixtures.keep_database_and_schema';
+
     protected $container;
 
     protected $fixturesLoaderFactory;
@@ -199,5 +201,11 @@ abstract class AbstractDatabaseTool
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
     {
         $this->excludedDoctrineTables = $excludedDoctrineTables;
+    }
+
+    protected function getKeepDatabaseAndSchemaParameter()
+    {
+        return $this->container->hasParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME)
+            && true === $this->container->getParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME);
     }
 }
