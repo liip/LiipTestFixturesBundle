@@ -52,7 +52,7 @@ abstract class AbstractDatabaseTool
     protected $connection;
 
     /**
-     * @var string
+     * @var int
      */
     protected $purgeMode;
 
@@ -96,7 +96,7 @@ abstract class AbstractDatabaseTool
         $this->connection = $this->registry->getConnection($omName);
     }
 
-    public function setPurgeMode(string $purgeMode = null): void
+    public function setPurgeMode(int $purgeMode = null): void
     {
         $this->purgeMode = $purgeMode;
     }
