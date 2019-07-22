@@ -145,7 +145,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
+            $this->om->getConnection()->executeUpdate('SET FOREIGN_KEY_CHECKS = 0;');
             $executor->purge();
+            $this->om->getConnection()->executeUpdate('SET FOREIGN_KEY_CHECKS = 1;');
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
