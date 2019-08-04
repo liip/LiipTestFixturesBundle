@@ -77,17 +77,11 @@ class ORMDatabaseTool extends AbstractDatabaseTool
 
     protected function cleanDatabase(): void
     {
-        $isMysql = ($this->connection->getDatabasePlatform() instanceof MySqlPlatform);
-
-        if ($isMysql) {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
-        }
+        $this->disableForeignKeyChecksIfApplicable();
 
         $this->loadFixtures([]);
 
-        if ($isMysql) {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
-        }
+        $this->enableForeignKeyChecksIfApplicable();
     }
 
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
@@ -145,9 +139,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
-            $this->om->getConnection()->executeUpdate('SET FOREIGN_KEY_CHECKS = 0;');
+            $this->disableForeignKeyChecksIfApplicable();
             $executor->purge();
-            $this->om->getConnection()->executeUpdate('SET FOREIGN_KEY_CHECKS = 1;');
+            $this->enableForeignKeyChecksIfApplicable();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
@@ -160,5 +154,28 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         }
 
         return $executor;
+    }
+
+    private function disableForeignKeyChecksIfApplicable(): void
+    {
+        if (!$this->isMysql()) {
+            return;
+        }
+
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+    }
+
+    private function enableForeignKeyChecksIfApplicable(): void
+    {
+        if (!$this->isMysql()) {
+            return;
+        }
+
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+    }
+
+    private function isMysql(): bool
+    {
+        return $this->connection->getDatabasePlatform() instanceof MySqlPlatform;
     }
 }
