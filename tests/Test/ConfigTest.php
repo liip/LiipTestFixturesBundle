@@ -35,10 +35,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  *
- * Avoid conflict with PHPUnit annotation when reading QueryCount
- * annotation:
- *
- * @IgnoreAnnotation("expectedException")
  */
 class ConfigTest extends KernelTestCase
 {

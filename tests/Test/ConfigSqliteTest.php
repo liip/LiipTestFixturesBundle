@@ -27,7 +27,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * @IgnoreAnnotation("depends")
- * @IgnoreAnnotation("expectedException")
  */
 class ConfigSqliteTest extends KernelTestCase
 {
