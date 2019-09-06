@@ -33,7 +33,7 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class WebTestCaseConfigPgsqlTest extends WebTestCaseConfigMysqlTest
+class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
 {
     use FixturesTrait;
 

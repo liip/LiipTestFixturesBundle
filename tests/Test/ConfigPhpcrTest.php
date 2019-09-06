@@ -18,7 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -31,7 +31,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class WebTestCaseConfigPhpcrTest extends WebTestCase
+class ConfigPhpcrTest extends KernelTestCase
 {
     use FixturesTrait;
 

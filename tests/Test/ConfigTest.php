@@ -17,7 +17,7 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -34,7 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  *
  * @IgnoreAnnotation("expectedException")
  */
-class WebTestCaseConfigTest extends WebTestCase
+class ConfigTest extends KernelTestCase
 {
     use FixturesTrait;
 

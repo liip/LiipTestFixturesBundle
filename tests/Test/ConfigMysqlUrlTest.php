@@ -32,7 +32,7 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class WebTestCaseConfigMysqlUrlTest extends WebTestCaseConfigMysqlTest
+class ConfigMysqlUrlTest extends ConfigMysqlTest
 {
     protected static function getKernelClass(): string
     {

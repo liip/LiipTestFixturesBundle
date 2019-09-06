@@ -8,7 +8,7 @@ DoctrineFixturesBundle installed and configured first:
 In case tests require database access make sure that the database is created and
 proxies are generated.  For tests that rely on specific database contents,
 write fixture classes and call `loadFixtures()` method from the bundled
-`Test\WebTestCase` class. This will replace the database configured in
+`Test\FixturesTrait` class. This will replace the database configured in
 `config_test.yml` with the specified fixtures. Please note that `loadFixtures()`
 will delete the contents from the database before loading the fixtures. That's
 why you should use a designated database for tests.
@@ -200,7 +200,7 @@ Tips for Fixture Loading Tests
 
 ### Loading Fixtures Using Alice
 If you would like to setup your fixtures with yml files using [Alice](https://github.com/nelmio/alice),
-[`Liip\TestFixturesBundle\Test\WebTestCase`](Test/WebTestCase.php) has a helper function `loadFixtureFiles`
+[`Liip\TestFixturesBundle\Test\FixturesTrait`](../src/Test/FixturesTrait.php) has a helper function `loadFixtureFiles`
 which takes an array of resources, or paths to yml files, and returns an array of objects.
 This method uses the [Theofidry AliceDataFixtures loader](https://github.com/theofidry/AliceDataFixtures#doctrine-orm)
 rather than the FunctionalTestBundle's load methods.
