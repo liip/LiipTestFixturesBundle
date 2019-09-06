@@ -76,12 +76,6 @@ trait FixturesTrait
      * Depends on the doctrine data-fixtures library being available in the
      * class path.
      *
-     * @param array  $classNames   List of fully qualified class names of fixtures to load
-     * @param bool   $append
-     * @param string $omName       The name of object manager to use
-     * @param string $registryName The service id of manager registry to use
-     * @param int    $purgeMode    Sets the ORM purge mode
-     *
      * @return null|AbstractExecutor
      */
     protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
@@ -95,18 +89,7 @@ trait FixturesTrait
         return $dbTool->loadFixtures($classNames, $append);
     }
 
-    /**
-     * @param array  $paths        Either symfony resource locators (@ BundleName/etc) or actual file paths
-     * @param bool   $append
-     * @param null   $omName
-     * @param string $registryName
-     * @param int    $purgeMode
-     *
-     * @throws \BadMethodCallException
-     *
-     * @return array
-     */
-    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null)
+    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
     {
         /** @var ContainerInterface $container */
         $container = $this->getContainer();
