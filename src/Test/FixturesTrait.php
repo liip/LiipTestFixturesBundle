@@ -87,7 +87,7 @@ trait FixturesTrait
         return $dbTool->loadFixtures($classNames, $append);
     }
 
-    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null)
+    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
     {
         /** @var ContainerInterface $container */
         $container = $this->getContainer();
