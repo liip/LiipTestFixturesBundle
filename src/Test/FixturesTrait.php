@@ -75,8 +75,6 @@ trait FixturesTrait
      *
      * Depends on the doctrine data-fixtures library being available in the
      * class path.
-     *
-     * @return null|AbstractExecutor
      */
     protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
     {
