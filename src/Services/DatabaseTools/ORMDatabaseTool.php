@@ -171,7 +171,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
-        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
     }
 
     private function isMysql(): bool
