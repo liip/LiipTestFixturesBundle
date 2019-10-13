@@ -30,6 +30,11 @@ class ORMDatabaseTool extends AbstractDatabaseTool
      */
     protected $om;
 
+    /**
+     * @var bool
+     */
+    private $shouldEnableForeignKeyChecks = false;
+
     public function getType(): string
     {
         return 'ORM';
@@ -162,7 +167,13 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
+        $currentValue = $this->connection->fetchColumn('SELECT @@SESSION.foreign_key_checks');
+        if ($currentValue === '0') {
+            return;
+        }
+
         $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $this->shouldEnableForeignKeyChecks = true;
     }
 
     private function enableForeignKeyChecksIfApplicable(): void
@@ -171,7 +182,12 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
+        if (!$this->shouldEnableForeignKeyChecks) {
+            return;
+        }
+
         $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
+        $this->shouldEnableForeignKeyChecks = false;
     }
 
     private function isMysql(): bool
