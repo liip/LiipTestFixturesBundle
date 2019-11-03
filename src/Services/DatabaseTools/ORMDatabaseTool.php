@@ -98,7 +98,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             $cacheDriver->deleteAll();
         }
 
-        $this->createDatabaseIfNotExists();
+        if (false === $this->getKeepDatabaseAndSchemaParameter()) {
+            $this->createDatabaseIfNotExists();
+        }
 
         $backupService = $this->getBackupService();
 
