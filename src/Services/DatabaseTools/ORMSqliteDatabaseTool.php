@@ -53,7 +53,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 if (method_exists($this->testCase, 'preFixtureBackupRestore')) {
                     $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 }
