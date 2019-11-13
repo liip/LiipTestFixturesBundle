@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ResettableContainerInterface;
  */
 trait FixturesTrait
 {
-    protected $containers = [];
+    protected $containers;
 
     /**
      * @var array
