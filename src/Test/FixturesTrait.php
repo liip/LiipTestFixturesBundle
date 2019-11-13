@@ -26,9 +26,7 @@ use Symfony\Component\DependencyInjection\ResettableContainerInterface;
  */
 trait FixturesTrait
 {
-    protected $environment = 'test';
-
-    protected $containers;
+    protected $containers = [];
 
     /**
      * @var array
@@ -41,23 +39,24 @@ trait FixturesTrait
      */
     protected function getContainer(): ContainerInterface
     {
-        $cacheKey = $this->environment;
-        if (empty($this->containers[$cacheKey])) {
+        $environment = $this->determineEnvironment();
+
+        if (empty($this->containers[$environment])) {
             $options = [
-                'environment' => $this->environment,
+                'environment' => $environment,
             ];
             $kernel = $this->createKernel($options);
             $kernel->boot();
 
             $container = $kernel->getContainer();
             if ($container->has('test.service_container')) {
-                $this->containers[$cacheKey] = $container->get('test.service_container');
+                $this->containers[$environment] = $container->get('test.service_container');
             } else {
-                $this->containers[$cacheKey] = $container;
+                $this->containers[$environment] = $container;
             }
         }
 
-        return $this->containers[$cacheKey];
+        return $this->containers[$environment];
     }
 
     /**
@@ -158,5 +157,21 @@ trait FixturesTrait
         $this->containers = null;
 
         parent::tearDown();
+    }
+
+    /**
+     * @see KernelTestCase::createKernel()
+     */
+    private function determineEnvironment()
+    {
+        if (isset($_ENV['APP_ENV'])) {
+            return $_ENV['APP_ENV'];
+        }
+
+        if (isset($_SERVER['APP_ENV'])) {
+            return $_SERVER['APP_ENV'];
+        }
+
+        return 'test';
     }
 }
