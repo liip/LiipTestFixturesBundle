@@ -7,8 +7,8 @@ DoctrineFixturesBundle installed and configured first:
 
 In case tests require database access make sure that the database is created and
 proxies are generated.  For tests that rely on specific database contents,
-write fixture classes and call `loadFixtures()` method from the bundled
-`Test\FixturesTrait` class. This will replace the database configured in
+write fixture classes and call `loadFixtures()` method.
+This will replace the database configured in
 `config_test.yml` with the specified fixtures. Please note that `loadFixtures()`
 will delete the contents from the database before loading the fixtures. That's
 why you should use a designated database for tests.
@@ -83,12 +83,31 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-    class MyControllerTest extends WebTestCase
+    class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
     {
-        use FixturesTrait;
+        use SymfonyTestContainer;
+
+        /**
+         * @var \Liip\TestFixturesBundle\Services\DatabaseToolCollection
+         * @inject liip_test_fixtures.services.database_tool_collection
+         */
+        private $databaseToolCollection;
+
+        /**
+         * @var \Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool
+         */
+        protected $databaseTool;
+
+        public function setUp(): void
+        {
+            parent::setUp();
+
+            $this->databaseTool = $this->databaseToolCollection->get();
+        }
 
         public function testIndex()
         {
@@ -114,13 +133,12 @@ Tips for Fixture Loading Tests
     `loadFixtures` without any argument.
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
-
         public function testIndex()
         {
             // If you need a client, you must create it before loading fixtures because
@@ -139,13 +157,12 @@ Tips for Fixture Loading Tests
     to the `setExcludedDoctrineTables` method before loading the fixtures.
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
-
         public function testIndex()
         {
             $this->setExcludedDoctrineTables(array('my_tablename_not_to_be_purged'));
@@ -161,13 +178,12 @@ Tips for Fixture Loading Tests
  to consider use the second parameter $append with value true.
 
     ```php
-        use Liip\TestFixturesBundle\Test\FixturesTrait;    
         use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+        use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+        use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
         class MyControllerTest extends WebTestCase
         {
-            use FixturesTrait;
-
             public function testIndex()
             {
                 $this->databaseTool->loadFixtures(array(
@@ -182,13 +198,12 @@ Tips for Fixture Loading Tests
     specify the service id of the registry manager:
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
-
         public function testIndex()
         {
             $fixtures = array(
@@ -205,7 +220,7 @@ Tips for Fixture Loading Tests
 
 ### Loading Fixtures Using Alice
 If you would like to setup your fixtures with yml files using [Alice](https://github.com/nelmio/alice),
-[`Liip\TestFixturesBundle\Test\FixturesTrait`](../src/Test/FixturesTrait.php) has a helper function `loadFixtureFiles`
+there is an helper function `loadFixtureFiles`
 which takes an array of resources, or paths to yml files, and returns an array of objects.
 This method uses the [Theofidry AliceDataFixtures loader](https://github.com/theofidry/AliceDataFixtures#doctrine-orm)
 rather than the FunctionalTestBundle's load methods.
@@ -270,13 +285,10 @@ automatically, you'll need to do that yourself. For example, you could write a
 
 ```php 
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\TestFixturesBundle\Test\FixturesTrait;    
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccountControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function setUp()
     {
         $em = $this->getContainer()->get('doctrine')->getManager();

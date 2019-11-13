@@ -25,11 +25,30 @@ declare(strict_types=1);
 namespace Liip\FooBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
+use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-class ExampleFunctionalTest extends WebTestCase
+class ExampleFunctionalTest extends WebTestCase implements ServiceContainerTestCase
 {
-    use FixturesTrait;
+    use SymfonyTestContainer;
+
+    /**
+     * @var \Liip\TestFixturesBundle\Services\DatabaseToolCollection
+     * @inject liip_test_fixtures.services.database_tool_collection
+     */
+    private $databaseToolCollection;
+
+    /**
+     * @var \Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool
+     */
+    protected $databaseTool;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->databaseTool = $this->databaseToolCollection->get();
+    }
 
     /**
      * Example using LiipFunctionalBundle the fixture loader.
