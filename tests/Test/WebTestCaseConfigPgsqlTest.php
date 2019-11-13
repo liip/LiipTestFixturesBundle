@@ -34,8 +34,6 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
  */
 class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
 {
-    use FixturesTrait;
-
     protected static function getKernelClass(): string
     {
         return AppConfigPgsqlKernel::class;
