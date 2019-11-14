@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class AbstractDatabaseTool
 {
     const KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME = 'liip_test_fixtures.keep_database_and_schema';
+    const CACHE_METADATA_PARAMETER_NAME = 'liip_test_fixtures.cache_metadata';
 
     protected $container;
 
@@ -186,6 +187,10 @@ abstract class AbstractDatabaseTool
 
     protected function getMetadatas(): array
     {
+        if(!$this->getCacheMetadataParameter()) {
+            return $this->om->getMetadataFactory()->getAllMetadata();
+        }
+
         $key = $this->getDriverName().$this->getType().$this->omName;
 
         if (!isset(self::$cachedMetadatas[$key])) {
@@ -207,5 +212,11 @@ abstract class AbstractDatabaseTool
     {
         return $this->container->hasParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME)
             && true === $this->container->getParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME);
+    }
+
+    protected function getCacheMetadataParameter()
+    {
+        return $this->container->hasParameter(self::CACHE_METADATA_PARAMETER_NAME)
+            && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);
     }
 }
