@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -34,7 +34,7 @@ use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class ConfigMysqlCacheDbTest extends ConfigMysqlTest implements ServiceContainerTestCase
+class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
     protected static function getKernelClass(): string
     {
@@ -60,7 +60,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest implements ServiceContainer
             $users
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,

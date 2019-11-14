@@ -16,11 +16,11 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
 use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
@@ -48,24 +48,13 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
  */
 class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
 {
-    use SymfonyTestContainer;
+    use FixturesTrait;
 
     /**
      * @var EntityManager
      * @inject doctrine
      */
     protected $entityManager;
-
-    /**
-     * @var DatabaseToolCollection
-     * @inject liip_test_fixtures.services.database_tool_collection
-     */
-    private $databaseToolCollection;
-
-    /**
-     * @var AbstractDatabaseTool
-     */
-    protected $databaseTool;
 
     public function setUp(): void
     {
@@ -125,7 +114,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
         $this->assertTrue($user1->getEnabled());
 
         // Load data from database
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -165,7 +154,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
             $users
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -182,7 +171,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
             $user1->getEnabled()
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user3 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 3,
@@ -327,7 +316,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
             count($users)
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
