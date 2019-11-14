@@ -39,7 +39,7 @@ class ExampleFunctionalTest extends WebTestCase implements ServiceContainerTestC
     private $databaseToolCollection;
 
     /**
-     * @var \Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool
+     * @var AbstractDatabaseTool
      */
     protected $databaseTool;
 

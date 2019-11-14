@@ -83,6 +83,7 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
+    use Liip\TestFixturesBundle\Test\FixturesTrait;
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
     use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
     use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;

@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
@@ -56,15 +55,6 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     protected $entityManager;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->assertInstanceOf(DatabaseToolCollection::class, $this->databaseToolCollection);
-
-        $this->databaseTool = $this->databaseToolCollection->get();
-    }
-
     protected static function getKernelClass(): string
     {
         return AppConfigMysqlKernel::class;
@@ -77,7 +67,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testLoadEmptyFixtures(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([]);
+        $fixtures = $this->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -90,7 +80,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testLoadFixtures(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([
+        $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -102,8 +92,8 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
-            $fixtures
+            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            $repository
         );
 
         $user1 = $repository->getReference('user');
@@ -135,11 +125,11 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testAppendFixtures(): void
     {
-        $this->databaseTool->loadFixtures([
+        $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $this->databaseTool->loadFixtures(
+        $this->loadFixtures(
             ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
         );
@@ -199,7 +189,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([
+        $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -215,8 +205,8 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
                 ->findAll())
         );
 
-        $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
-        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
+        $this->setExcludedDoctrineTables(['liip_user']);
+        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
         // The exclusion from purge worked, the user table is still alive and well.
         $this->assertSame(
@@ -236,7 +226,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testLoadFixturesAndPurge(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([
+        $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -254,7 +244,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
             $users
         );
 
-        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_DELETE);
+        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_DELETE);
 
         // The purge worked: there is no user.
         $users = $this->entityManager->getRepository('LiipAcme:User')
@@ -266,7 +256,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
         );
 
         // Reload fixtures
-        $this->databaseTool->loadFixtures([
+        $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -279,7 +269,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
             $users
         );
 
-        $this->databaseTool->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
+        $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
         // The purge worked: there is no user.
         $this->assertSame(
@@ -296,7 +286,7 @@ class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
      */
     public function testLoadFixturesFiles(): void
     {
-        $fixtures = $this->databaseTool->loadAliceFixture([
+        $fixtures = $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 

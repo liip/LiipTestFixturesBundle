@@ -44,17 +44,6 @@ class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
      */
     private $entityManager;
 
-    /**
-     * @var DatabaseToolCollection
-     * @inject liip_test_fixtures.services.database_tool_collection
-     */
-    private $databaseToolCollection;
-
-    /**
-     * @var AbstractDatabaseTool
-     */
-    private $databaseTool;
-
     protected static function getKernelClass(): string
     {
         return AppConfigPhpcrKernel::class;
@@ -67,10 +56,6 @@ class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
         }
 
         parent::setUp();
-
-        $this->assertInstanceOf(DatabaseToolCollection::class, $this->databaseToolCollection);
-
-        $this->databaseTool = $this->databaseToolCollection->get();
 
         // https://github.com/liip/LiipTestFixturesBundle/blob/master/doc/database.md#non-sqlite
         if (!isset($metadatas)) {
@@ -87,7 +72,7 @@ class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
 
     public function testLoadFixturesPhPCr(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([
+        $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
         ], false, null, 'doctrine_phpcr');
 
