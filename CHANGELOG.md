@@ -2,7 +2,14 @@
 
 ## 2.0.0
 
-- Removed `FixturesTrait` TODO
+- Removed `FixturesTrait`:
+  - Replaced by zalas/phpunit-injector
+  - Enable it in `phpunit.xml.dist`:
+  ```xml
+  <listeners>
+      <listener class="Zalas\Injector\PHPUnit\TestListener\ServiceInjectorListener" />
+  </listeners>
+  ```
 
 ## 1.5.0 (TBA)
 
