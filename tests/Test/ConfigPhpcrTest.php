@@ -17,12 +17,10 @@ use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
 use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
@@ -36,7 +34,7 @@ use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
  */
 class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
 {
-    use SymfonyTestContainer;
+    use FixturesTrait;
 
     /**
      * @var EntityManager
