@@ -166,9 +166,8 @@ Tips for Fixture Loading Tests
             public function testIndex()
             {
                 $this->loadFixtures(array(
-                    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData',
-                    true
-                ));
+                    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData'
+                ), true);
                 // ...
             }
         }
