@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\App\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-
 /**
  * User.
  */
-class User implements UserInterface
+class User
 {
     // Properties which will be serialized have to be "protected"
     // @see http://stackoverflow.com/questions/9384836/symfony2-serialize-entity-object-to-session/10014802#10014802
@@ -280,7 +278,7 @@ class User implements UserInterface
     {
     }
 
-    public function isEqualTo(UserInterface $user)
+    public function isEqualTo($user)
     {
         if (!$user instanceof self) {
             return false;

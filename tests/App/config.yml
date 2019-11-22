@@ -4,16 +4,6 @@
 framework:
     secret:          secret
     test: ~
-    router:          { resource: "%kernel.root_dir%/../App/routing.yml" }
-    form:            true
-    csrf_protection: true
-    templating:      { engines: ['twig'] }
-    session:
-        # handler_id set to null will use default session handler from php.ini
-        handler_id:  ~
-        storage_id: session.storage.mock_file
-        # https://groups.google.com/forum/#!topic/symfony2/IB-CpMgo5o0
-        name: MOCKSESSID
     profiler:
         collect: false
 
@@ -45,34 +35,6 @@ doctrine:
                         type: "yml"
                         dir: "%kernel.root_dir%/../App/Resources/config/doctrine"
                         prefix: 'Liip\Acme\Tests\App\Entity'
-
-security:
-    encoders:
-        # in_memory users
-        Symfony\Component\Security\Core\User\User: plaintext
-        # User entity
-        Liip\Acme\Tests\App\Entity\User: plaintext
-    providers:
-        chain_provider:
-            chain:
-                providers: [in_memory, main]
-        in_memory:
-            memory:
-                users:
-                    foobar:
-                        password: "12341234"
-                        roles: 'ROLE_USER'
-        main:
-            entity: { class: Liip\Acme\Tests\App\Entity\User, property: id }
-    firewalls:
-        secured_area:
-            pattern:  ^/
-            anonymous: true
-            http_basic:
-                realm: "Admin Area"
-            provider: chain_provider
-    access_control:
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 services:
     _defaults:
