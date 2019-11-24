@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->booleanNode('keep_database_and_schema')->defaultFalse()->end()
+            ->booleanNode('cache_metadata')->defaultTrue()->end()
         ;
 
         return $treeBuilder;
