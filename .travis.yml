@@ -36,6 +36,8 @@ matrix:
   allow_failures:
     - php: 7.2
       env: SYMFONY_VERSION="dev-master"
+    - php: 7.2
+      env: EXTRA_PACKAGES="doctrine/phpcr-bundle:^1.3 doctrine/phpcr-odm:^1.3"
   fast_finish: true
 
 before_install:
