@@ -13,8 +13,15 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\App;
 
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
+use Liip\TestFixturesBundle\LiipTestFixturesBundle;
+use Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle;
+use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 abstract class AppKernel extends Kernel
@@ -22,16 +29,14 @@ abstract class AppKernel extends Kernel
     public function registerBundles(): array
     {
         $bundles = [
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
-            new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new \Symfony\Bundle\MonologBundle\MonologBundle(),
-            new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new \Liip\TestFixturesBundle\LiipTestFixturesBundle(),
-            new \Liip\Acme\Tests\App\AcmeBundle(),
-            new \Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle(),
-            new \Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle(),
+            new FrameworkBundle(),
+            new MonologBundle(),
+            new DoctrineBundle(),
+            new DoctrineFixturesBundle(),
+            new LiipTestFixturesBundle(),
+            new AcmeBundle(),
+            new NelmioAliceBundle(),
+            new FidryAliceDataFixturesBundle(),
         ];
 
         return $bundles;
@@ -40,12 +45,6 @@ abstract class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config.yml');
-
-        $loader->load(function (ContainerBuilder $container): void {
-            $container->loadFromExtension('framework', [
-                'assets' => null,
-            ]);
-        });
     }
 
     public function getCacheDir()
@@ -60,6 +59,6 @@ abstract class AppKernel extends Kernel
 
     protected function getBaseDir()
     {
-        return sys_get_temp_dir().'/LiipTestFixturesBundle/'.(new \ReflectionClass($this))->getShortName().'/var/';
+        return sys_get_temp_dir().'/LiipTestFixturesBundle/'.(new ReflectionClass($this))->getShortName().'/var/';
     }
 }

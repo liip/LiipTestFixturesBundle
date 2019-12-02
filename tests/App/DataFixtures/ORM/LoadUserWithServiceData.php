@@ -17,25 +17,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class LoadUserWithServiceData extends AbstractFixture implements FixtureInterface
 {
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function load(ObjectManager $manager): void
     {
-        $this->tokenStorage->setToken('id', 'value');
-
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = new User();
         $user->setId(1);
         $user->setName('foo bar');
