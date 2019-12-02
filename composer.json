@@ -27,6 +27,7 @@
         "monolog/monolog": "~1.11 | ^2.0",
         "phpunit/phpunit": "^7.5 || ^8.0",
         "symfony/monolog-bundle": "^3.2",
+        "symfony/monolog-bridge": ">=3",
         "symfony/phpunit-bridge": "^3.4 || ^4.1 || ^5.0",
         "theofidry/alice-data-fixtures": "^1.0.1"
     },
