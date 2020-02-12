@@ -74,15 +74,15 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
 
         // Define parameter only if there's a value, to avoid warning from mysqldump:
         // mysqldump: [Warning] mysqldump: Empty value for 'port' specified. Will throw an error in future versions
-        $port = isset($params['port']) ? '--port='.$params['port'] : '';
+        $port = isset($params['port']) && $params['port'] ? '--port='.$params['port'] : '';
 
         $dbUser = isset($params['user']) ? $params['user'] : '';
-        $dbPass = isset($params['password']) ? $params['password'] : '';
+        $dbPass = isset($params['password']) && $params['password'] ? '--password='.$params['password'] : '';
 
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
-        exec("MYSQL_PWD=$dbPass mysqldump --host $dbHost $port --user $dbUser --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact $dbName > {$this->getBackupFilePath()}");
+        exec("mysqldump --host $dbHost $port $dbPass --user $dbUser --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact $dbName > {$this->getBackupFilePath()}");
     }
 
     protected function updateSchemaIfNeed(EntityManager $em)
