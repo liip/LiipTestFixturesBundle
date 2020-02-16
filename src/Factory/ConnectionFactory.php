@@ -35,14 +35,6 @@ class ConnectionFactory extends BaseConnectionFactory
      */
     public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = [])
     {
-        $dbName = $this->getDbNameFromEnv($params['dbname']);
-
-        if ('pdo_sqlite' === $params['driver']) {
-            $params['path'] = str_replace('__DBNAME__', $dbName, $params['path']);
-        } else {
-            $params['dbname'] = $dbName;
-        }
-
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }
 
