@@ -15,8 +15,11 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -384,5 +387,47 @@ class ConfigSqlitetTest extends KernelTestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->loadFixtureFiles($path);
+    }
+
+    public function testLoadAll(): void
+    {
+        $this->markTestSkipped('');
+        $fixtureLoaderMock = $this->createMock(ContainerAwareLoader::class);
+        $fixtureLoaderMock->expects($this->once())
+            ->method('getFixtures')
+            ->with($this->equalTo(['myGroup']))
+            ->willReturn([new LoadUserData()]);
+        $container = $this->getContainer();
+
+        $this->markTestSkipped('This needs the services to be public, which doesn\'t work. Why?');
+        $container->set('doctrine.fixtures.loader', $fixtureLoaderMock);
+
+        // Load the fixtures with an invalid group. The database should be empty.
+        $fixtures = $this->loadAllFixtures(['myGroup']);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $repository = $fixtures->getReferenceRepository();
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            $repository
+        );
+
+
+        $em = $this->getContainer()
+            ->get('doctrine.orm.entity_manager');
+
+        $users = $em->getRepository('LiipAcme:User')
+            ->findAll();
+
+        // The two files with fixtures have been loaded, there are 4 users.
+        $this->assertSame(
+            2,
+            count($users)
+        );
     }
 }
