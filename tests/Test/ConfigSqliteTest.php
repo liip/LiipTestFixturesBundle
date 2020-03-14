@@ -20,6 +20,7 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
 }
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use InvalidArgumentException;
@@ -390,5 +391,95 @@ class ConfigSqliteTest extends KernelTestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->loadFixtureFiles($path);
+    }
+
+    public function testLoadAll(): void
+    {
+        // When this test is run with older versions for doctrine, where the FixtureGroupInterface is not yet
+        // implemented, then the test is skipped. It is also skipped for symfony versions < 4, where private services
+        // cannot be loaded in tests.
+        if (interface_exists(FixtureGroupInterface::class)) {
+            // Load the fixtures with an invalid group. The database should be empty.
+            $fixtures = $this->loadAllFixtures(['wrongGroup']);
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+                $fixtures
+            );
+
+            $repository = $fixtures->getReferenceRepository();
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+                $repository
+            );
+
+            $users = $this->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('LiipAcme:User')
+                ->findAll();
+
+            // Using a non-existing group will result in zero users
+            $this->assertSame(
+                0,
+                count($users)
+            );
+
+
+            // Load the fixtures with a valid group.
+            $fixtures = $this->loadAllFixtures(['myGroup']);
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+                $fixtures
+            );
+
+            $repository = $fixtures->getReferenceRepository();
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+                $repository
+            );
+
+            $users = $this->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('LiipAcme:User')
+                ->findAll();
+
+            // The fixture group myGroup contains 3 users
+            $this->assertSame(
+                3,
+                count($users)
+            );
+
+
+            // Load all fixtures.
+            $fixtures = $this->loadAllFixtures();
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+                $fixtures
+            );
+
+            $repository = $fixtures->getReferenceRepository();
+
+            $this->assertInstanceOf(
+                'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+                $repository
+            );
+
+            $users = $this->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('LiipAcme:User')
+                ->findAll();
+
+            // Loading all fixtures results in 12 users.
+            $this->assertSame(
+                12,
+                count($users)
+            );
+        } else {
+            $this->markTestSkipped();
+        }
     }
 }

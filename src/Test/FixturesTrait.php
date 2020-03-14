@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Test;
 
+use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -58,6 +59,25 @@ trait FixturesTrait
         $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
 
         return $dbTool->loadAliceFixture($paths, $append);
+    }
+
+    /**
+     * This loads all the fixtures defined in the project, including ordering
+     * them, e.g. by the DependentFixtureInterface. The call to this method
+     * does the same as running the console command doctrine:fixtures:load,
+     * including the use of the group parameter.
+     */
+    protected function loadAllFixtures(array $groups = []): ?AbstractExecutor
+    {
+        /** @var SymfonyFixturesLoader $loader */
+        $loader = $this->getContainer()->get('doctrine.fixtures.loader');
+        $fixtures = $loader->getFixtures($groups);
+        $fixtureClasses = [];
+        foreach ($fixtures as $fixture) {
+            $fixtureClasses[] = get_class($fixture);
+        }
+
+        return $this->loadFixtures($fixtureClasses);
     }
 
     /**
