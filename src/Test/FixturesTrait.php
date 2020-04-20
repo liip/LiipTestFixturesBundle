@@ -45,8 +45,7 @@ trait FixturesTrait
             $options = [
                 'environment' => $environment,
             ];
-            $kernel = $this->createKernel($options);
-            $kernel->boot();
+            $kernel = $this->bootKernel($options);
 
             $container = $kernel->getContainer();
             if ($container->has('test.service_container')) {
