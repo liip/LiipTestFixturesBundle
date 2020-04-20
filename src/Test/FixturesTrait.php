@@ -45,7 +45,10 @@ trait FixturesTrait
             $options = [
                 'environment' => $environment,
             ];
-            $kernel = $this->bootKernel($options);
+            $kernel = static::$kernel;
+            if (null === $kernel) {
+                $kernel = $this->bootKernel($options);
+            }
 
             $this->containers[$environment] = static::$container;
         }
