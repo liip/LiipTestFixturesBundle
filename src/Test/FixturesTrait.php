@@ -47,12 +47,7 @@ trait FixturesTrait
             ];
             $kernel = $this->bootKernel($options);
 
-            $container = $kernel->getContainer();
-            if ($container->has('test.service_container')) {
-                $this->containers[$environment] = $container->get('test.service_container');
-            } else {
-                $this->containers[$environment] = $container;
-            }
+            $this->containers[$environment] = static::$container;
         }
 
         return $this->containers[$environment];
