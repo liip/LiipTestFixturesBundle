@@ -47,13 +47,16 @@ trait FixturesTrait
             ];
 
             // Check that the kernel has not been booted separately (eg. with static::createClient())
-            $kernel = static::$kernel;
-            if (null === $kernel) {
-                $kernel = $this->bootKernel($options);
+            if (null === static::$kernel) {
+                $this->bootKernel($options);
             }
 
-            // bootKernel() has logic to ensure static::$container is the correct container
-            $this->containers[$environment] = static::$container;
+            $container = static::$kernel->getContainer();
+            if ($container->has('test.service_container')) {
+                $this->containers[$environment] = $container->get('test.service_container');
+            } else {
+                $this->containers[$environment] = $container;
+            }
         }
 
         return $this->containers[$environment];
