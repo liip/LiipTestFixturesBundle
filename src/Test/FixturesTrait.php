@@ -33,6 +33,9 @@ trait FixturesTrait
      */
     private $excludedDoctrineTables = [];
 
+    /** @var bool */
+    private $kernelBooted = false;
+
     /**
      * Get an instance of the dependency injection container.
      * (this creates a kernel *without* parameters).
@@ -46,8 +49,7 @@ trait FixturesTrait
                 'environment' => $environment,
             ];
 
-            // Check that the kernel has not been booted separately (eg. with static::createClient())
-            if (null === static::$kernel) {
+            if (false === $this->kernelBooted) {
                 $this->bootKernel($options);
             }
 
@@ -158,6 +160,7 @@ trait FixturesTrait
         }
 
         $this->containers = null;
+        $this->kernelBooted = false;
 
         parent::tearDown();
     }
