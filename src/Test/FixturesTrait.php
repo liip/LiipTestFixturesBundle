@@ -45,10 +45,13 @@ trait FixturesTrait
             $options = [
                 'environment' => $environment,
             ];
-            $kernel = $this->createKernel($options);
-            $kernel->boot();
 
-            $container = $kernel->getContainer();
+            // Check that the kernel has not been booted separately (eg. with static::createClient())
+            if (null === static::$kernel || null === static::$kernel->getContainer()) {
+                $this->bootKernel($options);
+            }
+
+            $container = static::$kernel->getContainer();
             if ($container->has('test.service_container')) {
                 $this->containers[$environment] = $container->get('test.service_container');
             } else {

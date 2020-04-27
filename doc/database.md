@@ -92,6 +92,10 @@ Tips for Fixture Loading Tests
 
         public function testIndex()
         {
+            // If you need a client, you must create it before loading fixtures because
+            // creating the client boots the kernel, which is used by loadFixtures
+            $client = $this->createClient();
+    
             // add all your fixtures classes that implement
             // Doctrine\Common\DataFixtures\FixtureInterface
             $this->loadFixtures(array(
@@ -100,7 +104,6 @@ Tips for Fixture Loading Tests
             ));
 
             // you can now run your functional tests with a populated database
-            $client = $this->createClient();
             // ...
         }
     }
@@ -120,10 +123,12 @@ Tips for Fixture Loading Tests
 
         public function testIndex()
         {
+            // If you need a client, you must create it before loading fixtures because
+            // creating the client boots the kernel, which is used by loadFixtures
+            $client = $this->createClient();
             $this->loadFixtures();
 
             // you can now run your functional tests with a populated database
-            $client = $this->createClient();
             // ...
         }
     }
@@ -190,9 +195,10 @@ Tips for Fixture Loading Tests
                 'Me\MyBundle\DataFixtures\MongoDB\LoadData'
             );
 
-            $this->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
-
+            // If you need a client, you must create it before loading fixtures because
+            // creating the client boots the kernel, which is used by loadFixtures
             $client = $this->createClient();
+            $this->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
         }
     }
     ```
