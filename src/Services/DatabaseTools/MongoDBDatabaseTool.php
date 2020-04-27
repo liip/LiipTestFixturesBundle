@@ -63,9 +63,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
             $backupService->init($this->getMetadatas(), $classNames);
 
             if ($backupService->isBackupActual()) {
-                if (null !== $this->connection) {
-                    $this->connection->close();
-                }
 
                 $this->om->flush();
                 $this->om->clear();

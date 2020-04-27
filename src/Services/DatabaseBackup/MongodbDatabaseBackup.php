@@ -13,6 +13,7 @@ namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use MongoDB\Driver\Server;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -57,10 +58,10 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
         if (!self::$databases) {
             self::$databases = [];
             foreach ($dm->getDocumentDatabases() as $db) {
-                $hosts = $db->getConnection()->getMongoClient()->getHosts();
+                $hosts = $db->getManager()->getServers();
 
                 foreach ($hosts as $host) {
-                    self::$databases[$db->getName()] = $host;
+                    self::$databases[$db->getDatabaseName()] = $host;
                 }
             }
         }
@@ -74,10 +75,13 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
         $dm = $executor->getReferenceRepository()->getManager();
 
         foreach ($this->getDatabases($dm) as $dbName => $server) {
-            $dbHost = $server['host'];
-            $dbPort = $server['port'];
+            /**
+             * @var $server Server
+             */
+            $dbHost = $server->getHost();
+            $dbPort = $server->getPort();
 
-            exec("mongodump --quiet --db $dbName --host $dbHost --port $dbPort --out {$this->getBackupFilePath()}");
+            exec("mongodump --quiet --forceTableScan --db $dbName --host $dbHost --port $dbPort --out {$this->getBackupFilePath()}");
         }
 
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
@@ -88,13 +92,14 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
     {
         /** @var DocumentManager $dm */
         $dm = $executor->getReferenceRepository()->getManager();
-        $connection = $dm->getConnection();
 
         foreach ($this->getDatabases($dm) as $dbName => $server) {
-            $dbHost = $server['host'];
-            $dbPort = $server['port'];
+            /**
+             * @var $server Server
+             */
+            $dbHost = $server->getHost();
+            $dbPort = $server->getPort();
 
-            $connection->dropDatabase($dbName);
             exec("mongorestore --quiet --db $dbName --host $dbHost --port $dbPort {$this->getBackupFilePath()}/$dbName", $output);
         }
 
