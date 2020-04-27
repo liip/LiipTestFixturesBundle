@@ -42,7 +42,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
     {
         if (!self::$databaseCreated) {
             $sm = $this->om->getSchemaManager();
-            $sm->createDatabases();
             $sm->updateIndexes();
             self::$databaseCreated = true;
         }
