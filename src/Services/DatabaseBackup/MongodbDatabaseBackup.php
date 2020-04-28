@@ -100,7 +100,7 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
             $dbHost = $server->getHost();
             $dbPort = $server->getPort();
 
-            exec("mongorestore --quiet --db $dbName --host $dbHost --port $dbPort {$this->getBackupFilePath()}/$dbName", $output);
+            exec("mongorestore --quiet --drop --db $dbName --host $dbHost --port $dbPort {$this->getBackupFilePath()}/$dbName", $output);
         }
 
         if (self::$metadata) {
