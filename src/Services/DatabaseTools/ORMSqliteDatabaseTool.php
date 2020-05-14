@@ -25,7 +25,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         return 'pdo_sqlite';
     }
 
-    public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
+    public function loadFixtures(array $classNames = [], bool $append = false, $dropDb = true): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
         $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
@@ -56,7 +56,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             }
         }
 
-        if (false === $append) {
+        if (false === $append && true === $dropDb) {
             // TODO: handle case when using persistent connections. Fail loudly?
             $schemaTool = new SchemaTool($this->om);
             $schemaTool->dropDatabase();
