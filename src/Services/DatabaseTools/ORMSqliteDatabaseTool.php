@@ -56,7 +56,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             }
         }
 
-        if (false === $append) {
+        if (false === $append && false === $this->getKeepDatabaseAndSchemaParameter()) {
             // TODO: handle case when using persistent connections. Fail loudly?
             $schemaTool = new SchemaTool($this->om);
             $schemaTool->dropDatabase();
