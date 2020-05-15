@@ -42,7 +42,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
     {
         if (!self::$databaseCreated) {
             $sm = $this->om->getSchemaManager();
-            $sm->createDatabases();
             $sm->updateIndexes();
             self::$databaseCreated = true;
         }
@@ -64,9 +63,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
             $backupService->init($this->getMetadatas(), $classNames);
 
             if ($backupService->isBackupActual()) {
-                if (null !== $this->connection) {
-                    $this->connection->close();
-                }
 
                 $this->om->flush();
                 $this->om->clear();
