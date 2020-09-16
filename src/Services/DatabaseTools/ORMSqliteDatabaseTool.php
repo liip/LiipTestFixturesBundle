@@ -13,6 +13,8 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
@@ -20,6 +22,11 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 class ORMSqliteDatabaseTool extends ORMDatabaseTool
 {
+    /**
+     * @var bool
+     */
+    private $shouldEnableForeignKeyChecks = false;
+
     public function getDriverName(): string
     {
         return 'pdo_sqlite';
@@ -82,5 +89,39 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         }
 
         return $executor;
+    }
+
+    protected function disableForeignKeyChecksIfApplicable(): void
+    {
+        if (!$this->isSqlite()) {
+            return;
+        }
+
+        $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
+        if ($currentValue === '0') {
+            return;
+        }
+
+        $this->connection->query('PRAGMA foreign_keys = 0');
+        $this->shouldEnableForeignKeyChecks = true;
+    }
+
+    protected function enableForeignKeyChecksIfApplicable(): void
+    {
+        if (!$this->isSqlite()) {
+            return;
+        }
+
+        if (!$this->shouldEnableForeignKeyChecks) {
+            return;
+        }
+
+        $this->connection->query('PRAGMA foreign_keys = 1');
+        $this->shouldEnableForeignKeyChecks = false;
+    }
+
+    private function isSqlite(): bool
+    {
+        return $this->connection->getDatabasePlatform() instanceof SqlitePlatform;
     }
 }

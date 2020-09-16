@@ -163,7 +163,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         return $executor;
     }
 
-    private function disableForeignKeyChecksIfApplicable(): void
+    protected function disableForeignKeyChecksIfApplicable(): void
     {
         if (!$this->isMysql()) {
             return;
@@ -178,7 +178,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $this->shouldEnableForeignKeyChecks = true;
     }
 
-    private function enableForeignKeyChecksIfApplicable(): void
+    protected function enableForeignKeyChecksIfApplicable(): void
     {
         if (!$this->isMysql()) {
             return;
