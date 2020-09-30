@@ -12,8 +12,8 @@
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;

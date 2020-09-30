@@ -15,7 +15,7 @@ namespace Liip\Acme\Tests\App\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
