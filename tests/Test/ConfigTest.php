@@ -13,6 +13,12 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+// BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
+if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
+    !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
+    class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
+}
+
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;

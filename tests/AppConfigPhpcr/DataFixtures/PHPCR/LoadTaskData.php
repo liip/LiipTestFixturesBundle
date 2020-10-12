@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Liip\Acme\Tests\AppConfigPhpcr\Document\Task;
 
