@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/liip/LiipFunctionalTestBundle.svg?branch=master)](https://travis-ci.com/liip/LiipFunctionalTestBundle)
+[![Build Status](https://travis-ci.com/liip/LiipTestFixturesBundle.svg?branch=master)](https://travis-ci.com/liip/LiipTestFixturesBundle)
 [![Latest Stable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/stable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/unstable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 
