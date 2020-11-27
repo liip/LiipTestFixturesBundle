@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.1 || 8.0",
+        "php": "^7.1 || ^8.0",
         "doctrine/common": "^2.13 || ^3.0",
         "symfony/framework-bundle": "^3.4 || ^4.1 || ^5.0"
     },
