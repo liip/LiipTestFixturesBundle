@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
+
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
     !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
@@ -20,6 +22,7 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 }
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -54,6 +57,10 @@ class ConfigTest extends KernelTestCase
      */
     public function testLoadFixturesFilesWithCustomProvider(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         // Load default Data Fixtures.
         $fixtures = $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
@@ -67,7 +74,7 @@ class ConfigTest extends KernelTestCase
             $fixtures
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $fixtures['id1'];
 
         // The custom provider has not been used successfully.
@@ -81,7 +88,7 @@ class ConfigTest extends KernelTestCase
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
         ]);
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $fixtures['id1'];
 
         // The custom provider "foo" has been loaded and used successfully.
@@ -105,7 +112,7 @@ class ConfigTest extends KernelTestCase
         // Load data from database
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
@@ -116,7 +123,7 @@ class ConfigTest extends KernelTestCase
         // Reload the fixtures.
         $this->loadFixtures($fixtures);
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         //The salt are not the same because cache were not used
@@ -140,7 +147,7 @@ class ConfigTest extends KernelTestCase
         // Load data from database
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $em->getRepository('LiipAcme:User')
             ->findOneBy(['id' => 1]);
 

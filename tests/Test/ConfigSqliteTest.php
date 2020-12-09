@@ -21,6 +21,9 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
+use InvalidArgumentException;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -81,7 +84,7 @@ class ConfigSqliteTest extends KernelTestCase
             $repository
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $repository->getReference('user');
 
         $this->assertSame(1, $user1->getId());
@@ -102,7 +105,7 @@ class ConfigSqliteTest extends KernelTestCase
             count($users)
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -133,7 +136,7 @@ class ConfigSqliteTest extends KernelTestCase
         $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -148,7 +151,7 @@ class ConfigSqliteTest extends KernelTestCase
             $user->getEnabled()
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 3,
@@ -223,6 +226,10 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
@@ -246,7 +253,7 @@ class ConfigSqliteTest extends KernelTestCase
             count($users)
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -271,7 +278,11 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadNonexistentFixturesFiles(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
+        $this->expectException(InvalidArgumentException::class);
 
         $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/nonexistent.yml',
@@ -298,7 +309,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         $id = 1;
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         foreach ($fixtures as $user) {
             $this->assertSame($id++, $user->getId());
         }
@@ -309,6 +320,10 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPaths(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtureFiles([
             $this->getContainer()->get('kernel')->locateResource(
                 '@AcmeBundle/DataFixtures/ORM/user.yml'
@@ -323,7 +338,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user1 */
+        /** @var User $user1 */
         $user1 = $fixtures['id1'];
 
         $this->assertIsString($user1->getUsername());
@@ -340,7 +355,7 @@ class ConfigSqliteTest extends KernelTestCase
             count($users)
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -356,6 +371,10 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPathsWithoutLocateResource(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtureFiles([
             __DIR__.'/../App/DataFixtures/ORM/user.yml',
         ]);
@@ -385,9 +404,13 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadNonexistentFixturesFilesPaths(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $path = ['/nonexistent.yml'];
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->loadFixtureFiles($path);
     }

@@ -15,6 +15,8 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
+use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -59,6 +61,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadEmptyFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtures([]);
 
         $this->assertInstanceOf(
@@ -72,6 +78,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -99,7 +109,7 @@ class ConfigMysqlTest extends KernelTestCase
         $em = $this->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -120,6 +130,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testAppendFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -142,7 +156,7 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user1 = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
@@ -159,7 +173,7 @@ class ConfigMysqlTest extends KernelTestCase
             $user1->getEnabled()
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user3 = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 3,
@@ -187,6 +201,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -227,6 +245,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndPurge(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -290,6 +312,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
@@ -313,7 +339,7 @@ class ConfigMysqlTest extends KernelTestCase
             count($users)
         );
 
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = $em->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
