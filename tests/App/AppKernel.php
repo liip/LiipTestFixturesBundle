@@ -35,9 +35,12 @@ abstract class AppKernel extends Kernel
             new DoctrineFixturesBundle(),
             new LiipTestFixturesBundle(),
             new AcmeBundle(),
-            new NelmioAliceBundle(),
-            new FidryAliceDataFixturesBundle(),
         ];
+
+        if (class_exists(NelmioAliceBundle::class) && class_exists(FidryAliceDataFixturesBundle::class)) {
+            $bundles[] = new NelmioAliceBundle();
+            $bundles[] = new FidryAliceDataFixturesBundle();
+        }
 
         return $bundles;
     }
