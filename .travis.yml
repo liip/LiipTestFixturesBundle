@@ -3,7 +3,6 @@ dist: xenial
 language: php
 
 php:
-  - 7.1
   - 7.2
   - 7.3
   - 7.4
@@ -20,7 +19,7 @@ addons:
 
 matrix:
   include:
-    - php: 7.1
+    - php: 7.2
       env: COMPOSER_FLAGS="--prefer-lowest"
     - php: 7.2
       env: SYMFONY_VERSION="^3.4"
