@@ -53,5 +53,5 @@ install:
 # revert this.
 # Run tests twice to ensure that tests are idempotent even if database caching is enabled
 script:
-  - php ./vendor/bin/phpunit --exclude-group ""
-  - php ./vendor/bin/phpunit --exclude-group ""
+  - php ./vendor/bin/phpunit --testdox --exclude-group ""
+  - php ./vendor/bin/phpunit --testdox --exclude-group ""
