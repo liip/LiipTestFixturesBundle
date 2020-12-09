@@ -50,5 +50,7 @@ class LoadSecondUserData extends AbstractFixture implements FixtureInterface
 
         $manager->persist($user);
         $manager->flush();
+
+        $this->addReference('user-second', $user);
     }
 }

@@ -119,4 +119,23 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             $user1->getSalt()
         );
     }
+
+    /**
+     * @group mysql
+     */
+    public function testLoadFixturesCheckReferences(): void
+    {
+        $referenceRepository = $this->loadFixtures([
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+        ])->getReferenceRepository();
+
+        $this->assertCount(1, $referenceRepository->getReferences());
+
+        $referenceRepository = $this->loadFixtures([
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
+        ])->getReferenceRepository();
+
+        $this->assertCount(2, $referenceRepository->getReferences());
+    }
 }
