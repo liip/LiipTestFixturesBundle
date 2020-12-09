@@ -20,8 +20,6 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements DatabaseBackupInterface
 {
-    protected static $referenceData;
-
     protected static $metadata;
 
     protected static $schemaUpdatedFlag = false;
@@ -43,11 +41,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
 
     protected function getReferenceBackup(): string
     {
-        if (empty(self::$referenceData)) {
-            self::$referenceData = file_get_contents($this->getReferenceBackupFilePath());
-        }
-
-        return self::$referenceData;
+        return file_get_contents($this->getReferenceBackupFilePath());
     }
 
     public function isBackupActual(): bool
