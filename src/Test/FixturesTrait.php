@@ -104,6 +104,8 @@ trait FixturesTrait
     /**
      * Callback function to be executed after Schema creation.
      * Use this to execute acl:init or other things necessary.
+     *
+     * @deprecated Use LiipTestFixturesEvents instead
      */
     public function postFixtureSetup(): void
     {
@@ -113,6 +115,8 @@ trait FixturesTrait
      * Callback function to be executed after Schema restore.
      *
      * @param string $backupFilePath Path of file used to backup the references of the data fixtures
+     *
+     * @deprecated Use LiipTestFixturesEvents instead
      */
     public function postFixtureBackupRestore($backupFilePath): void
     {
@@ -120,6 +124,8 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed before Schema restore.
+     *
+     * @deprecated Use LiipTestFixturesEvents instead
      */
     public function preFixtureBackupRestore(
         ObjectManager $manager,
@@ -130,6 +136,8 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed after save of references.
+     *
+     * @deprecated Use LiipTestFixturesEvents instead
      */
     public function postReferenceSave(ObjectManager $manager, AbstractExecutor $executor, string $backupFilePath): void
     {
@@ -137,6 +145,8 @@ trait FixturesTrait
 
     /**
      * Callback function to be executed before save of references.
+     *
+     * @deprecated Use LiipTestFixturesEvents instead
      */
     public function preReferenceSave(ObjectManager $manager, AbstractExecutor $executor, ?string $backupFilePath): void
     {
