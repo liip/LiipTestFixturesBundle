@@ -26,7 +26,7 @@ class AppConfigPgsqlKernel extends AppKernel
         // Load the default file.
         parent::registerContainerConfiguration($loader);
 
-        // Load the file with MySQL configuration
+        // Load the file with PostgreSQL configuration
         $loader->load(__DIR__.'/config.yml');
     }
 }

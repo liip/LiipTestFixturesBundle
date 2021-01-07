@@ -27,6 +27,7 @@ use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
+use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -231,5 +232,35 @@ class ConfigTest extends KernelTestCase
 
         // Check that random data has been changed, to ensure that backup was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());
+    }
+
+    /**
+     * Check that events have been registered, they will be called.
+     */
+    public function testLoadEmptyFixturesAndCheckEvents(): void
+    {
+        $fixtures = $this->loadFixtures([]);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+
+        $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+        $this->assertSame('preFixtureBackupRestore', $event[0][1]);
+
+        $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::POST_FIXTURE_SETUP);
+        $this->assertSame('postFixtureSetup', $event[0][1]);
+
+        $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
+        $this->assertSame('postFixtureBackupRestore', $event[0][1]);
+
+        $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+        $this->assertSame('preReferenceSave', $event[0][1]);
+
+        $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::POST_REFERENCE_SAVE);
+        $this->assertSame('postReferenceSave', $event[0][1]);
     }
 }
