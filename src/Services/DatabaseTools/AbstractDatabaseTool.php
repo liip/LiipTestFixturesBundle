@@ -17,12 +17,12 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
+use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -236,7 +236,7 @@ abstract class AbstractDatabaseTool
      *
      * @see https://github.com/symfony/symfony/blob/75369dabb8af73b0d0ad7f206d85c08cf39117f8/src/Symfony/Component/EventDispatcher/LegacyEventDispatcherProxy.php#L30-L35
      */
-    protected function dispatchEvent(Event $event, $eventName) {
+    protected function dispatchEvent(FixtureEvent $event, $eventName) {
         $r = new ReflectionMethod($this->eventDispatcher, 'dispatch');
         $param2 = $r->getParameters()[1] ?? null;
 
