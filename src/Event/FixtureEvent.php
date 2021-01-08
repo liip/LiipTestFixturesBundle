@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Event;
 
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class FixtureEvent extends Event
 {

@@ -72,7 +72,7 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
                 $this->om->clear();
 
                 $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+                $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
                 $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
 
                 $executor = $this->getExecutor($this->getPurger());
@@ -80,7 +80,7 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
                 $backupService->restore($executor);
 
                 $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
+                $this->dispatchEvent($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
                 $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
 
                 return $executor;
@@ -98,12 +98,12 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
-            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+            $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
             $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
 
             $backupService->backup($executor);
 
-            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
+            $this->dispatchEvent($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
             $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
         }
 

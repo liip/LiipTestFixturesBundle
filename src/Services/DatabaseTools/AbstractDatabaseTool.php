@@ -19,8 +19,10 @@ use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -227,5 +229,23 @@ abstract class AbstractDatabaseTool
     {
         return $this->container->hasParameter(self::CACHE_METADATA_PARAMETER_NAME)
             && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);
+    }
+
+    /**
+     * Compatibility layer for Symfony <= 4.3
+     *
+     * @see https://github.com/symfony/symfony/blob/75369dabb8af73b0d0ad7f206d85c08cf39117f8/src/Symfony/Component/EventDispatcher/LegacyEventDispatcherProxy.php#L30-L35
+     */
+    protected function dispatchEvent(Event $event, $eventName) {
+        $r = new ReflectionMethod($this->eventDispatcher, 'dispatch');
+        $param2 = $r->getParameters()[1] ?? null;
+
+        if (!$param2 || !$param2->hasType() || $param2->getType()->isBuiltin()) {
+            $this->eventDispatcher->dispatch($event, $eventName);
+
+            return;
+        }
+
+        $this->eventDispatcher->dispatch($eventName, $event);
     }
 }
