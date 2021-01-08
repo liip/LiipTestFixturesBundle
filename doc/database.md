@@ -288,7 +288,6 @@ class AccountControllerTest extends WebTestCase
         if (!empty($metadatas)) {
             $schemaTool->createSchema($metadatas);
         }
-        $this->postFixtureSetup();
 
         $fixtures = array(
             'Acme\MyBundle\DataFixtures\ORM\LoadUserData',

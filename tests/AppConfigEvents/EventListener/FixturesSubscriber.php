@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Liip\Acme\Tests\AppConfig\EventListener;
+namespace Liip\Acme\Tests\AppConfigEvents\EventListener;
 
 use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
@@ -11,7 +11,7 @@ use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class FixturesSubscriber implements EventSubscriberInterface
+class FixturesSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {

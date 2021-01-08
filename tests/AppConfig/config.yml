@@ -17,7 +17,3 @@ services:
     faker.provider.foo:
         class: Liip\Acme\Tests\AppConfig\DataFixtures\Faker\Provider\FooProvider
         tags: [ { name: nelmio_alice.faker.provider } ]
-
-    'Liip\Acme\Tests\AppConfig\EventListener\FixturesSubscriber':
-        tags:
-            - { name: kernel.event_subscriber }
