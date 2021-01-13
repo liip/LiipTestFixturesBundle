@@ -16,30 +16,52 @@ namespace Liip\TestFixturesBundle\Test;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Persistence\ObjectManager;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
 /**
  * @author Lea Haensenberger
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @deprecated
  */
 trait FixturesTrait
 {
-    /**
-     * @var DatabaseToolCollection
-     */
-    private $databaseToolCollection;
-
-    /**
-     * @var AbstractDatabaseTool
-     */
-    protected $databaseTool;
+    protected $containers;
 
     /**
      * @var array
      */
     private $excludedDoctrineTables = [];
+
+    /**
+     * Get an instance of the dependency injection container.
+     * (this creates a kernel *without* parameters).
+     */
+    protected function getContainer(): ContainerInterface
+    {
+        $environment = $this->determineEnvironment();
+
+        if (empty($this->containers[$environment])) {
+            $options = [
+                'environment' => $environment,
+            ];
+
+            // Check that the kernel has not been booted separately (eg. with static::createClient())
+            if (null === static::$kernel || null === static::$kernel->getContainer()) {
+                $this->bootKernel($options);
+            }
+
+            $container = static::$kernel->getContainer();
+            if ($container->has('test.service_container')) {
+                $this->containers[$environment] = $container->get('test.service_container');
+            } else {
+                $this->containers[$environment] = $container;
+            }
+        }
+
+        return $this->containers[$environment];
+    }
 
     /**
      * Set the database to the provided fixtures.
@@ -56,18 +78,30 @@ trait FixturesTrait
      *
      * Depends on the doctrine data-fixtures library being available in the
      * class path.
+     *
+     * @deprecated
      */
     protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
     {
-        $dbTool = $this->databaseToolCollection->get($omName, $registryName, $purgeMode, $this);
+        $container = $this->getContainer();
+
+        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
+        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
         $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
 
         return $dbTool->loadFixtures($classNames, $append);
     }
 
+    /**
+     * @deprecated
+     */
     public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
     {
-        $dbTool = $this->databaseToolCollection->get($omName, $registryName, $purgeMode, $this);
+        /** @var ContainerInterface $container */
+        $container = $this->getContainer();
+
+        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
+        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
         $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
 
         return $dbTool->loadAliceFixture($paths, $append);
@@ -117,5 +151,36 @@ trait FixturesTrait
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
     {
         $this->excludedDoctrineTables = $excludedDoctrineTables;
+    }
+
+    protected function tearDown(): void
+    {
+        if (null !== $this->containers) {
+            foreach ($this->containers as $container) {
+                if ($container instanceof ResettableContainerInterface) {
+                    $container->reset();
+                }
+            }
+        }
+
+        $this->containers = null;
+
+        parent::tearDown();
+    }
+
+    /**
+     * @see KernelTestCase::createKernel()
+     */
+    private function determineEnvironment()
+    {
+        if (isset($_ENV['APP_ENV'])) {
+            return $_ENV['APP_ENV'];
+        }
+
+        if (isset($_SERVER['APP_ENV'])) {
+            return $_SERVER['APP_ENV'];
+        }
+
+        return 'test';
     }
 }
