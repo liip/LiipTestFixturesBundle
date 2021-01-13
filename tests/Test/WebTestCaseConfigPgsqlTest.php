@@ -29,6 +29,7 @@ use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
 class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
