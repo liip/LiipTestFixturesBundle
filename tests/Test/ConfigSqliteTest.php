@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -60,8 +61,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->entityManager = self::$container->get(EntityManagerInterface::class);
 
-        $dataBaseToolCollection = self::$container->get('liip_test_fixtures.services.database_tool_collection');
-        $this->databaseTool = $dataBaseToolCollection->get();
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     public function testLoadEmptyFixtures(): void
@@ -350,6 +350,8 @@ class ConfigSqliteTest extends KernelTestCase
             ->findOneBy([
                 'id' => 1,
             ]);
+
+        $this->assertInstanceOf(User::class, $user);
 
         $this->assertTrue(
             $user->getEnabled()

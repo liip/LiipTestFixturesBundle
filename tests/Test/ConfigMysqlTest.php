@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -70,8 +71,7 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->entityManager = self::$container->get(EntityManagerInterface::class);
 
-        $dataBaseToolCollection = self::$container->get('liip_test_fixtures.services.database_tool_collection');
-        $this->databaseTool = $dataBaseToolCollection->get();
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     /**
