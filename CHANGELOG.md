@@ -5,6 +5,7 @@
 - Deprecated `FixturesTrait`:
   - Access through the service `liip_test_fixtures.services.database_tool_collection` instead
   - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
+- Deprecated the `@DisableDatabaseCache` annotation, use `$this->databaseTool->setDatabaseCacheEnabled(false);` instead
 
 Old code:
 

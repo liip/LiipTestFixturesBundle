@@ -125,14 +125,13 @@ class ConfigTest extends KernelTestCase
         );
     }
 
-    /**
-     * @DisableDatabaseCache()
-     */
     public function testCacheCanBeDisabled(): void
     {
         $fixtures = [
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
+
+        $this->databaseTool->setDatabaseCacheEnabled(false);
 
         $this->databaseTool->loadFixtures($fixtures);
 
@@ -153,6 +152,9 @@ class ConfigTest extends KernelTestCase
 
         //The salt are not the same because cache were not used
         $this->assertNotSame($user1Salt, $user1->getSalt());
+
+        // Enable the cache again
+        $this->databaseTool->setDatabaseCacheEnabled(true);
     }
 
     /**
