@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Persistence\ObjectManager;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
 
 /**
  * @author Lea Haensenberger
@@ -27,11 +26,8 @@ use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
  */
 trait FixturesTrait
 {
-    use SymfonyTestContainer;
-
     /**
      * @var DatabaseToolCollection
-     * @inject liip_test_fixtures.services.database_tool_collection
      */
     private $databaseToolCollection;
 

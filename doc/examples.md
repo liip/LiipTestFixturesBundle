@@ -24,17 +24,12 @@ declare(strict_types=1);
 
 namespace Liip\FooBundle\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ExampleFunctionalTest extends WebTestCase implements ServiceContainerTestCase
+class ExampleFunctionalTest extends WebTestCase 
 {
-    use SymfonyTestContainer;
-
     /**
-     * @var \Liip\TestFixturesBundle\Services\DatabaseToolCollection
-     * @inject liip_test_fixtures.services.database_tool_collection
+     * @var DatabaseToolCollection
      */
     private $databaseToolCollection;
 

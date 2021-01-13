@@ -27,7 +27,6 @@ use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -43,19 +42,17 @@ use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
  *
  * @IgnoreAnnotation("expectedException")
  */
-class ConfigTest extends KernelTestCase implements ServiceContainerTestCase
+class ConfigTest extends KernelTestCase
 {
     use FixturesTrait;
 
     /**
      * @var EntityManager
-     * @inject doctrine
      */
     private $entityManager;
 
     /**
      * @var ContainerInterface
-     * @inject
      */
     private $containerTest;
 

@@ -83,23 +83,20 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;    use Liip\TestFixturesBundle\Test\FixturesTrait;
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-    class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
+    class MyControllerTest extends WebTestCase
     {
         use SymfonyTestContainer;
 
         /**
-         * @var \Liip\TestFixturesBundle\Services\DatabaseToolCollection
-         * @inject liip_test_fixtures.services.database_tool_collection
+         * @var DatabaseToolCollection
          */
         private $databaseToolCollection;
 
         /**
-         * @var \Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool
+         * @var AbstractDatabaseTool
          */
         protected $databaseTool;
 
@@ -135,10 +132,8 @@ Tips for Fixture Loading Tests
 
     ```php
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-    class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
+    class MyControllerTest extends WebTestCase
     {
         // …
 
@@ -161,10 +156,8 @@ Tips for Fixture Loading Tests
 
     ```php
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-    class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
+    class MyControllerTest extends WebTestCase
     {
         // …
 
@@ -184,10 +177,8 @@ Tips for Fixture Loading Tests
 
     ```php
         use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-        use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-        use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-        class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
+        class MyControllerTest extends WebTestCase
         {
             // …
 
@@ -206,10 +197,8 @@ Tips for Fixture Loading Tests
 
     ```php
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-    use Zalas\Injector\PHPUnit\Symfony\TestCase\SymfonyTestContainer;
-    use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
-    class MyControllerTest extends WebTestCase implements ServiceContainerTestCase
+    class MyControllerTest extends WebTestCase
     {
         // …
 

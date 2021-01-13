@@ -20,7 +20,6 @@ use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
@@ -45,13 +44,12 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
-class ConfigMysqlTest extends KernelTestCase implements ServiceContainerTestCase
+class ConfigMysqlTest extends KernelTestCase
 {
     use FixturesTrait;
 
     /**
      * @var EntityManager
-     * @inject doctrine
      */
     protected $entityManager;
 

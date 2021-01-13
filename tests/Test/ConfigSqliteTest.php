@@ -27,7 +27,6 @@ use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * @preserveGlobalState disabled
@@ -35,13 +34,12 @@ use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
  * @IgnoreAnnotation("depends")
  * @IgnoreAnnotation("expectedException")
  */
-class ConfigSqlitetTest extends KernelTestCase implements ServiceContainerTestCase
+class ConfigSqlitetTest extends KernelTestCase
 {
     use FixturesTrait;
 
     /**
      * @var EntityManager
-     * @inject doctrine
      */
     private $entityManager;
 

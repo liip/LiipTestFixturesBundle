@@ -21,7 +21,6 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
 
 /**
  * Test PHPCR.
@@ -32,13 +31,12 @@ use Zalas\Injector\PHPUnit\TestCase\ServiceContainerTestCase;
  *
  * @preserveGlobalState disabled
  */
-class ConfigPhpcrTest extends KernelTestCase implements ServiceContainerTestCase
+class ConfigPhpcrTest extends KernelTestCase
 {
     use FixturesTrait;
 
     /**
      * @var EntityManager
-     * @inject doctrine
      */
     private $entityManager;
 
