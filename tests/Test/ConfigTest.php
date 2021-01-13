@@ -21,12 +21,12 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -44,21 +44,36 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ConfigTest extends KernelTestCase
 {
-    use FixturesTrait;
-
     /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var ContainerInterface
+     * @var AbstractDatabaseTool
      */
-    private $containerTest;
+    protected $databaseTool;
+
+    /** @var string */
+    private $kernelCacheDir;
 
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+
+        $this->entityManager = self::$container->get(EntityManagerInterface::class);
+
+        $dataBaseToolCollection = self::$container->get('liip_test_fixtures.services.database_tool_collection');
+        $this->databaseTool = $dataBaseToolCollection->get();
+
+        $this->kernelCacheDir = self::$container->getParameter('kernel.cache_dir');
     }
 
     /**
@@ -67,7 +82,7 @@ class ConfigTest extends KernelTestCase
     public function testLoadFixturesFilesWithCustomProvider(): void
     {
         // Load default Data Fixtures.
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
@@ -89,7 +104,7 @@ class ConfigTest extends KernelTestCase
         );
 
         // Load Data Fixtures with custom loader defined in configuration.
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
         ]);
 
@@ -112,7 +127,7 @@ class ConfigTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // Load data from database
         /** @var User $user1 */
@@ -124,7 +139,7 @@ class ConfigTest extends KernelTestCase
         sleep(2);
 
         // Reload the fixtures.
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         /** @var User $user1 */
         $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
@@ -145,7 +160,7 @@ class ConfigTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // Load data from database
         /** @var User $user1 */
@@ -161,7 +176,7 @@ class ConfigTest extends KernelTestCase
 
         $dependentFixtureFilemtime = filemtime($dependentFixtureFilePath);
 
-        $databaseFilePath = $this->containerTest->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
+        $databaseFilePath = $this->kernelCacheDir.'/test_sqlite_'.$md5.'.db';
 
         if (!is_file($databaseFilePath)) {
             $this->markTestSkipped($databaseFilePath.' is not a file.');
@@ -172,7 +187,7 @@ class ConfigTest extends KernelTestCase
         sleep(2);
 
         // Reload the fixtures.
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // The mtime of the file has not changed.
         $this->assertSame(
@@ -198,7 +213,7 @@ class ConfigTest extends KernelTestCase
         // Update the filemtime of the fixture file used as a dependency.
         touch($dependentFixtureFilePath);
 
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
 
         // The mtime of the fixture file has been updated.
         $this->assertGreaterThan(

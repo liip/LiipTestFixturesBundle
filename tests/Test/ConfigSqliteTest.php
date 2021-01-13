@@ -22,10 +22,11 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -34,23 +35,38 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @IgnoreAnnotation("depends")
  * @IgnoreAnnotation("expectedException")
  */
-class ConfigSqlitetTest extends KernelTestCase
+class ConfigSqliteTest extends KernelTestCase
 {
-    use FixturesTrait;
-
     /**
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @var AbstractDatabaseTool
+     */
+    protected $databaseTool;
 
     public static function getKernelClass()
     {
         return AppConfigSqliteKernel::class;
     }
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+
+        $this->entityManager = self::$container->get(EntityManagerInterface::class);
+
+        $dataBaseToolCollection = self::$container->get('liip_test_fixtures.services.database_tool_collection');
+        $this->databaseTool = $dataBaseToolCollection->get();
+    }
+
     public function testLoadEmptyFixtures(): void
     {
-        $fixtures = $this->loadFixtures([]);
+        $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -60,7 +76,7 @@ class ConfigSqlitetTest extends KernelTestCase
 
     public function testLoadFixturesWithoutParameters(): void
     {
-        $fixtures = $this->loadFixtures();
+        $fixtures = $this->databaseTool->loadFixtures();
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -70,7 +86,7 @@ class ConfigSqlitetTest extends KernelTestCase
 
     public function testLoadFixtures(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -122,11 +138,11 @@ class ConfigSqlitetTest extends KernelTestCase
 
     public function testAppendFixtures(): void
     {
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $this->loadFixtures(
+        $this->databaseTool->loadFixtures(
             ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
         );
@@ -168,7 +184,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadDependentFixtures(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ]);
 
@@ -192,7 +208,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadDependentFixturesWithDependencyInjected(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserWithServiceData',
         ]);
 
@@ -216,7 +232,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
@@ -242,6 +258,8 @@ class ConfigSqlitetTest extends KernelTestCase
                 'id' => 1,
             ]);
 
+        $this->assertInstanceOf(User::class, $user);
+
         $this->assertTrue(
             $user->getEnabled()
         );
@@ -263,7 +281,7 @@ class ConfigSqlitetTest extends KernelTestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->loadFixtureFiles([
+        $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/nonexistent.yml',
         ]);
     }
@@ -275,7 +293,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadFixturesFilesWithPurgeModeTruncate(): void
     {
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ], true, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE);
 
@@ -299,7 +317,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPaths(): void
     {
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             static::$kernel->locateResource(
                 '@AcmeBundle/DataFixtures/ORM/user.yml'
             ),
@@ -343,7 +361,7 @@ class ConfigSqlitetTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPathsWithoutLocateResource(): void
     {
-        $fixtures = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             __DIR__.'/../App/DataFixtures/ORM/user.yml',
         ]);
 
@@ -373,6 +391,6 @@ class ConfigSqlitetTest extends KernelTestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $this->loadFixtureFiles($path);
+        $this->databaseTool->loadAliceFixture($path);
     }
 }

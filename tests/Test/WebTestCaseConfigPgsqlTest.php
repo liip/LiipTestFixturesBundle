@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 
 /**
  * Test PostgreSQL database.

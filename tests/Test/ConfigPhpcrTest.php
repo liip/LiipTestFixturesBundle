@@ -17,7 +17,6 @@ use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -33,8 +32,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class ConfigPhpcrTest extends KernelTestCase
 {
-    use FixturesTrait;
-
     /**
      * @var EntityManager
      */
@@ -68,7 +65,7 @@ class ConfigPhpcrTest extends KernelTestCase
 
     public function testLoadFixturesPhPCr(): void
     {
-        $fixtures = $this->loadFixtures([
+        $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\LoadTaskData',
         ], false, null, 'doctrine_phpcr');
 

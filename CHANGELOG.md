@@ -3,9 +3,10 @@
 ## 2.0.0
 
 - Removed `FixturesTrait`:
-  - Access through service instead
+  - Access through the service `liip_test_fixtures.services.database_tool_collection` instead
+  - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
 
-## 1.5.0 (TBA)
+## 1.x.0 (TBA)
 
 - Deprecated `FixturesTrait` #26
 

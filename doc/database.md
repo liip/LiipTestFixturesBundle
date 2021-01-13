@@ -83,13 +83,12 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;    use Liip\TestFixturesBundle\Test\FixturesTrait;
+    use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+    use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use SymfonyTestContainer;
-
         /**
          * @var DatabaseToolCollection
          */
