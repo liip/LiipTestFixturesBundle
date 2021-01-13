@@ -32,22 +32,5 @@ class LiipTestFixturesExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('database_tools.xml');
-
-        foreach ($config as $key => $value) {
-            // If the node is an array,
-            // e.g. "liip_test_fixtures.query.max_query_count",
-            // set the value as
-            // "liip_test_fixtures.query.max_query_count"
-            // instead of an array "liip_test_fixtures.query"
-            // with a "max_query_count" key.
-            if (is_array($value)) {
-                foreach ($value as $key2 => $value2) {
-                    $container->setParameter($this->getAlias().'.'.$key.
-                        '.'.$key2, $value2);
-                }
-            } else {
-                $container->setParameter($this->getAlias().'.'.$key, $value);
-            }
-        }
     }
 }
