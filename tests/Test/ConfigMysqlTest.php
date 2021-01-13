@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -43,6 +44,7 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
@@ -81,6 +83,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadEmptyFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
@@ -94,6 +100,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -139,6 +149,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testAppendFixtures(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -203,6 +217,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -240,6 +258,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndPurge(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -300,6 +322,10 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
@@ -327,8 +353,6 @@ class ConfigMysqlTest extends KernelTestCase
             ]);
 
         $this->assertInstanceOf(User::class, $user);
-
-        $this->assertNotNull($user);
 
         $this->assertTrue(
             $user->getEnabled()

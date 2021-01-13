@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
 
@@ -44,24 +45,12 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
     /**
      * @group mysql
      */
-    public function testLoadFixtures(): void
-    {
-        $this->markTestSkipped('OutOfBoundsException : Reference to "user" does not exist');
-    }
-
-    /**
-     * @group mysql
-     */
-    public function testLoadFixturesFiles(): void
-    {
-        $this->markTestSkipped('Failed asserting that null is not null.');
-    }
-
-    /**
-     * @group mysql
-     */
     public function testLoadFixturesAndCheckBackup(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -138,6 +127,10 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesCheckReferences(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();

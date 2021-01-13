@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
+
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
     !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
@@ -36,6 +38,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  *
  * Avoid conflict with PHPUnit annotation when reading QueryCount
@@ -81,6 +84,10 @@ class ConfigTest extends KernelTestCase
      */
     public function testLoadFixturesFilesWithCustomProvider(): void
     {
+        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
+            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
+        }
+
         // Load default Data Fixtures.
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
