@@ -2,9 +2,64 @@
 
 ## 2.0.0
 
-- Removed `FixturesTrait`:
+- Deprecated `FixturesTrait`:
   - Access through the service `liip_test_fixtures.services.database_tool_collection` instead
   - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
+
+Old code:
+
+```php
+<?php
+
+use Liip\TestFixturesBundle\Test\FixturesTrait; 
+
+class ConfigTest extends KernelTestCase
+{
+    use FixturesTrait;
+    
+    public function testLoadFixtures(): void
+    {
+        $fixtures = $this->loadFixtureFiles([
+            '@AcmeBundle/DataFixtures/ORM/user.yml',
+        ]);
+        
+        // …
+    }
+}
+```
+
+New code :
+
+```php
+<?php
+
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+
+class ConfigTest extends KernelTestCase
+{
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+    }
+    
+    public function testLoadFixtures(): void
+    {
+        $fixtures = $this->databaseTool->loadAliceFixture([
+            '@AcmeBundle/DataFixtures/ORM/user.yml',
+        ]);
+        
+        // …
+    }
+}
+```
 
 ## 1.x.0 (TBA)
 
