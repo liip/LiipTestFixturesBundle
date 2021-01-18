@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\AppConfigPhpcr;
 
+use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -20,11 +21,17 @@ class AppConfigPhpcrKernel extends AppConfigSqliteKernel
 {
     public function registerBundles(): array
     {
+        $bundles = [];
+
+        if (class_exists(DoctrinePHPCRBundle::class)) {
+            $bundles = [
+                new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
+            ];
+        }
+
         return array_merge(
             parent::registerBundles(),
-            [
-                new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
-            ]
+            $bundles
         );
     }
 
@@ -36,7 +43,9 @@ class AppConfigPhpcrKernel extends AppConfigSqliteKernel
         // Load the default file.
         parent::registerContainerConfiguration($loader);
 
-        // Load the file with MySQL configuration
-        $loader->load(__DIR__.'/config.yml');
+        // Load the file with PHPCR configuration
+        if (class_exists(DoctrinePHPCRBundle::class)) {
+            $loader->load(__DIR__ . '/config.yml');
+        }
     }
 }

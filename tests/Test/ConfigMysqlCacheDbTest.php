@@ -57,10 +57,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         ]);
 
         // Load data from database
-        $em = $this->getContainer()
-            ->get('doctrine.orm.entity_manager');
-
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been saved to database
@@ -70,7 +67,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
 
         /** @var User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -90,7 +87,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         // Clean database
         $this->loadFixtures();
 
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been removed from database
@@ -104,7 +101,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $em->getRepository('LiipAcme:User')
+        $users = $this->entityManager->getRepository('LiipAcme:User')
             ->findAll();
 
         // Check that all User have been loaded again in database
@@ -113,7 +110,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             $users
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy([
                 'id' => 1,
             ]);

@@ -22,8 +22,10 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 }
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\ORM\EntityManager;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -45,11 +47,31 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigTest extends KernelTestCase
 {
+    use ContainerProvider;
     use FixturesTrait;
+
+    /** @var EntityManager */
+    private $entityManager;
+
+    /** @var string */
+    private $kernelCacheDir;
 
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+
+        $container = $this->getTestContainer();
+
+        $this->entityManager = $container->get('doctrine');
+
+        $this->kernelCacheDir = $container->getParameter('kernel.cache_dir');
     }
 
     /**
@@ -110,10 +132,8 @@ class ConfigTest extends KernelTestCase
         $this->loadFixtures($fixtures);
 
         // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         /** @var User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
         $user1Salt = $user1->getSalt();
@@ -124,7 +144,7 @@ class ConfigTest extends KernelTestCase
         $this->loadFixtures($fixtures);
 
         /** @var User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         //The salt are not the same because cache were not used
         $this->assertNotSame($user1Salt, $user1->getSalt());
@@ -145,22 +165,20 @@ class ConfigTest extends KernelTestCase
         $this->loadFixtures($fixtures);
 
         // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
         /** @var User $user1 */
-        $user1 = $em->getRepository('LiipAcme:User')
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')
             ->findOneBy(['id' => 1]);
 
         // Store random data, in order to check it after reloading fixtures.
         $user1Salt = $user1->getSalt();
 
-        $dependentFixtureFilePath = $this->getContainer()->get('kernel')->locateResource(
+        $dependentFixtureFilePath = static::$kernel->locateResource(
             '@AcmeBundle/DataFixtures/ORM/LoadUserData.php'
         );
 
         $dependentFixtureFilemtime = filemtime($dependentFixtureFilePath);
 
-        $databaseFilePath = $this->getContainer()->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
+        $databaseFilePath = $this->kernelCacheDir.'/test_sqlite_'.$md5.'.db';
 
         if (!is_file($databaseFilePath)) {
             $this->markTestSkipped($databaseFilePath.' is not a file.');
@@ -187,7 +205,7 @@ class ConfigTest extends KernelTestCase
             'File modification time of the backup has been updated.'
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Check that random data has not been changed, to ensure that backup was created and loaded successfully.
         $this->assertSame($user1Salt, $user1->getSalt());
@@ -213,7 +231,7 @@ class ConfigTest extends KernelTestCase
             'File modification time of the backup has not been updated.'
         );
 
-        $user1 = $em->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
+        $user1 = $this->entityManager->getRepository('LiipAcme:User')->findOneBy(['id' => 1]);
 
         // Check that random data has been changed, to ensure that backup was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());
