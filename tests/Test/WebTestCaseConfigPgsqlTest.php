@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 
 /**
  * Test PostgreSQL database.
@@ -35,8 +34,6 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
  */
 class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
 {
-    use FixturesTrait;
-
     protected static function getKernelClass(): string
     {
         return AppConfigPgsqlKernel::class;
