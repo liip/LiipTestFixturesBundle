@@ -57,8 +57,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         ]);
 
         // Load data from database
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that all User have been saved to database
         $this->assertCount(
@@ -67,7 +66,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
 
         /** @var User $user1 */
-        $user1 = $this->entityManager->getRepository('LiipAcme:User')
+        $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -87,8 +86,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         // Clean database
         $this->loadFixtures();
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that all User have been removed from database
         $this->assertCount(
@@ -101,8 +99,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that all User have been loaded again in database
         $this->assertCount(
@@ -110,7 +107,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             $users
         );
 
-        $user1 = $this->entityManager->getRepository('LiipAcme:User')
+        $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);

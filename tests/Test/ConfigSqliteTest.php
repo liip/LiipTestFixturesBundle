@@ -21,7 +21,7 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectRepository;
 use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
@@ -39,8 +39,8 @@ class ConfigSqliteTest extends KernelTestCase
     use ContainerProvider;
     use FixturesTrait;
 
-    /** @var EntityManager */
-    private $entityManager;
+    /** @var ObjectRepository */
+    private $userRepository;
 
     public static function getKernelClass()
     {
@@ -53,7 +53,8 @@ class ConfigSqliteTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->entityManager = $this->getTestContainer()->get('doctrine');
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
+            ->getRepository('LiipAcme:User');
     }
 
     public function testLoadEmptyFixtures(): void
@@ -103,8 +104,7 @@ class ConfigSqliteTest extends KernelTestCase
         $this->assertTrue($user1->getEnabled());
 
         // Load data from database
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // There are 2 users.
         $this->assertSame(
@@ -113,7 +113,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -141,7 +141,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         // Load data from database
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -156,7 +156,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 3,
             ]);
@@ -185,8 +185,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
@@ -209,8 +208,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
@@ -240,8 +238,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         $this->assertSame(
             10,
@@ -249,7 +246,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -260,7 +257,7 @@ class ConfigSqliteTest extends KernelTestCase
             $user->getEnabled()
         );
 
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 10,
             ]);
@@ -341,8 +338,7 @@ class ConfigSqliteTest extends KernelTestCase
         $this->assertIsString($user1->getUsername());
         $this->assertTrue($user1->getEnabled());
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         $this->assertSame(
             10,
@@ -350,7 +346,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -383,8 +379,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         $this->assertSame(
             10,

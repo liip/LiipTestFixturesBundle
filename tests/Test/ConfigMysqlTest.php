@@ -15,7 +15,7 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectRepository;
 use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
@@ -52,8 +52,8 @@ class ConfigMysqlTest extends KernelTestCase
     use ContainerProvider;
     use FixturesTrait;
 
-    /** @var EntityManager */
-    protected $entityManager;
+    /** @var ObjectRepository */
+    protected $userRepository;
 
     protected static function getKernelClass(): string
     {
@@ -66,7 +66,8 @@ class ConfigMysqlTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->entityManager = $this->getTestContainer()->get('doctrine');
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
+            ->getRepository('LiipAcme:User');
     }
 
     /**
@@ -122,7 +123,7 @@ class ConfigMysqlTest extends KernelTestCase
 
         // Load data from database
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -156,8 +157,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         // Load data from database
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that there are 3 users.
         $this->assertCount(
@@ -166,7 +166,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user1 = $this->entityManager->getRepository('LiipAcme:User')
+        $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -183,7 +183,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user3 = $this->entityManager->getRepository('LiipAcme:User')
+        $user3 = $this->userRepository
             ->findOneBy([
                 'id' => 3,
             ]);
@@ -226,8 +226,7 @@ class ConfigMysqlTest extends KernelTestCase
         // Check that there are 2 users.
         $this->assertSame(
             2,
-            count($this->entityManager->getRepository('LiipAcme:User')
-                ->findAll())
+            count($this->userRepository->findAll())
         );
 
         $this->setExcludedDoctrineTables(['liip_user']);
@@ -236,8 +235,7 @@ class ConfigMysqlTest extends KernelTestCase
         // The exclusion from purge worked, the user table is still alive and well.
         $this->assertSame(
             2,
-            count($this->entityManager->getRepository('LiipAcme:User')
-                ->findAll())
+            count($this->userRepository->findAll())
         );
     }
 
@@ -264,8 +262,7 @@ class ConfigMysqlTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that there are 2 users.
         $this->assertCount(
@@ -276,8 +273,7 @@ class ConfigMysqlTest extends KernelTestCase
         $this->loadFixtures([], false, null, 'doctrine', ORMPurger::PURGE_MODE_DELETE);
 
         // The purge worked: there is no user.
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         $this->assertCount(
             0,
@@ -289,8 +285,7 @@ class ConfigMysqlTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         // Check that there are 2 users.
         $this->assertCount(
@@ -303,8 +298,7 @@ class ConfigMysqlTest extends KernelTestCase
         // The purge worked: there is no user.
         $this->assertSame(
             0,
-            count($this->entityManager->getRepository('LiipAcme:User')
-                ->findAll())
+            count($this->userRepository->findAll())
         );
     }
 
@@ -331,8 +325,7 @@ class ConfigMysqlTest extends KernelTestCase
             $fixtures
         );
 
-        $users = $this->entityManager->getRepository('LiipAcme:User')
-            ->findAll();
+        $users = $this->userRepository->findAll();
 
         $this->assertSame(
             10,
@@ -340,7 +333,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         /** @var User $user */
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ]);
@@ -351,7 +344,7 @@ class ConfigMysqlTest extends KernelTestCase
             $user->getEnabled()
         );
 
-        $user = $this->entityManager->getRepository('LiipAcme:User')
+        $user = $this->userRepository
             ->findOneBy([
                 'id' => 10,
             ]);
