@@ -77,10 +77,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadEmptyFixtures(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->loadFixtures([]);
 
         $this->assertInstanceOf(
@@ -94,10 +90,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixtures(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -143,10 +135,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testAppendFixtures(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -210,10 +198,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -249,10 +233,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesAndPurge(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -309,10 +289,6 @@ class ConfigMysqlTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->loadFixtureFiles([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
