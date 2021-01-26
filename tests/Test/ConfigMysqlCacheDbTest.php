@@ -47,10 +47,6 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesAndCheckBackup(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -124,10 +120,6 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesCheckReferences(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();

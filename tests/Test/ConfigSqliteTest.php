@@ -229,10 +229,6 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFiles(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
@@ -279,10 +275,6 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadNonexistentFixturesFiles(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $this->expectException(InvalidArgumentException::class);
 
         $this->databaseTool->loadAliceFixture([
@@ -323,10 +315,6 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPaths(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->databaseTool->loadAliceFixture([
             static::$kernel->locateResource(
                 '@AcmeBundle/DataFixtures/ORM/user.yml'
@@ -372,10 +360,6 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFilesPathsWithoutLocateResource(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $fixtures = $this->databaseTool->loadAliceFixture([
             __DIR__.'/../App/DataFixtures/ORM/user.yml',
         ]);
@@ -401,10 +385,6 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadNonexistentFixturesFilesPaths(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         $path = ['/nonexistent.yml'];
 
         $this->expectException(InvalidArgumentException::class);

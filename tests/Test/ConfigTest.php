@@ -84,10 +84,6 @@ class ConfigTest extends KernelTestCase
      */
     public function testLoadFixturesFilesWithCustomProvider(): void
     {
-        if (!class_exists(FidryAliceDataFixturesBundle::class)) {
-            $this->markTestSkipped('Need theofidry/alice-data-fixtures package.');
-        }
-
         // Load default Data Fixtures.
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
