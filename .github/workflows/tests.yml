@@ -1,0 +1,95 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    name: Symfony (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.2', '7.3', '7.4', '8.0']
+        composer-flags: ['']
+        symfony-version: ['']
+        extra-packages: ['']
+        include:
+          - php-version: 7.2
+            composer-flags: "--prefer-lowest"
+          - php-version: 7.2
+            symfony-version: "^3.4"
+          - php-version: 7.2
+            symfony-version: "^4.4"
+          - php-version: 7.3
+            symfony-version: "^4.4"
+          - php-version: 7.2
+            extra-packages: "doctrine/phpcr-bundle:^2.0 doctrine/phpcr-odm:^1.3 jackalope/jackalope-doctrine-dbal:^1.5"
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: acme
+        ports:
+          - 3306:3306
+      postgresql:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'postgres'
+          POSTGRES_DB: 'postgres'
+          # Set health checks to wait until postgres has started
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Require Symfony
+        if: matrix.symfony-version != ''
+        run: composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
+
+      - name: Install extra Composer dependencies
+        if: matrix.extra-packages != ''
+        run: composer require --no-update ${{ matrix.extra-packages }}
+
+      - name: Install Composer dependencies
+        if: matrix.composer-flags == ''
+        run: composer install
+
+      - name: Install Composer dependencies with options
+        if: matrix.composer-flags != ''
+        # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
+        run: composer update ${{ matrix.composer-flags }}
+
+      - name: Run tests
+        # In phpunit.xml.dist, tests annotated with "@group mysql" are excluded, revert this
+        # Run tests twice to ensure that tests are idempotent even if database caching is enabled
+        run: |
+          php ./vendor/bin/phpunit --testdox --exclude-group ""
+          php ./vendor/bin/phpunit --testdox --exclude-group ""
