@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
 
@@ -32,6 +31,7 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
  */
@@ -47,6 +47,8 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesAndCheckBackup(): void
     {
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);

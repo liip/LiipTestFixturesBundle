@@ -11,10 +11,12 @@
 
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
+use BadMethodCallException;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
+use InvalidArgumentException;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -90,6 +92,11 @@ abstract class AbstractDatabaseTool
         $this->databaseCacheEnabled = $databaseCacheEnabled;
     }
 
+    public function isDatabaseCacheEnabled(): bool
+    {
+        return $this->databaseCacheEnabled;
+    }
+
     public function setObjectManagerName(string $omName = null): void
     {
         $this->omName = $omName;
@@ -137,13 +144,13 @@ abstract class AbstractDatabaseTool
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
 
     /**
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function loadAliceFixture(array $paths = [], bool $append = false): array
     {
         $persisterLoaderServiceName = 'fidry_alice_data_fixtures.loader.doctrine';
         if (!$this->container->has($persisterLoaderServiceName)) {
-            throw new \BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
+            throw new BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
         }
 
         if (false === $append) {
@@ -163,7 +170,7 @@ abstract class AbstractDatabaseTool
     /**
      * Locate fixture files.
      *
-     * @throws \InvalidArgumentException if a wrong path is given outside a bundle
+     * @throws InvalidArgumentException if a wrong path is given outside a bundle
      */
     protected function locateResources(array $paths): array
     {
@@ -174,7 +181,7 @@ abstract class AbstractDatabaseTool
         foreach ($paths as $path) {
             if ('@' !== $path[0]) {
                 if (!file_exists($path)) {
-                    throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
+                    throw new InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
                 }
                 $files[] = $path;
 
