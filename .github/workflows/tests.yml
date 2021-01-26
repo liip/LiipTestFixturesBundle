@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    name: Symfony (PHP ${{ matrix.php-version }})
+    name: Symfony ${{ matrix.symfony-version }} on PHP ${{ matrix.php-version }} flags ${{ matrix.composer-flags }}
     runs-on: ubuntu-latest
 
     strategy:
