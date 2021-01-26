@@ -220,7 +220,7 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->databaseTool->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
-        $this->databaseTool->loadFixtures([], true);
+        $this->databaseTool->loadFixtures([]);
 
         // The exclusion from purge worked, the user table is still alive and well.
         $this->assertSame(
