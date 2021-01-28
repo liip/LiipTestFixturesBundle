@@ -26,6 +26,6 @@ trait ContainerProvider
             return self::$container;
         }
 
-        return $this->getContainer();
+        return static::$kernel->getContainer();
     }
 }
