@@ -74,13 +74,13 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                if (method_exists($this->testCase, 'preFixtureBackupRestore')) {
+                if ($this->testCase && method_exists($this->testCase, 'preFixtureBackupRestore')) {
                     $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 }
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor);
-                if (method_exists($this->testCase, 'postFixtureBackupRestore')) {
+                if ($this->testCase && method_exists($this->testCase, 'postFixtureBackupRestore')) {
                     $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
                 }
 

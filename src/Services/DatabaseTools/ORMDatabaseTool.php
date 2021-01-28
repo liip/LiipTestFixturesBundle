@@ -115,7 +115,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                if (method_exists($this->testCase, 'preFixtureBackupRestore')) {
+                if ($this->testCase && method_exists($this->testCase, 'preFixtureBackupRestore')) {
                     $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 }
 
@@ -123,7 +123,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor, $this->excludedDoctrineTables);
 
-                if (method_exists($this->testCase, 'postFixtureBackupRestore')) {
+                if ($this->testCase && method_exists($this->testCase, 'postFixtureBackupRestore')) {
                     $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
                 }
 
@@ -147,7 +147,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             }
         }
 
-        if (method_exists($this->testCase, 'postFixtureSetup')) {
+        if ($this->testCase && method_exists($this->testCase, 'postFixtureSetup')) {
             $this->testCase->postFixtureSetup();
         }
 
@@ -163,13 +163,13 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $executor->execute($loader->getFixtures(), true);
 
         if ($backupService) {
-            if (method_exists($this->testCase, 'preReferenceSave')) {
+            if ($this->testCase && method_exists($this->testCase, 'preReferenceSave')) {
                 $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
             }
 
             $backupService->backup($executor);
 
-            if (method_exists($this->testCase, 'postReferenceSave')) {
+            if ($this->testCase && method_exists($this->testCase, 'postReferenceSave')) {
                 $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
             }
         }
