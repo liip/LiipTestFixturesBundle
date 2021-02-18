@@ -79,14 +79,14 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
                 $this->om->clear();
 
                 $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
-                $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
 
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor);
 
                 $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
-                $this->dispatchEvent($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
 
                 return $executor;
             }
@@ -103,11 +103,11 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
 
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
-            $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
 
             $backupService->backup($executor);
 
-            $this->dispatchEvent($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
         }
 
         return $executor;
