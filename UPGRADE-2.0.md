@@ -4,7 +4,7 @@
 This is the list of actions that you need to take when upgrading this bundle from the 1.x to the 2.x version:
 
 - Remove `FixturesTrait`:
-    - Access through the service `liip_test_fixtures.services.database_tool_collection` instead
+    - Access through the service `DatabaseToolCollection::class` instead
     - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
     - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way:
         - 3rd argument `$omName`: call `$databaseTool->setObjectManagerName($omName);` instead
@@ -91,7 +91,6 @@ class DefaultControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->testClient = static::makeClient();
-        $this->testClient->getContainer();
     }
     
     public function testUsers()
