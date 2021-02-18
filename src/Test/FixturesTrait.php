@@ -16,6 +16,7 @@ namespace Liip\TestFixturesBundle\Test;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Persistence\ObjectManager;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
@@ -99,57 +100,6 @@ trait FixturesTrait
         $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
 
         return $dbTool->loadAliceFixture($paths, $append);
-    }
-
-    /**
-     * Callback function to be executed after Schema creation.
-     * Use this to execute acl:init or other things necessary.
-     *
-     * @deprecated Use LiipTestFixturesEvents instead
-     */
-    public function postFixtureSetup(): void
-    {
-    }
-
-    /**
-     * Callback function to be executed after Schema restore.
-     *
-     * @param string $backupFilePath Path of file used to backup the references of the data fixtures
-     *
-     * @deprecated Use LiipTestFixturesEvents instead
-     */
-    public function postFixtureBackupRestore($backupFilePath): void
-    {
-    }
-
-    /**
-     * Callback function to be executed before Schema restore.
-     *
-     * @deprecated Use LiipTestFixturesEvents instead
-     */
-    public function preFixtureBackupRestore(
-        ObjectManager $manager,
-        ProxyReferenceRepository $referenceRepository,
-        string $backupFilePath
-    ): void {
-    }
-
-    /**
-     * Callback function to be executed after save of references.
-     *
-     * @deprecated Use LiipTestFixturesEvents instead
-     */
-    public function postReferenceSave(ObjectManager $manager, AbstractExecutor $executor, string $backupFilePath): void
-    {
-    }
-
-    /**
-     * Callback function to be executed before save of references.
-     *
-     * @deprecated Use LiipTestFixturesEvents instead
-     */
-    public function preReferenceSave(ObjectManager $manager, AbstractExecutor $executor, ?string $backupFilePath): void
-    {
     }
 
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void

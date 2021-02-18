@@ -73,7 +73,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
                 $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
 
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
@@ -81,7 +80,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
                 $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
                 $this->dispatchEvent($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
-                $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
 
                 return $executor;
             }

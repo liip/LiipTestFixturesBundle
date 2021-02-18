@@ -59,7 +59,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
                 $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
                 $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
 
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
@@ -67,7 +66,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
                 $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
                 $this->dispatchEvent($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
-                $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
 
                 return $executor;
             }
@@ -85,8 +83,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         $event = new FixtureEvent();
         $this->dispatchEvent($event, LiipTestFixturesEvents::POST_FIXTURE_SETUP);
 
-        $this->testCase->postFixtureSetup();
-
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
@@ -99,12 +95,10 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
             $this->dispatchEvent($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
-            $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
 
             $backupService->backup($executor);
 
             $this->dispatchEvent($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
-            $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
         }
 
         return $executor;

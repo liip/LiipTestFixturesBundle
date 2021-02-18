@@ -14,8 +14,8 @@ namespace Liip\TestFixturesBundle\Services;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use ReflectionMethod;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,7 +43,7 @@ final class DatabaseToolCollection
         $this->items[$databaseTool->getType()][$databaseTool->getDriverName()] = $databaseTool;
     }
 
-    public function get($omName = null, $registryName = 'doctrine', int $purgeMode = null, KernelTestCase $testCase = null): AbstractDatabaseTool
+    public function get($omName = null, $registryName = 'doctrine', int $purgeMode = null): AbstractDatabaseTool
     {
         /** @var ManagerRegistry $registry */
         $registry = $this->container->get($registryName);
@@ -56,7 +56,6 @@ final class DatabaseToolCollection
         $databaseTool->setRegistry($registry);
         $databaseTool->setObjectManagerName($omName);
         $databaseTool->setPurgeMode($purgeMode);
-        $databaseTool->setTestCase($testCase);
 
         $databaseTool->setDatabaseCacheEnabled($this->isCacheEnabled());
 
@@ -68,7 +67,7 @@ final class DatabaseToolCollection
         foreach (debug_backtrace() as $step) {
             if ('test' === substr($step['function'], 0, 4)) { //TODO: handle tests with the @test annotation
                 $annotations = $this->annotationReader->getMethodAnnotations(
-                    new \ReflectionMethod($step['class'], $step['function'])
+                    new ReflectionMethod($step['class'], $step['function'])
                 );
 
                 foreach ($annotations as $annotationClass) {
