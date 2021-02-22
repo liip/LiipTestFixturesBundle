@@ -16,9 +16,11 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -34,11 +36,23 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigEventsTest extends KernelTestCase
 {
-    use FixturesTrait;
+    use ContainerProvider;
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
     protected static function getKernelClass(): string
     {
         return AppConfigEventsKernel::class;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     /**
@@ -47,14 +61,14 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
-        $fixtures = $this->loadFixtures([]);
+        $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
             $fixtures
         );
 
-        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
 
         $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
         $this->assertSame('preFixtureBackupRestore', $event[0][1]);
@@ -88,14 +102,14 @@ class ConfigEventsTest extends KernelTestCase
             ->method($methodName);
 
         // Register to the event
-        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
         $eventDispatcher->addListener(
             $eventName,
             [$mock, $methodName]
         );
 
         // By loading fixtures, the events will be called (or not)
-        $fixtures = $this->loadFixtures([]);
+        $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
