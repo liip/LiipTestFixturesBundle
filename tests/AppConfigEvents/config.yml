@@ -1,0 +1,6 @@
+# inherits configuration from ../AppConfig/config.yml
+
+services:
+    'Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber':
+        tags:
+            - { name: kernel.event_subscriber }

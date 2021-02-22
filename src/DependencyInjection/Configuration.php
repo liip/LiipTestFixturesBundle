@@ -26,14 +26,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        if (method_exists(TreeBuilder::class, 'getRootNode')) {
-            $treeBuilder = new TreeBuilder('liip_test_fixtures');
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $treeBuilder = new TreeBuilder();
-            $rootNode = $treeBuilder->root('liip_test_fixtures', 'array');
-        }
+        $treeBuilder = new TreeBuilder('liip_test_fixtures');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

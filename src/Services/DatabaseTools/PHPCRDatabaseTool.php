@@ -16,6 +16,10 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\PHPCRPurger;
 use Doctrine\ODM\PHPCR\DocumentManager;
+use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
+use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -74,11 +78,15 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor);
-                $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
+
+                $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
 
                 return $executor;
             }
@@ -94,9 +102,12 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
         $executor->execute($loader->getFixtures(), true);
 
         if ($backupService) {
-            $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+            $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+
             $backupService->backup($executor);
-            $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
         }
 
         return $executor;

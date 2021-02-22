@@ -13,9 +13,13 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\Tools\SchemaTool;
+use Liip\TestFixturesBundle\Event\FixtureEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
+use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -53,11 +57,15 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor);
-                $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
+
+                $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
 
                 return $executor;
             }
@@ -71,7 +79,9 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
                 $schemaTool->createSchema($this->getMetadatas());
             }
         }
-        $this->testCase->postFixtureSetup();
+
+        $event = new FixtureEvent();
+        $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_SETUP);
 
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
@@ -83,9 +93,12 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         $executor->execute($loader->getFixtures(), true);
 
         if ($backupService) {
-            $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+            $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+
             $backupService->backup($executor);
-            $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
         }
 
         return $executor;
