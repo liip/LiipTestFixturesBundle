@@ -17,7 +17,8 @@ class PostFixtureBackupRestoreEvent extends FixtureEvent
 {
     private $backupFilePath;
 
-    public function __construct(string $backupFilePath) {
+    public function __construct(string $backupFilePath)
+    {
         $this->backupFilePath = $backupFilePath;
     }
 

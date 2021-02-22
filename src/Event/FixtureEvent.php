@@ -21,8 +21,7 @@ if (class_exists('\Symfony\Component\EventDispatcher\Event')) {
     class FixtureEvent extends \Symfony\Component\EventDispatcher\Event
     {
     }
-}
-else {
+} else {
     class FixtureEvent extends Event
     {
     }
