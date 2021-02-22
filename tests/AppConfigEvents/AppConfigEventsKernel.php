@@ -11,12 +11,12 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\Acme\Tests\AppConfigPgsql;
+namespace Liip\Acme\Tests\AppConfigEvents;
 
-use Liip\Acme\Tests\App\AppKernel;
+use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class AppConfigPgsqlKernel extends AppKernel
+class AppConfigEventsKernel extends AppConfigKernel
 {
     /**
      * Load the config.yml from the current directory.
@@ -26,7 +26,7 @@ class AppConfigPgsqlKernel extends AppKernel
         // Load the default file.
         parent::registerContainerConfiguration($loader);
 
-        // Load the file with PostgreSQL configuration
-        $loader->load(__DIR__.'/config.yml');
+        // Load the file with the FixturesSubscriber service
+        $loader->load(__DIR__ . '/config.yml');
     }
 }

@@ -23,18 +23,6 @@ Tips for Fixture Loading Tests
     test-environment to use a SQLite-database. This will make your tests run
     faster and will create a fresh, predictable database for every test you run.
 
-    * For symfony 3: add those lines to `app/config/config_test.yml`:
-        ```yaml
-        # app/config/config_test.yml
-        doctrine:
-            dbal:
-                default_connection: default
-                connections:
-                    default:
-                        driver:   pdo_sqlite
-                        path:     "%kernel.cache_dir%/test.db"
-        ```
-    
     * For symfony 4 : create file if it doesn't exists `config/packages/test/doctrine.yaml`, and if it does append those lines:
         ```yaml
         # config/packages/test/doctrine.yaml
@@ -297,7 +285,6 @@ class AccountControllerTest extends WebTestCase
         if (!empty($metadatas)) {
             $schemaTool->createSchema($metadatas);
         }
-        $this->postFixtureSetup();
 
         $fixtures = array(
             'Acme\MyBundle\DataFixtures\ORM\LoadUserData',

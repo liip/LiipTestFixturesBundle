@@ -13,6 +13,9 @@ The bundle's internal tests show several ways to load fixtures:
   - [fixture to load](../tests/App/DataFixtures/ORM/user_with_custom_provider.yml)
   - [custom provider](../tests/AppConfig/DataFixtures/Faker/Provider/FooProvider.php)
   - [service declaration](../tests/AppConfig/config.yml)
+- using events to perform actions during fixtures loading:
+  - [declare subscriber(s)](../tests/AppConfigEvents/EventListener/FixturesSubscriber.php)
+  - [service declaration to put in your test configuration](../tests/AppConfigEvents/config.yml)
 
 Functional test
 ---------------

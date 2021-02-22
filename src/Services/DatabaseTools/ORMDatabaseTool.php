@@ -19,6 +19,11 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
+use Liip\TestFixturesBundle\Event\FixtureEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
+use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -115,17 +120,15 @@ class ORMDatabaseTool extends AbstractDatabaseTool
                 $this->om->flush();
                 $this->om->clear();
 
-                if ($this->testCase && method_exists($this->testCase, 'preFixtureBackupRestore')) {
-                    $this->testCase->preFixtureBackupRestore($this->om, $referenceRepository, $backupService->getBackupFilePath());
-                }
+                $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
 
                 $executor = $this->getExecutor($this->getPurger());
                 $executor->setReferenceRepository($referenceRepository);
                 $backupService->restore($executor, $this->excludedDoctrineTables);
 
-                if ($this->testCase && method_exists($this->testCase, 'postFixtureBackupRestore')) {
-                    $this->testCase->postFixtureBackupRestore($backupService->getBackupFilePath());
-                }
+                $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
 
                 return $executor;
             }
@@ -147,9 +150,8 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             }
         }
 
-        if ($this->testCase && method_exists($this->testCase, 'postFixtureSetup')) {
-            $this->testCase->postFixtureSetup();
-        }
+        $event = new FixtureEvent();
+        $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_SETUP);
 
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
@@ -163,14 +165,13 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $executor->execute($loader->getFixtures(), true);
 
         if ($backupService) {
-            if ($this->testCase && method_exists($this->testCase, 'preReferenceSave')) {
-                $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
-            }
+            $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
 
             $backupService->backup($executor);
 
             if ($this->testCase && method_exists($this->testCase, 'postReferenceSave')) {
-                $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
             }
         }
 
