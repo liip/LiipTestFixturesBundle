@@ -170,9 +170,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
 
             $backupService->backup($executor);
 
-            if ($this->testCase && method_exists($this->testCase, 'postReferenceSave')) {
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
-            }
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
         }
 
         return $executor;

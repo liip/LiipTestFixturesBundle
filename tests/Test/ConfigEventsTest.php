@@ -38,9 +38,6 @@ class ConfigEventsTest extends KernelTestCase
 {
     use ContainerProvider;
 
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
-
     protected static function getKernelClass(): string
     {
         return AppConfigEventsKernel::class;
@@ -51,8 +48,6 @@ class ConfigEventsTest extends KernelTestCase
         parent::setUp();
 
         self::bootKernel();
-
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     /**
@@ -61,7 +56,9 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
-        $fixtures = $this->databaseTool->loadFixtures([]);
+        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -95,6 +92,8 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations): void
     {
+        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
         // Create the mock and declare that the method must be called (or not)
         $mock = $this->getMockBuilder(FixturesSubscriber::class)->getMock();
 
@@ -109,7 +108,7 @@ class ConfigEventsTest extends KernelTestCase
         );
 
         // By loading fixtures, the events will be called (or not)
-        $fixtures = $this->databaseTool->loadFixtures([]);
+        $fixtures = $databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',

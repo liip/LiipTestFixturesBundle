@@ -21,7 +21,6 @@ use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use ReflectionMethod;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -64,11 +63,6 @@ abstract class AbstractDatabaseTool
      * @var int
      */
     protected $purgeMode;
-
-    /**
-     * @var KernelTestCase
-     */
-    protected $testCase;
 
     /**
      * @var bool
@@ -114,11 +108,6 @@ abstract class AbstractDatabaseTool
     public function setPurgeMode(int $purgeMode = null): void
     {
         $this->purgeMode = $purgeMode;
-    }
-
-    public function setTestCase(KernelTestCase $testCase): void
-    {
-        $this->testCase = $testCase;
     }
 
     abstract public function getType(): string;

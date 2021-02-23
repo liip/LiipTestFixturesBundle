@@ -98,9 +98,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
             $backupService->backup($executor);
 
-            if ($this->testCase && method_exists($this->testCase, 'preReferenceSave')) {
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
-            }
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
         }
 
         return $executor;
