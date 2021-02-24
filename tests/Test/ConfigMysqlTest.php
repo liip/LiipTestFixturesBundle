@@ -16,7 +16,6 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
-use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
@@ -24,8 +23,8 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
-    !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
+if (interface_exists('\Doctrine\Persistence\ObjectManager')
+    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
     class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
 }
 
@@ -46,6 +45,9 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigMysqlTest extends KernelTestCase
 {
@@ -55,11 +57,6 @@ class ConfigMysqlTest extends KernelTestCase
     /** @var ObjectRepository */
     protected $userRepository;
 
-    protected static function getKernelClass(): string
-    {
-        return AppConfigMysqlKernel::class;
-    }
-
     public function setUp(): void
     {
         parent::setUp();
@@ -67,7 +64,8 @@ class ConfigMysqlTest extends KernelTestCase
         self::bootKernel();
 
         $this->userRepository = $this->getTestContainer()->get('doctrine')
-            ->getRepository('LiipAcme:User');
+            ->getRepository('LiipAcme:User')
+        ;
     }
 
     /**
@@ -118,7 +116,8 @@ class ConfigMysqlTest extends KernelTestCase
         $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
-            ]);
+            ])
+        ;
 
         $this->assertSame(
             'foo@bar.com',
@@ -157,7 +156,8 @@ class ConfigMysqlTest extends KernelTestCase
         $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
-            ]);
+            ])
+        ;
 
         $this->assertNotNull($user1);
 
@@ -174,7 +174,8 @@ class ConfigMysqlTest extends KernelTestCase
         $user3 = $this->userRepository
             ->findOneBy([
                 'id' => 3,
-            ]);
+            ])
+        ;
 
         $this->assertNotNull($user3);
 
@@ -312,7 +313,8 @@ class ConfigMysqlTest extends KernelTestCase
         $user = $this->userRepository
             ->findOneBy([
                 'id' => 1,
-            ]);
+            ])
+        ;
 
         $this->assertInstanceOf(User::class, $user);
 
@@ -323,10 +325,16 @@ class ConfigMysqlTest extends KernelTestCase
         $user = $this->userRepository
             ->findOneBy([
                 'id' => 10,
-            ]);
+            ])
+        ;
 
         $this->assertTrue(
             $user->getEnabled()
         );
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigMysqlKernel::class;
     }
 }

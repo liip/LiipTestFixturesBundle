@@ -31,6 +31,9 @@ use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ *
+ * @internal
+ * @coversNothing
  */
 class WebTestCaseConfigPgsqlTest extends ConfigMysqlTest
 {

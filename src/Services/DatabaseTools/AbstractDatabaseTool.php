@@ -11,10 +11,12 @@
 
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
+use BadMethodCallException;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
+use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\DBAL\Connection;
+use InvalidArgumentException;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -67,12 +69,12 @@ abstract class AbstractDatabaseTool
      */
     protected $databaseCacheEnabled = true;
 
+    protected $excludedDoctrineTables = [];
+
     /**
      * @var array
      */
     private static $cachedMetadatas = [];
-
-    protected $excludedDoctrineTables = [];
 
     public function __construct(ContainerInterface $container, FixturesLoaderFactory $fixturesLoaderFactory)
     {
@@ -114,6 +116,32 @@ abstract class AbstractDatabaseTool
         return 'default';
     }
 
+    abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
+
+    /**
+     * @throws BadMethodCallException
+     */
+    public function loadAliceFixture(array $paths = [], bool $append = false): array
+    {
+        $persisterLoaderServiceName = 'fidry_alice_data_fixtures.loader.doctrine';
+        if (!$this->container->has($persisterLoaderServiceName)) {
+            throw new BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
+        }
+
+        if (false === $append) {
+            $this->cleanDatabase();
+        }
+
+        $files = $this->locateResources($paths);
+
+        return $this->container->get($persisterLoaderServiceName)->load($files);
+    }
+
+    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
+    {
+        $this->excludedDoctrineTables = $excludedDoctrineTables;
+    }
+
     protected function getBackupService(): ?DatabaseBackupInterface
     {
         $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
@@ -127,32 +155,11 @@ abstract class AbstractDatabaseTool
             if ($this->container->has($backupServiceName)) {
                 $backupService = $this->container->get($backupServiceName);
             } else {
-                @trigger_error("Could not find $backupServiceName in container. Possible misconfiguration.");
+                @trigger_error("Could not find {$backupServiceName} in container. Possible misconfiguration.");
             }
         }
 
         return (isset($backupService) && $backupService instanceof DatabaseBackupInterface) ? $backupService : null;
-    }
-
-    abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
-
-    /**
-     * @throws \BadMethodCallException
-     */
-    public function loadAliceFixture(array $paths = [], bool $append = false): array
-    {
-        $persisterLoaderServiceName = 'fidry_alice_data_fixtures.loader.doctrine';
-        if (!$this->container->has($persisterLoaderServiceName)) {
-            throw new \BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
-        }
-
-        if (false === $append) {
-            $this->cleanDatabase();
-        }
-
-        $files = $this->locateResources($paths);
-
-        return $this->container->get($persisterLoaderServiceName)->load($files);
     }
 
     protected function cleanDatabase(): void
@@ -163,7 +170,7 @@ abstract class AbstractDatabaseTool
     /**
      * Locate fixture files.
      *
-     * @throws \InvalidArgumentException if a wrong path is given outside a bundle
+     * @throws InvalidArgumentException if a wrong path is given outside a bundle
      */
     protected function locateResources(array $paths): array
     {
@@ -174,7 +181,7 @@ abstract class AbstractDatabaseTool
         foreach ($paths as $path) {
             if ('@' !== $path[0]) {
                 if (!file_exists($path)) {
-                    throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
+                    throw new InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
                 }
                 $files[] = $path;
 
@@ -189,7 +196,7 @@ abstract class AbstractDatabaseTool
 
     protected function getMetadatas(): array
     {
-        if(!$this->getCacheMetadataParameter()) {
+        if (!$this->getCacheMetadataParameter()) {
             return $this->om->getMetadataFactory()->getAllMetadata();
         }
 
@@ -203,11 +210,6 @@ abstract class AbstractDatabaseTool
         }
 
         return self::$cachedMetadatas[$key];
-    }
-
-    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
-    {
-        $this->excludedDoctrineTables = $excludedDoctrineTables;
     }
 
     protected function getKeepDatabaseAndSchemaParameter()
