@@ -31,6 +31,9 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigMysqlUrlTest extends ConfigMysqlTest
 {

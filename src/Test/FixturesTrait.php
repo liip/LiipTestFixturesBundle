@@ -33,60 +33,19 @@ trait FixturesTrait
      */
     private $excludedDoctrineTables = [];
 
-    /**
-     * Get an instance of the dependency injection container.
-     * (this creates a kernel *without* parameters).
-     */
-    protected function getContainer(): ContainerInterface
+    protected function tearDown(): void
     {
-        $environment = $this->determineEnvironment();
-
-        if (empty($this->containers[$environment])) {
-            $options = [
-                'environment' => $environment,
-            ];
-
-            // Check that the kernel has not been booted separately (eg. with static::createClient())
-            if (null === static::$kernel || null === static::$kernel->getContainer()) {
-                $this->bootKernel($options);
-            }
-
-            $container = static::$kernel->getContainer();
-            if ($container->has('test.service_container')) {
-                $this->containers[$environment] = $container->get('test.service_container');
-            } else {
-                $this->containers[$environment] = $container;
+        if (null !== $this->containers) {
+            foreach ($this->containers as $container) {
+                if ($container instanceof ResettableContainerInterface) {
+                    $container->reset();
+                }
             }
         }
 
-        return $this->containers[$environment];
-    }
+        $this->containers = null;
 
-    /**
-     * Set the database to the provided fixtures.
-     *
-     * Drops the current database and then loads fixtures using the specified
-     * classes. The parameter is a list of fully qualified class names of
-     * classes that implement Doctrine\Common\DataFixtures\FixtureInterface
-     * so that they can be loaded by the DataFixtures Loader::addFixture
-     *
-     * When using SQLite this method will automatically make a copy of the
-     * loaded schema and fixtures which will be restored automatically in
-     * case the same fixture classes are to be loaded again. Caveat: changes
-     * to references and/or identities may go undetected.
-     *
-     * Depends on the doctrine data-fixtures library being available in the
-     * class path.
-     */
-    protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
-    {
-        $container = $this->getContainer();
-
-        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
-        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
-        $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
-
-        return $dbTool->loadFixtures($classNames, $append);
+        parent::tearDown();
     }
 
     public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
@@ -147,19 +106,60 @@ trait FixturesTrait
         $this->excludedDoctrineTables = $excludedDoctrineTables;
     }
 
-    protected function tearDown(): void
+    /**
+     * Get an instance of the dependency injection container.
+     * (this creates a kernel *without* parameters).
+     */
+    protected function getContainer(): ContainerInterface
     {
-        if (null !== $this->containers) {
-            foreach ($this->containers as $container) {
-                if ($container instanceof ResettableContainerInterface) {
-                    $container->reset();
-                }
+        $environment = $this->determineEnvironment();
+
+        if (empty($this->containers[$environment])) {
+            $options = [
+                'environment' => $environment,
+            ];
+
+            // Check that the kernel has not been booted separately (eg. with static::createClient())
+            if (null === static::$kernel || null === static::$kernel->getContainer()) {
+                $this->bootKernel($options);
+            }
+
+            $container = static::$kernel->getContainer();
+            if ($container->has('test.service_container')) {
+                $this->containers[$environment] = $container->get('test.service_container');
+            } else {
+                $this->containers[$environment] = $container;
             }
         }
 
-        $this->containers = null;
+        return $this->containers[$environment];
+    }
 
-        parent::tearDown();
+    /**
+     * Set the database to the provided fixtures.
+     *
+     * Drops the current database and then loads fixtures using the specified
+     * classes. The parameter is a list of fully qualified class names of
+     * classes that implement Doctrine\Common\DataFixtures\FixtureInterface
+     * so that they can be loaded by the DataFixtures Loader::addFixture
+     *
+     * When using SQLite this method will automatically make a copy of the
+     * loaded schema and fixtures which will be restored automatically in
+     * case the same fixture classes are to be loaded again. Caveat: changes
+     * to references and/or identities may go undetected.
+     *
+     * Depends on the doctrine data-fixtures library being available in the
+     * class path.
+     */
+    protected function loadFixtures(array $classNames = [], bool $append = false, ?string $omName = null, string $registryName = 'doctrine', ?int $purgeMode = null): ?AbstractExecutor
+    {
+        $container = $this->getContainer();
+
+        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
+        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
+        $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
+
+        return $dbTool->loadFixtures($classNames, $append);
     }
 
     /**

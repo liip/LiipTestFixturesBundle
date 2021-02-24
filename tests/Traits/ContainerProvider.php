@@ -16,7 +16,7 @@ namespace Liip\Acme\Tests\Traits;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Used by Symfony < 4.0 because self::$container doesn't exist
+ * Used by Symfony < 4.0 because self::$container doesn't exist.
  */
 trait ContainerProvider
 {

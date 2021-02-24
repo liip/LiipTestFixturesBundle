@@ -36,6 +36,60 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
         return $this->getBackupFilePath().'.ser';
     }
 
+    public function isBackupActual(): bool
+    {
+        return
+            file_exists($this->getBackupFilePath())
+            && file_exists($this->getReferenceBackupFilePath())
+            && $this->isBackupUpToDate($this->getBackupFilePath());
+    }
+
+    public function backup(AbstractExecutor $executor): void
+    {
+        /** @var DocumentManager $dm */
+        $dm = $executor->getReferenceRepository()->getManager();
+
+        foreach ($this->getDatabases($dm) as $dbName => $server) {
+            /**
+             * @var Server $server
+             */
+            $dbHost = $server->getHost();
+            $dbPort = $server->getPort();
+
+            exec("mongodump --quiet --forceTableScan --db {$dbName} --host {$dbHost} --port {$dbPort} --out {$this->getBackupFilePath()}");
+        }
+
+        $executor->getReferenceRepository()->save($this->getBackupFilePath());
+        self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
+    }
+
+    public function restore(AbstractExecutor $executor, array $excludedTables = []): void
+    {
+        /** @var DocumentManager $dm */
+        $dm = $executor->getReferenceRepository()->getManager();
+
+        foreach ($this->getDatabases($dm) as $dbName => $server) {
+            /**
+             * @var Server $server
+             */
+            $dbHost = $server->getHost();
+            $dbPort = $server->getPort();
+
+            exec("mongorestore --quiet --drop --db {$dbName} --host {$dbHost} --port {$dbPort} {$this->getBackupFilePath()}/{$dbName}", $output);
+        }
+
+        if (self::$metadata) {
+            // it need for better performance
+            foreach (self::$metadata as $class => $data) {
+                $dm->getMetadataFactory()->setMetadataFor($class, $data);
+            }
+            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+        } else {
+            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+            self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
+        }
+    }
+
     protected function getReferenceBackup(): string
     {
         if (empty(self::$referenceData)) {
@@ -43,14 +97,6 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
         }
 
         return self::$referenceData;
-    }
-
-    public function isBackupActual(): bool
-    {
-        return
-            file_exists($this->getBackupFilePath()) &&
-            file_exists($this->getReferenceBackupFilePath()) &&
-            $this->isBackupUpToDate($this->getBackupFilePath());
     }
 
     protected function getDatabases(DocumentManager $dm): array
@@ -67,51 +113,5 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements Data
         }
 
         return self::$databases;
-    }
-
-    public function backup(AbstractExecutor $executor): void
-    {
-        /** @var DocumentManager $dm */
-        $dm = $executor->getReferenceRepository()->getManager();
-
-        foreach ($this->getDatabases($dm) as $dbName => $server) {
-            /**
-             * @var $server Server
-             */
-            $dbHost = $server->getHost();
-            $dbPort = $server->getPort();
-
-            exec("mongodump --quiet --forceTableScan --db $dbName --host $dbHost --port $dbPort --out {$this->getBackupFilePath()}");
-        }
-
-        $executor->getReferenceRepository()->save($this->getBackupFilePath());
-        self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
-    }
-
-    public function restore(AbstractExecutor $executor, array $excludedTables = []): void
-    {
-        /** @var DocumentManager $dm */
-        $dm = $executor->getReferenceRepository()->getManager();
-
-        foreach ($this->getDatabases($dm) as $dbName => $server) {
-            /**
-             * @var $server Server
-             */
-            $dbHost = $server->getHost();
-            $dbPort = $server->getPort();
-
-            exec("mongorestore --quiet --drop --db $dbName --host $dbHost --port $dbPort {$this->getBackupFilePath()}/$dbName", $output);
-        }
-
-        if (self::$metadata) {
-            // it need for better performance
-            foreach (self::$metadata as $class => $data) {
-                $dm->getMetadataFactory()->setMetadataFor($class, $data);
-            }
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
-        } else {
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
-            self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
-        }
     }
 }

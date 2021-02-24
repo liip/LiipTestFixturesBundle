@@ -16,6 +16,7 @@ namespace Liip\TestFixturesBundle\Factory;
 use Doctrine\Bundle\DoctrineBundle\ConnectionFactory as BaseConnectionFactory;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Connection;
 
 /**
  * Creates a connection taking the db name from the env with
@@ -26,12 +27,10 @@ class ConnectionFactory extends BaseConnectionFactory
     /**
      * Create a connection by name.
      *
-     * @param array         $params
      * @param Configuration $config
      * @param EventManager  $eventManager
-     * @param array         $mappingTypes
      *
-     * @return \Doctrine\DBAL\Connection
+     * @return Connection
      */
     public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = [])
     {

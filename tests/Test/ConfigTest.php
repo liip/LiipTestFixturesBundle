@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
-
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager') &&
-    !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
+if (interface_exists('\Doctrine\Persistence\ObjectManager')
+    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
     class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
 }
 
@@ -44,6 +42,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * annotation:
  *
  * @IgnoreAnnotation("expectedException")
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigTest extends KernelTestCase
 {
@@ -56,11 +57,6 @@ class ConfigTest extends KernelTestCase
     /** @var string */
     private $kernelCacheDir;
 
-    protected static function getKernelClass(): string
-    {
-        return AppConfigKernel::class;
-    }
-
     public function setUp(): void
     {
         parent::setUp();
@@ -70,7 +66,8 @@ class ConfigTest extends KernelTestCase
         $container = $this->getTestContainer();
 
         $this->userRepository = $this->getTestContainer()->get('doctrine')
-            ->getRepository('LiipAcme:User');
+            ->getRepository('LiipAcme:User')
+        ;
 
         $this->kernelCacheDir = $container->getParameter('kernel.cache_dir');
     }
@@ -231,5 +228,10 @@ class ConfigTest extends KernelTestCase
 
         // Check that random data has been changed, to ensure that backup was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigKernel::class;
     }
 }
