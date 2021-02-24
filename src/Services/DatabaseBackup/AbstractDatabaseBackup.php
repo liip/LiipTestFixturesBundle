@@ -11,7 +11,9 @@
 
 namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
+use DateTime;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -63,7 +65,7 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
      */
     protected function isBackupUpToDate(string $backup): bool
     {
-        $backupLastModifiedDateTime = \DateTime::createFromFormat('U', filemtime($backup));
+        $backupLastModifiedDateTime = DateTime::createFromFormat('U', filemtime($backup));
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($this->classNames);
 
@@ -85,18 +87,16 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
      *
      * @param string $class The fully qualified class name of the fixture class to
      *                      check modification date on
-     *
-     * @return \DateTime|null
      */
-    protected function getFixtureLastModified($class): ?\DateTime
+    protected function getFixtureLastModified($class): ?DateTime
     {
         $lastModifiedDateTime = null;
 
-        $reflClass = new \ReflectionClass($class);
+        $reflClass = new ReflectionClass($class);
         $classFileName = $reflClass->getFileName();
 
         if (file_exists($classFileName)) {
-            $lastModifiedDateTime = new \DateTime();
+            $lastModifiedDateTime = new DateTime();
             $lastModifiedDateTime->setTimestamp(filemtime($classFileName));
         }
 

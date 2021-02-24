@@ -3,6 +3,15 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  static-code-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: PHP-CS-Fixer
+        uses: docker://jakzal/phpqa:php7.4-alpine
+        with:
+          args: php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi --rules=@PhpCsFixer fix
+
   tests:
     name: Symfony ${{ matrix.symfony-version }} on PHP ${{ matrix.php-version }} flags ${{ matrix.composer-flags }}
     runs-on: ubuntu-latest

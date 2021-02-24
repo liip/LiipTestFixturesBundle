@@ -34,22 +34,12 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         return $this->getBackupFilePath().'.ser';
     }
 
-    protected function getBackup()
-    {
-        return file_get_contents($this->getBackupFilePath());
-    }
-
-    protected function getReferenceBackup(): string
-    {
-        return file_get_contents($this->getReferenceBackupFilePath());
-    }
-
     public function isBackupActual(): bool
     {
         return
-            file_exists($this->getBackupFilePath()) &&
-            file_exists($this->getReferenceBackupFilePath()) &&
-            $this->isBackupUpToDate($this->getBackupFilePath());
+            file_exists($this->getBackupFilePath())
+            && file_exists($this->getReferenceBackupFilePath())
+            && $this->isBackupUpToDate($this->getBackupFilePath());
     }
 
     public function backup(AbstractExecutor $executor): void
@@ -76,20 +66,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
-        exec("mysqldump --host $dbHost $port $dbPass --user $dbUser --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact $dbName > {$this->getBackupFilePath()}");
-    }
-
-    protected function updateSchemaIfNeed(EntityManager $em)
-    {
-        if (!self::$schemaUpdatedFlag) {
-            $schemaTool = new SchemaTool($em);
-            $schemaTool->dropDatabase();
-            if (!empty($this->metadatas)) {
-                $schemaTool->createSchema($this->metadatas);
-            }
-
-            self::$schemaUpdatedFlag = true;
-        }
+        exec("mysqldump --host {$dbHost} {$port} {$dbPass} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact {$dbName} > {$this->getBackupFilePath()}");
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
@@ -130,6 +107,29 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         } else {
             $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
             self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
+        }
+    }
+
+    protected function getBackup()
+    {
+        return file_get_contents($this->getBackupFilePath());
+    }
+
+    protected function getReferenceBackup(): string
+    {
+        return file_get_contents($this->getReferenceBackupFilePath());
+    }
+
+    protected function updateSchemaIfNeed(EntityManager $em)
+    {
+        if (!self::$schemaUpdatedFlag) {
+            $schemaTool = new SchemaTool($em);
+            $schemaTool->dropDatabase();
+            if (!empty($this->metadatas)) {
+                $schemaTool->createSchema($this->metadatas);
+            }
+
+            self::$schemaUpdatedFlag = true;
         }
     }
 }

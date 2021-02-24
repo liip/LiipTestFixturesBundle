@@ -40,55 +40,6 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         return 'ORM';
     }
 
-    protected function getExecutor(ORMPurger $purger = null): ORMExecutor
-    {
-        return new ORMExecutor($this->om, $purger);
-    }
-
-    protected function getPurger(): ORMPurger
-    {
-        $purger = new ORMPurger(null, $this->excludedDoctrineTables);
-
-        if (null !== $this->purgeMode) {
-            $purger->setPurgeMode($this->purgeMode);
-        }
-
-        return $purger;
-    }
-
-    protected function createDatabaseIfNotExists(): void
-    {
-        $params = $this->connection->getParams();
-        if (isset($params['master'])) {
-            $params = $params['master'];
-        }
-        $dbName = isset($params['dbname']) ? $params['dbname'] : '';
-
-        unset($params['dbname']);
-
-        // Unset url to avoid issue:
-        // “An exception occurred in driver: SQLSTATE[HY000] [1049] Unknown database 'test'”
-        unset($params['url']);
-
-        $tmpConnection = DriverManager::getConnection($params);
-        $tmpConnection->connect();
-
-        if (!in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases())) {
-            $tmpConnection->getSchemaManager()->createDatabase($dbName);
-        }
-
-        $tmpConnection->close();
-    }
-
-    protected function cleanDatabase(): void
-    {
-        $this->disableForeignKeyChecksIfApplicable();
-
-        $this->loadFixtures([]);
-
-        $this->enableForeignKeyChecksIfApplicable();
-    }
-
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
@@ -127,7 +78,6 @@ class ORMDatabaseTool extends AbstractDatabaseTool
 
         // TODO: handle case when using persistent connections. Fail loudly?
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
-
             $schemaTool = new SchemaTool($this->om);
             if (count($this->excludedDoctrineTables) > 0 || true === $append) {
                 if (!empty($this->getMetadatas())) {
@@ -163,6 +113,54 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         return $executor;
     }
 
+    protected function getExecutor(ORMPurger $purger = null): ORMExecutor
+    {
+        return new ORMExecutor($this->om, $purger);
+    }
+
+    protected function getPurger(): ORMPurger
+    {
+        $purger = new ORMPurger(null, $this->excludedDoctrineTables);
+
+        if (null !== $this->purgeMode) {
+            $purger->setPurgeMode($this->purgeMode);
+        }
+
+        return $purger;
+    }
+
+    protected function createDatabaseIfNotExists(): void
+    {
+        $params = $this->connection->getParams();
+        if (isset($params['master'])) {
+            $params = $params['master'];
+        }
+        $dbName = isset($params['dbname']) ? $params['dbname'] : '';
+
+        unset($params['dbname'], $params['url']);
+
+        // Unset url to avoid issue:
+        // “An exception occurred in driver: SQLSTATE[HY000] [1049] Unknown database 'test'”
+
+        $tmpConnection = DriverManager::getConnection($params);
+        $tmpConnection->connect();
+
+        if (!in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases())) {
+            $tmpConnection->getSchemaManager()->createDatabase($dbName);
+        }
+
+        $tmpConnection->close();
+    }
+
+    protected function cleanDatabase(): void
+    {
+        $this->disableForeignKeyChecksIfApplicable();
+
+        $this->loadFixtures([]);
+
+        $this->enableForeignKeyChecksIfApplicable();
+    }
+
     protected function disableForeignKeyChecksIfApplicable(): void
     {
         if (!$this->isMysql()) {
@@ -170,7 +168,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         }
 
         $currentValue = $this->connection->fetchColumn('SELECT @@SESSION.foreign_key_checks');
-        if ($currentValue === '0') {
+        if ('0' === $currentValue) {
             return;
         }
 

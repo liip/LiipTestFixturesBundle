@@ -13,7 +13,6 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -98,7 +97,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         }
 
         $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
-        if ($currentValue === '0') {
+        if ('0' === $currentValue) {
             return;
         }
 
