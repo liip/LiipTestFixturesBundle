@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -51,14 +52,7 @@ class ConfigPhpcrTest extends KernelTestCase
 
         $entityManager = self::$container->get('doctrine')->getManager();
 
-        /** @var AbstractDatabaseTool $databaseTool */
-        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
-
-        // Check that this alternative syntax works (instead of passing these parameters to “get()”)
-        $this->databaseTool = $databaseTool
-            ->withObjectManagerName('default')
-            ->withRegistryName('doctrine_phpcr')
-        ;
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
 
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
 
@@ -69,6 +63,11 @@ class ConfigPhpcrTest extends KernelTestCase
         }
 
         $this->initRepository();
+    }
+
+    public function testToolType()
+    {
+        $this->assertInstanceOf(PHPCRDatabaseTool::class, $this->databaseTool);
     }
 
     public function testLoadFixturesPhPCr(): void

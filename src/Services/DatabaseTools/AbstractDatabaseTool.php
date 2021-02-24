@@ -125,27 +125,6 @@ abstract class AbstractDatabaseTool
         return 'default';
     }
 
-    public function withObjectManagerName(string $omName): AbstractDatabaseTool
-    {
-        $newTool = clone $this;
-        $newTool->setObjectManagerName($omName);
-
-        return $newTool;
-    }
-
-    public function withRegistryName(string $registryName): AbstractDatabaseTool
-    {
-        $newTool = clone $this;
-        $newTool->setRegistryName($registryName);
-
-        /** @var \Symfony\Bridge\Doctrine\ManagerRegistry $registry */
-        $registry = $this->container->get($registryName);
-
-        $newTool->setRegistry($registry);
-
-        return $newTool;
-    }
-
     public function withPurgeMode(int $purgeMode): AbstractDatabaseTool
     {
         $newTool = clone $this;

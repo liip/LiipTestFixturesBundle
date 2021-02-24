@@ -27,6 +27,7 @@ use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -61,6 +62,11 @@ class ConfigSqliteTest extends KernelTestCase
     public static function getKernelClass()
     {
         return AppConfigSqliteKernel::class;
+    }
+
+    public function testToolType()
+    {
+        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }
 
     public function testLoadEmptyFixtures(): void

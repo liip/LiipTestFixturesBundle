@@ -6,15 +6,14 @@ This is the list of actions that you need to take when upgrading this bundle fro
 - Removed `FixturesTrait`:
     - Access through the service `DatabaseToolCollection::class` instead
     - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
-    - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way:
-      - if you need to use these options only once:
-        - 3rd argument `$omName`: call `$databaseTool->withObjectManagerName($omName)->load…;` instead
-        - 4th argument `$registryName`: call `$databaseTool->withRegistryName($registryName)->load…;` instead
-        - 5th argument `$purgeMode`: call `$databaseTool->withPurgeMode($purgeMode)->load…;` instead
-      - if you need these options in all of your tests, pass them to these setters:
-        - 3rd argument `$omName`: call `$databaseTool->setObjectManagerName($omName);`
-        - 4th argument `$registryName`: call `$databaseTool->setRegistryName($registryName);`
-        - 5th argument `$purgeMode`: call `$databaseTool->setPurgeMode($purgeMode);`
+    - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way to use them:
+      - 3rd argument `$omName`:
+        - call `self::$container->get(DatabaseToolCollection::class)->get($omName)` instead
+      - 4th argument `$registryName`:
+        - call `self::$container->get(DatabaseToolCollection::class)->get(null, $registryName)` instead
+      - 5th argument `$purgeMode`:
+        - if you need to use that option only once: call `$databaseTool->withPurgeMode($purgeMode)->load…;`
+        - if you need that option in all of your tests: call the setter `$databaseTool->setPurgeMode($purgeMode);` before loading fixtures
 - Removed the `@DisableDatabaseCache` annotation:
     - call `$databaseTool->withDatabaseCacheEnabled(false)->load…;` to use it on the fly
     - or `$this->databaseTool->setDatabaseCacheEnabled(false);` to change it globally
