@@ -25,7 +25,6 @@ use Doctrine\Persistence\ObjectRepository;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -41,8 +40,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigSqliteTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var ObjectRepository */
     private $userRepository;
 
@@ -55,11 +52,11 @@ class ConfigSqliteTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine')
+        $this->userRepository = self::$container->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     public static function getKernelClass()

@@ -16,7 +16,6 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -39,8 +38,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigEventsTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -54,7 +51,7 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
-        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadFixtures([]);
 
@@ -63,7 +60,7 @@ class ConfigEventsTest extends KernelTestCase
             $fixtures
         );
 
-        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
+        $eventDispatcher = self::$container->get('event_dispatcher');
 
         $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
         $this->assertSame('preFixtureBackupRestore', $event[0][1]);
@@ -90,7 +87,7 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations): void
     {
-        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
 
         // Create the mock and declare that the method must be called (or not)
         $mock = $this->getMockBuilder(FixturesSubscriber::class)->getMock();
@@ -100,7 +97,7 @@ class ConfigEventsTest extends KernelTestCase
         ;
 
         // Register to the event
-        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
+        $eventDispatcher = self::$container->get('event_dispatcher');
         $eventDispatcher->addListener(
             $eventName,
             [$mock, $methodName]

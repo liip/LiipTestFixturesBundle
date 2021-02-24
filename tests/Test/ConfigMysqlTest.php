@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -52,8 +51,6 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
  */
 class ConfigMysqlTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var ObjectRepository */
     protected $userRepository;
 
@@ -66,11 +63,11 @@ class ConfigMysqlTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine')
+        $this->userRepository = self::$container->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     /**
