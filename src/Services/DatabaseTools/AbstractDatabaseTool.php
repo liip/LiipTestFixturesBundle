@@ -43,9 +43,9 @@ abstract class AbstractDatabaseTool
     protected $registry;
 
     /**
-     * @var string|null
+     * @var null|string
      */
-    protected $omName = null;
+    protected $omName;
 
     /**
      * @var string
@@ -63,9 +63,9 @@ abstract class AbstractDatabaseTool
     protected $connection;
 
     /**
-     * @var int|null
+     * @var null|int
      */
-    protected $purgeMode = null;
+    protected $purgeMode;
 
     /**
      * @var bool
@@ -153,6 +153,7 @@ abstract class AbstractDatabaseTool
 
         return $newTool;
     }
+
     public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): AbstractDatabaseTool
     {
         $newTool = clone $this;
