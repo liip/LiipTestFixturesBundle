@@ -58,13 +58,13 @@ class ConfigSqliteTest extends KernelTestCase
         $this->userRepository = $this->getTestContainer()->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
+
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public static function getKernelClass()
     {
         return AppConfigSqliteKernel::class;
-
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testLoadEmptyFixtures(): void
