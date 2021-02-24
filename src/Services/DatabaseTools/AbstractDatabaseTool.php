@@ -153,6 +153,13 @@ abstract class AbstractDatabaseTool
 
         return $newTool;
     }
+    public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setDatabaseCacheEnabled($databaseCacheEnabled);
+
+        return $newTool;
+    }
 
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
 

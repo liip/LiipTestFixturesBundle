@@ -12,9 +12,7 @@
 namespace Liip\TestFixturesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use ReflectionMethod;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -57,27 +55,6 @@ final class DatabaseToolCollection
         $databaseTool->setObjectManagerName($omName);
         $databaseTool->setPurgeMode($purgeMode);
 
-        $databaseTool->setDatabaseCacheEnabled($this->isCacheEnabled());
-
         return $databaseTool;
-    }
-
-    public function isCacheEnabled(): bool
-    {
-        foreach (debug_backtrace() as $step) {
-            if ('test' === substr($step['function'], 0, 4)) { //TODO: handle tests with the @test annotation
-                $annotations = $this->annotationReader->getMethodAnnotations(
-                    new ReflectionMethod($step['class'], $step['function'])
-                );
-
-                foreach ($annotations as $annotationClass) {
-                    if ($annotationClass instanceof DisableDatabaseCache) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
     }
 }

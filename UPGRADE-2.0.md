@@ -3,7 +3,7 @@
 ## Needed actions
 This is the list of actions that you need to take when upgrading this bundle from the 1.x to the 2.x version:
 
-- Remove `FixturesTrait`:
+- Removed `FixturesTrait`:
     - Access through the service `DatabaseToolCollection::class` instead
     - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
     - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way:
@@ -15,8 +15,9 @@ This is the list of actions that you need to take when upgrading this bundle fro
         - 3rd argument `$omName`: call `$databaseTool->setObjectManagerName($omName);`
         - 4th argument `$registryName`: call `$databaseTool->setRegistryName($registryName);`
         - 5th argument `$purgeMode`: call `$databaseTool->setPurgeMode($purgeMode);`
-- Deprecated the `@DisableDatabaseCache` annotation, use `$this->databaseTool->setDatabaseCacheEnabled(false);` instead,
-  and don't forget to 
+- Removed the `@DisableDatabaseCache` annotation:
+    - call `$databaseTool->withDatabaseCacheEnabled(false)->load…;` to use it on the fly
+    - or `$this->databaseTool->setDatabaseCacheEnabled(false);` to change it globally
 
 ### Tested based on KernelTestCase
 

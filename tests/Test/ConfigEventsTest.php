@@ -16,7 +16,6 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
-use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -84,7 +83,7 @@ class ConfigEventsTest extends KernelTestCase
      *
      * @dataProvider fixturesEventsProvider
      */
-    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations): void
+    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations, bool $withCache = true): void
     {
         $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
 
@@ -103,7 +102,11 @@ class ConfigEventsTest extends KernelTestCase
         );
 
         // By loading fixtures, the events will be called (or not)
-        $fixtures = $databaseTool->loadFixtures([]);
+        if ($withCache) {
+            $fixtures = $databaseTool->loadFixtures([]);
+        } else {
+            $fixtures = $databaseTool->withDatabaseCacheEnabled(false)->loadFixtures([]);
+        }
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -114,8 +117,6 @@ class ConfigEventsTest extends KernelTestCase
     /**
      * We disable the cache to ensure that other events are called.
      *
-     * @DisableDatabaseCache()
-     *
      * @dataProvider fixturesEventsProvider
      */
     public function testLoadEmptyFixturesAndCheckEventsAreCalledWithoutCache(string $eventName, string $methodName, int $numberOfInvocations): void
@@ -123,7 +124,7 @@ class ConfigEventsTest extends KernelTestCase
         // Swap 0 → 1 and 1 → 0
         $numberOfInvocations = (int) (!$numberOfInvocations);
 
-        $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations);
+        $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations, false);
     }
 
     public function fixturesEventsProvider(): array
