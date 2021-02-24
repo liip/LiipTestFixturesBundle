@@ -36,27 +36,6 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
         return 'PHPCR';
     }
 
-    protected function getExecutor(PHPCRPurger $purger = null, InitializerManager $initializerManager = null): AbstractExecutor
-    {
-        $executorClass = class_exists('Doctrine\Bundle\PHPCRBundle\DataFixtures\PHPCRExecutor')
-            ? 'Doctrine\Bundle\PHPCRBundle\DataFixtures\PHPCRExecutor'
-            : 'Doctrine\\Common\\DataFixtures\\Executor\\'.$this->getType().'Executor';
-
-        return new $executorClass($this->om, $purger, $initializerManager);
-    }
-
-    protected function getPurger(): PHPCRPurger
-    {
-        return new PHPCRPurger($this->om);
-    }
-
-    protected function getInitializerManager(): ?InitializerManager
-    {
-        $serviceName = 'doctrine_phpcr.initializer_manager';
-
-        return $this->container->has($serviceName) ? $this->container->get($serviceName) : null;
-    }
-
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
@@ -111,5 +90,26 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
         }
 
         return $executor;
+    }
+
+    protected function getExecutor(PHPCRPurger $purger = null, InitializerManager $initializerManager = null): AbstractExecutor
+    {
+        $executorClass = class_exists('Doctrine\Bundle\PHPCRBundle\DataFixtures\PHPCRExecutor')
+            ? 'Doctrine\Bundle\PHPCRBundle\DataFixtures\PHPCRExecutor'
+            : 'Doctrine\\Common\\DataFixtures\\Executor\\'.$this->getType().'Executor';
+
+        return new $executorClass($this->om, $purger, $initializerManager);
+    }
+
+    protected function getPurger(): PHPCRPurger
+    {
+        return new PHPCRPurger($this->om);
+    }
+
+    protected function getInitializerManager(): ?InitializerManager
+    {
+        $serviceName = 'doctrine_phpcr.initializer_manager';
+
+        return $this->container->has($serviceName) ? $this->container->get($serviceName) : null;
     }
 }

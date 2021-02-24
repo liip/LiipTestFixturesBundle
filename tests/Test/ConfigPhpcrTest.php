@@ -30,15 +30,13 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigPhpcrTest extends KernelTestCase
 {
     use FixturesTrait;
-
-    protected static function getKernelClass(): string
-    {
-        return AppConfigPhpcrKernel::class;
-    }
 
     public function setUp(): void
     {
@@ -77,6 +75,11 @@ class ConfigPhpcrTest extends KernelTestCase
             'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
             $repository
         );
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigPhpcrKernel::class;
     }
 
     /**

@@ -27,6 +27,6 @@ class AppConfigEventsKernel extends AppConfigKernel
         parent::registerContainerConfiguration($loader);
 
         // Load the file with the FixturesSubscriber service
-        $loader->load(__DIR__ . '/config.yml');
+        $loader->load(__DIR__.'/config.yml');
     }
 }

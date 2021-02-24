@@ -14,6 +14,7 @@ namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use InvalidArgumentException;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -23,21 +24,6 @@ final class SqliteDatabaseBackup extends AbstractDatabaseBackup implements Datab
     public function getBackupFilePath(): string
     {
         return $this->container->getParameter('kernel.cache_dir').'/test_sqlite_'.md5(serialize($this->metadatas).serialize($this->classNames)).'.db';
-    }
-
-    private function getDatabaseName(Connection $connection): string
-    {
-        $params = $connection->getParams();
-        if (isset($params['master'])) {
-            $params = $params['master'];
-        }
-
-        $name = $params['path'] ?? ($params['dbname'] ?? false);
-        if (!$name) {
-            throw new \InvalidArgumentException("Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped.");
-        }
-
-        return $name;
     }
 
     public function isBackupActual(): bool
@@ -66,5 +52,20 @@ final class SqliteDatabaseBackup extends AbstractDatabaseBackup implements Datab
 
         copy($this->getBackupFilePath(), $this->getDatabaseName($connection));
         $executor->getReferenceRepository()->load($this->getBackupFilePath());
+    }
+
+    private function getDatabaseName(Connection $connection): string
+    {
+        $params = $connection->getParams();
+        if (isset($params['master'])) {
+            $params = $params['master'];
+        }
+
+        $name = $params['path'] ?? ($params['dbname'] ?? false);
+        if (!$name) {
+            throw new InvalidArgumentException("Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped.");
+        }
+
+        return $name;
     }
 }

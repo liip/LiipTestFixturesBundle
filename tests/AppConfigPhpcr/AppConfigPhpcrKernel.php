@@ -25,7 +25,7 @@ class AppConfigPhpcrKernel extends AppConfigSqliteKernel
 
         if (class_exists(DoctrinePHPCRBundle::class)) {
             $bundles = [
-                new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
+                new DoctrinePHPCRBundle(),
             ];
         }
 
@@ -45,7 +45,7 @@ class AppConfigPhpcrKernel extends AppConfigSqliteKernel
 
         // Load the file with PHPCR configuration
         if (class_exists(DoctrinePHPCRBundle::class)) {
-            $loader->load(__DIR__ . '/config.yml');
+            $loader->load(__DIR__.'/config.yml');
         }
     }
 }
