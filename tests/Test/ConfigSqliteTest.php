@@ -40,11 +40,10 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigSqliteTest extends KernelTestCase
 {
-    /** @var ObjectRepository */
-    private $userRepository;
-
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
+    /** @var ObjectRepository */
+    private $userRepository;
 
     public function setUp(): void
     {
