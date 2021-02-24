@@ -32,25 +32,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         return 'MongoDB';
     }
 
-    protected function getExecutor(MongoDBPurger $purger = null): MongoDBExecutor
-    {
-        return new MongoDBExecutor($this->om, $purger);
-    }
-
-    protected function getPurger(): MongoDBPurger
-    {
-        return new MongoDBPurger();
-    }
-
-    protected function createDatabaseOnce(): void
-    {
-        if (!self::$databaseCreated) {
-            $sm = $this->om->getSchemaManager();
-            $sm->updateIndexes();
-            self::$databaseCreated = true;
-        }
-    }
-
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
@@ -67,7 +48,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
             $backupService->init($this->getMetadatas(), $classNames);
 
             if ($backupService->isBackupActual()) {
-
                 $this->om->flush();
                 $this->om->clear();
 
@@ -104,5 +84,24 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         }
 
         return $executor;
+    }
+
+    protected function getExecutor(MongoDBPurger $purger = null): MongoDBExecutor
+    {
+        return new MongoDBExecutor($this->om, $purger);
+    }
+
+    protected function getPurger(): MongoDBPurger
+    {
+        return new MongoDBPurger();
+    }
+
+    protected function createDatabaseOnce(): void
+    {
+        if (!self::$databaseCreated) {
+            $sm = $this->om->getSchemaManager();
+            $sm->updateIndexes();
+            self::$databaseCreated = true;
+        }
     }
 }

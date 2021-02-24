@@ -34,14 +34,12 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("group")
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
-    protected static function getKernelClass(): string
-    {
-        return AppConfigMysqlKernelCacheDb::class;
-    }
-
     /**
      * @group mysql
      */
@@ -66,7 +64,8 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
-            ]);
+            ])
+        ;
 
         $this->assertSame(
             'foo@bar.com',
@@ -107,7 +106,8 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
-            ]);
+            ])
+        ;
 
         // Salt is a random string, if it's the same as before it means that the backup has been saved and loaded
         // successfully
@@ -134,5 +134,10 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         ])->getReferenceRepository();
 
         $this->assertCount(2, $referenceRepository->getReferences());
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigMysqlKernelCacheDb::class;
     }
 }

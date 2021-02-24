@@ -31,6 +31,9 @@ use Symfony\Component\Console\Tester\CommandTester;
  * So it must be loaded in a separate process.
  *
  * @preserveGlobalState disabled
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigPhpcrTest extends KernelTestCase
 {
@@ -38,11 +41,6 @@ class ConfigPhpcrTest extends KernelTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-
-    protected static function getKernelClass(): string
-    {
-        return AppConfigPhpcrKernel::class;
-    }
 
     public function setUp(): void
     {
@@ -86,6 +84,11 @@ class ConfigPhpcrTest extends KernelTestCase
             'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
             $repository
         );
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigPhpcrKernel::class;
     }
 
     /**
