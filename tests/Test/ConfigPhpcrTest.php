@@ -51,7 +51,14 @@ class ConfigPhpcrTest extends KernelTestCase
 
         $entityManager = self::$container->get('doctrine')->getManager();
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
+        /** @var AbstractDatabaseTool $databaseTool */
+        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+
+        // Check that this alternative syntax works (instead of passing these parameters to “get()”)
+        $this->databaseTool = $databaseTool
+            ->withObjectManagerName('default')
+            ->withRegistryName('doctrine_phpcr')
+        ;
 
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
 

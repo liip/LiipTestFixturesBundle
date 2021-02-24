@@ -43,9 +43,14 @@ abstract class AbstractDatabaseTool
     protected $registry;
 
     /**
+     * @var string|null
+     */
+    protected $omName = null;
+
+    /**
      * @var string
      */
-    protected $omName;
+    protected $registryName = 'doctrine';
 
     /**
      * @var ObjectManager
@@ -58,9 +63,9 @@ abstract class AbstractDatabaseTool
     protected $connection;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $purgeMode;
+    protected $purgeMode = null;
 
     /**
      * @var bool
@@ -103,6 +108,11 @@ abstract class AbstractDatabaseTool
         $this->connection = $this->registry->getConnection($omName);
     }
 
+    public function setRegistryName(string $registryName): void
+    {
+        $this->registryName = $registryName;
+    }
+
     public function setPurgeMode(int $purgeMode = null): void
     {
         $this->purgeMode = $purgeMode;
@@ -113,6 +123,35 @@ abstract class AbstractDatabaseTool
     public function getDriverName(): string
     {
         return 'default';
+    }
+
+    public function withObjectManagerName(string $omName): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setObjectManagerName($omName);
+
+        return $newTool;
+    }
+
+    public function withRegistryName(string $registryName): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setRegistryName($registryName);
+
+        /** @var \Symfony\Bridge\Doctrine\ManagerRegistry $registry */
+        $registry = $this->container->get($registryName);
+
+        $newTool->setRegistry($registry);
+
+        return $newTool;
+    }
+
+    public function withPurgeMode(int $purgeMode): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setPurgeMode($purgeMode);
+
+        return $newTool;
     }
 
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;

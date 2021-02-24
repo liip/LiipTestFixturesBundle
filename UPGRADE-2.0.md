@@ -7,9 +7,14 @@ This is the list of actions that you need to take when upgrading this bundle fro
     - Access through the service `DatabaseToolCollection::class` instead
     - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
     - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way:
-        - 3rd argument `$omName`: call `$databaseTool->setObjectManagerName($omName);` instead
-        - 4th argument `$registryName`: call `$databaseTool->get(null, $registryName);` instead
-        - 5th argument `$purgeMode`: call `$databaseTool->setPurgeMode($purgeMode);` instead
+      - if you need to use these options only once:
+        - 3rd argument `$omName`: call `$databaseTool->withObjectManagerName($omName)->load…;` instead
+        - 4th argument `$registryName`: call `$databaseTool->withRegistryName($registryName)->load…;` instead
+        - 5th argument `$purgeMode`: call `$databaseTool->withPurgeMode($purgeMode)->load…;` instead
+      - if you need these options in all of your tests, pass them to these setters:
+        - 3rd argument `$omName`: call `$databaseTool->setObjectManagerName($omName);`
+        - 4th argument `$registryName`: call `$databaseTool->setRegistryName($registryName);`
+        - 5th argument `$purgeMode`: call `$databaseTool->setPurgeMode($purgeMode);`
 - Deprecated the `@DisableDatabaseCache` annotation, use `$this->databaseTool->setDatabaseCacheEnabled(false);` instead,
   and don't forget to 
 
