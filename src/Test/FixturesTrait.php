@@ -14,9 +14,6 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Test;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
-use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Doctrine\Persistence\ObjectManager;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
@@ -33,6 +30,38 @@ trait FixturesTrait
      * @var array
      */
     private $excludedDoctrineTables = [];
+
+    protected function tearDown(): void
+    {
+        if (null !== $this->containers) {
+            foreach ($this->containers as $container) {
+                if ($container instanceof ResettableContainerInterface) {
+                    $container->reset();
+                }
+            }
+        }
+
+        $this->containers = null;
+
+        parent::tearDown();
+    }
+
+    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
+    {
+        /** @var ContainerInterface $container */
+        $container = $this->getContainer();
+
+        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
+        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
+        $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
+
+        return $dbTool->loadAliceFixture($paths, $append);
+    }
+
+    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
+    {
+        $this->excludedDoctrineTables = $excludedDoctrineTables;
+    }
 
     /**
      * Get an instance of the dependency injection container.
@@ -88,38 +117,6 @@ trait FixturesTrait
         $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
 
         return $dbTool->loadFixtures($classNames, $append);
-    }
-
-    public function loadFixtureFiles(array $paths = [], bool $append = false, ?string $omName = null, $registryName = 'doctrine', ?int $purgeMode = null): array
-    {
-        /** @var ContainerInterface $container */
-        $container = $this->getContainer();
-
-        $dbToolCollection = $container->get('liip_test_fixtures.services.database_tool_collection');
-        $dbTool = $dbToolCollection->get($omName, $registryName, $purgeMode, $this);
-        $dbTool->setExcludedDoctrineTables($this->excludedDoctrineTables);
-
-        return $dbTool->loadAliceFixture($paths, $append);
-    }
-
-    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
-    {
-        $this->excludedDoctrineTables = $excludedDoctrineTables;
-    }
-
-    protected function tearDown(): void
-    {
-        if (null !== $this->containers) {
-            foreach ($this->containers as $container) {
-                if ($container instanceof ResettableContainerInterface) {
-                    $container->reset();
-                }
-            }
-        }
-
-        $this->containers = null;
-
-        parent::tearDown();
     }
 
     /**

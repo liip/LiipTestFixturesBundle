@@ -111,7 +111,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         }
 
         $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
-        if ($currentValue === '0') {
+        if ('0' === $currentValue) {
             return;
         }
 

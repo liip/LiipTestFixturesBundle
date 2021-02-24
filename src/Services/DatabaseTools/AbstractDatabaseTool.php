@@ -13,14 +13,12 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use BadMethodCallException;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
+use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
-use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
-use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -75,12 +73,12 @@ abstract class AbstractDatabaseTool
      */
     protected $databaseCacheEnabled = true;
 
+    protected $excludedDoctrineTables = [];
+
     /**
      * @var array
      */
     private static $cachedMetadatas = [];
-
-    protected $excludedDoctrineTables = [];
 
     public function __construct(ContainerInterface $container, FixturesLoaderFactory $fixturesLoaderFactory)
     {
@@ -123,26 +121,6 @@ abstract class AbstractDatabaseTool
         return 'default';
     }
 
-    protected function getBackupService(): ?DatabaseBackupInterface
-    {
-        $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
-            ('ORM' === $this->getType())
-                ? $this->connection->getDatabasePlatform()->getName()
-                : $this->getType()
-        ));
-
-        if ($this->container->hasParameter($backupServiceParamName)) {
-            $backupServiceName = $this->container->getParameter($backupServiceParamName);
-            if ($this->container->has($backupServiceName)) {
-                $backupService = $this->container->get($backupServiceName);
-            } else {
-                @trigger_error("Could not find $backupServiceName in container. Possible misconfiguration.");
-            }
-        }
-
-        return (isset($backupService) && $backupService instanceof DatabaseBackupInterface) ? $backupService : null;
-    }
-
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
 
     /**
@@ -162,6 +140,31 @@ abstract class AbstractDatabaseTool
         $files = $this->locateResources($paths);
 
         return $this->container->get($persisterLoaderServiceName)->load($files);
+    }
+
+    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
+    {
+        $this->excludedDoctrineTables = $excludedDoctrineTables;
+    }
+
+    protected function getBackupService(): ?DatabaseBackupInterface
+    {
+        $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
+            ('ORM' === $this->getType())
+                ? $this->connection->getDatabasePlatform()->getName()
+                : $this->getType()
+        ));
+
+        if ($this->container->hasParameter($backupServiceParamName)) {
+            $backupServiceName = $this->container->getParameter($backupServiceParamName);
+            if ($this->container->has($backupServiceName)) {
+                $backupService = $this->container->get($backupServiceName);
+            } else {
+                @trigger_error("Could not find {$backupServiceName} in container. Possible misconfiguration.");
+            }
+        }
+
+        return (isset($backupService) && $backupService instanceof DatabaseBackupInterface) ? $backupService : null;
     }
 
     protected function cleanDatabase(): void
@@ -198,7 +201,7 @@ abstract class AbstractDatabaseTool
 
     protected function getMetadatas(): array
     {
-        if(!$this->getCacheMetadataParameter()) {
+        if (!$this->getCacheMetadataParameter()) {
             return $this->om->getMetadataFactory()->getAllMetadata();
         }
 
@@ -212,11 +215,6 @@ abstract class AbstractDatabaseTool
         }
 
         return self::$cachedMetadatas[$key];
-    }
-
-    public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
-    {
-        $this->excludedDoctrineTables = $excludedDoctrineTables;
     }
 
     protected function getKeepDatabaseAndSchemaParameter()

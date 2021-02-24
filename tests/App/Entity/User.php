@@ -34,17 +34,17 @@ class User
     /**
      * @var string
      */
-    private $email;
-
-    /**
-     * @var string
-     */
     protected $password;
 
     /**
      * @var string
      */
     protected $salt;
+
+    /**
+     * @var string
+     */
+    private $email;
 
     /**
      * @var string
@@ -67,6 +67,15 @@ class User
             // http://php.net/manual/fr/function.openssl-random-pseudo-bytes.php
             bin2hex(openssl_random_pseudo_bytes(100))
         );
+    }
+
+    // @see http://stackoverflow.com/questions/9384836/symfony2-serialize-entity-object-to-session/19133985#19133985
+
+    public function __sleep()
+    {
+        // these are field names to be serialized, others will be excluded
+        // but note that you have to fill other field values by your own
+        return ['id', 'name', 'password', 'salt'];
     }
 
     /**
@@ -297,14 +306,5 @@ class User
         }
 
         return true;
-    }
-
-    // @see http://stackoverflow.com/questions/9384836/symfony2-serialize-entity-object-to-session/19133985#19133985
-
-    public function __sleep()
-    {
-        // these are field names to be serialized, others will be excluded
-        // but note that you have to fill other field values by your own
-        return ['id', 'name', 'password', 'salt'];
     }
 }

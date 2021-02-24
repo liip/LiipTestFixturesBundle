@@ -31,15 +31,13 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @IgnoreAnnotation("dataProvider")
+ *
+ * @internal
+ * @coversNothing
  */
 class ConfigEventsTest extends KernelTestCase
 {
     use FixturesTrait;
-
-    protected static function getKernelClass(): string
-    {
-        return AppConfigEventsKernel::class;
-    }
 
     /**
      * Check that events have been registered, they don't do anything but will
@@ -85,7 +83,8 @@ class ConfigEventsTest extends KernelTestCase
         $mock = $this->getMockBuilder(FixturesSubscriber::class)->getMock();
 
         $mock->expects($this->exactly($numberOfInvocations))
-            ->method($methodName);
+            ->method($methodName)
+        ;
 
         // Register to the event
         $eventDispatcher = $this->getContainer()->get('event_dispatcher');
@@ -118,7 +117,8 @@ class ConfigEventsTest extends KernelTestCase
         $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations);
     }
 
-    public function fixturesEventsProvider(): array {
+    public function fixturesEventsProvider(): array
+    {
         return [
             [LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE, 'preFixtureBackupRestore', 1],
             [LiipTestFixturesEvents::POST_FIXTURE_SETUP, 'postFixtureSetup', 0],
@@ -126,5 +126,10 @@ class ConfigEventsTest extends KernelTestCase
             [LiipTestFixturesEvents::PRE_REFERENCE_SAVE, 'preReferenceSave', 0],
             [LiipTestFixturesEvents::POST_REFERENCE_SAVE, 'postReferenceSave', 0],
         ];
+    }
+
+    protected static function getKernelClass(): string
+    {
+        return AppConfigEventsKernel::class;
     }
 }
