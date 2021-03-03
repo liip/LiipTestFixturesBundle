@@ -78,11 +78,6 @@ Tips for Fixture Loading Tests
     class MyControllerTest extends WebTestCase
     {
         /**
-         * @var DatabaseToolCollection
-         */
-        private $databaseToolCollection;
-
-        /**
          * @var AbstractDatabaseTool
          */
         protected $databaseTool;
@@ -91,7 +86,7 @@ Tips for Fixture Loading Tests
         {
             parent::setUp();
 
-            $this->databaseTool = $this->databaseToolCollection->get();
+            $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
         }
 
         public function testIndex()

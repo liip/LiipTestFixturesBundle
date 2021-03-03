@@ -32,11 +32,6 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Symfony\Bundle\F
 class ExampleFunctionalTest extends WebTestCase 
 {
     /**
-     * @var DatabaseToolCollection
-     */
-    private $databaseToolCollection;
-
-    /**
      * @var AbstractDatabaseTool
      */
     protected $databaseTool;
@@ -45,7 +40,7 @@ class ExampleFunctionalTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->databaseTool = $this->databaseToolCollection->get();
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     /**

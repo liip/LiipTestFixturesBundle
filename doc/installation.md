@@ -7,7 +7,7 @@ Installation
     following command to download the latest stable version of this bundle:
 
     ```bash
-    $ composer require --dev liip/test-fixtures-bundle:^1.0.0
+    $ composer require --dev liip/test-fixtures-bundle:^2.0.0
     ```
 
     This command requires you to have Composer installed globally, as explained
