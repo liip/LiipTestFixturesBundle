@@ -7,8 +7,8 @@ DoctrineFixturesBundle installed and configured first:
 
 In case tests require database access make sure that the database is created and
 proxies are generated.  For tests that rely on specific database contents,
-write fixture classes and call `loadFixtures()` method from the bundled
-`Test\FixturesTrait` class. This will replace the database configured in
+write fixture classes and call `loadFixtures()` method.
+This will replace the database configured in
 `config_test.yml` with the specified fixtures. Please note that `loadFixtures()`
 will delete the contents from the database before loading the fixtures. That's
 why you should use a designated database for tests.
@@ -71,12 +71,23 @@ Tips for Fixture Loading Tests
  4. Load your Doctrine fixtures in your tests:
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;
+    use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+    use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
+        /**
+         * @var AbstractDatabaseTool
+         */
+        protected $databaseTool;
+
+        public function setUp(): void
+        {
+            parent::setUp();
+
+            $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        }
 
         public function testIndex()
         {
@@ -86,7 +97,7 @@ Tips for Fixture Loading Tests
     
             // add all your fixtures classes that implement
             // Doctrine\Common\DataFixtures\FixtureInterface
-            $this->loadFixtures(array(
+            $this->databaseTool->loadFixtures(array(
                 'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
                 'Me\MyBundle\DataFixtures\ORM\LoadData'
             ));
@@ -102,19 +113,18 @@ Tips for Fixture Loading Tests
     `loadFixtures` without any argument.
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
+        // …
 
         public function testIndex()
         {
             // If you need a client, you must create it before loading fixtures because
             // creating the client boots the kernel, which is used by loadFixtures
             $client = $this->createClient();
-            $this->loadFixtures();
+            $this->databaseTool->loadFixtures();
 
             // you can now run your functional tests with a populated database
             // ...
@@ -127,17 +137,16 @@ Tips for Fixture Loading Tests
     to the `setExcludedDoctrineTables` method before loading the fixtures.
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
+        // …
 
         public function testIndex()
         {
             $this->setExcludedDoctrineTables(array('my_tablename_not_to_be_purged'));
-            $this->loadFixtures(array(
+            $this->databaseTool->loadFixtures(array(
                 'Me\MyBundle\DataFixtures\ORM\LoadData'
             ));
             // ...
@@ -149,17 +158,16 @@ Tips for Fixture Loading Tests
  to consider use the second parameter $append with value true.
 
     ```php
-        use Liip\TestFixturesBundle\Test\FixturesTrait;    
         use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
         class MyControllerTest extends WebTestCase
         {
-            use FixturesTrait;
+            // …
 
             public function testIndex()
             {
-                $this->loadFixtures(array(
-                    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData'
+                $this->databaseTool->loadFixtures(array(
+                    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData',
                 ), true);
                 // ...
             }
@@ -170,12 +178,11 @@ Tips for Fixture Loading Tests
     specify the service id of the registry manager:
 
     ```php
-    use Liip\TestFixturesBundle\Test\FixturesTrait;    
     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class MyControllerTest extends WebTestCase
     {
-        use FixturesTrait;
+        // …
 
         public function testIndex()
         {
@@ -186,21 +193,21 @@ Tips for Fixture Loading Tests
             // If you need a client, you must create it before loading fixtures because
             // creating the client boots the kernel, which is used by loadFixtures
             $client = $this->createClient();
-            $this->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
+            $this->databaseTool->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
         }
     }
     ```
 
 ### Loading Fixtures Using Alice
 If you would like to setup your fixtures with yml files using [Alice](https://github.com/nelmio/alice),
-[`Liip\TestFixturesBundle\Test\FixturesTrait`](../src/Test/FixturesTrait.php) has a helper function `loadFixtureFiles`
+there is an helper function `loadFixtureFiles`
 which takes an array of resources, or paths to yml files, and returns an array of objects.
 This method uses the [Theofidry AliceDataFixtures loader](https://github.com/theofidry/AliceDataFixtures#doctrine-orm)
 rather than the FunctionalTestBundle's load methods.
 You should be aware that there are some difference between the ways these two libraries handle loading.
 
 ```php
-$fixtures = $this->loadFixtureFiles(array(
+$fixtures = $this->databaseTool->loadAliceFixture(array(
     '@AcmeBundle/DataFixtures/ORM/ObjectData.yml',
     '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
     __DIR__.'/../../DataFixtures/ORM/YetAnotherObjectData.yml',
@@ -213,7 +220,7 @@ If you want to clear tables you have the following two ways:
 
 The first way is consisted in using the second parameter `$append` with value `false`. It allows you **only** to remove all records of table. Values of auto increment won't be reset. 
 ```php
-$fixtures = $this->loadFixtureFiles(
+$fixtures = $this->databaseTool->loadAliceFixture(
     array(
         '@AcmeBundle/DataFixtures/ORM/ObjectData.yml',
         '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
@@ -235,7 +242,7 @@ $files = array(
      '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
      __DIR__.'/../../DataFixtures/ORM/YetAnotherObjectData.yml',
  );
-$fixtures = $this->loadFixtureFiles($files, false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE );
+$fixtures = $this->databaseTool->loadAliceFixture($files, false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE );
 ```
 
 ### Non-SQLite
@@ -258,13 +265,10 @@ automatically, you'll need to do that yourself. For example, you could write a
 
 ```php 
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\TestFixturesBundle\Test\FixturesTrait;    
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccountControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function setUp()
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
@@ -280,7 +284,7 @@ class AccountControllerTest extends WebTestCase
         $fixtures = array(
             'Acme\MyBundle\DataFixtures\ORM\LoadUserData',
         );
-        $this->loadFixtures($fixtures);
+        $this->databaseTool->loadFixtures($fixtures);
     }
 //...
 }
@@ -312,7 +316,7 @@ and then in the test case setup:
 ...
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures([
+        $this->fixtures = $this->databaseTool->loadFixtures([
             'AppBundle\Tests\Fixtures\LoadMemberAccounts'
         ])->getReferenceRepository();
     ...

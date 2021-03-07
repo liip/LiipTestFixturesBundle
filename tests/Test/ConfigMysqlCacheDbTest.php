@@ -45,7 +45,9 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesAndCheckBackup(): void
     {
-        $this->loadFixtures([
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -78,7 +80,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         $salt = $user1->getSalt();
 
         // Clean database
-        $this->loadFixtures();
+        $this->databaseTool->loadFixtures();
 
         $users = $this->userRepository->findAll();
 
@@ -89,7 +91,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
 
         // Load fixtures again
-        $this->loadFixtures([
+        $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
@@ -120,13 +122,13 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesCheckReferences(): void
     {
-        $referenceRepository = $this->loadFixtures([
+        $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
         $this->assertCount(1, $referenceRepository->getReferences());
 
-        $referenceRepository = $this->loadFixtures([
+        $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();

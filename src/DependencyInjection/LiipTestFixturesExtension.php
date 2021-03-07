@@ -32,11 +32,11 @@ class LiipTestFixturesExtension extends Extension
 
         foreach ($config as $key => $value) {
             // If the node is an array,
-            // e.g. "liip_test_fixtures.query.max_query_count",
+            // e.g. "liip_test_fixtures.cache_db.mysql",
             // set the value as
-            // "liip_test_fixtures.query.max_query_count"
-            // instead of an array "liip_test_fixtures.query"
-            // with a "max_query_count" key.
+            // "liip_test_fixtures.cache_db.mysql"
+            // instead of an array "liip_test_fixtures.cache_db"
+            // with a "mysql" key.
             if (is_array($value)) {
                 foreach ($value as $key2 => $value2) {
                     $container->setParameter($this->getAlias().'.'.$key.

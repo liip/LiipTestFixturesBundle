@@ -27,12 +27,21 @@ declare(strict_types=1);
 
 namespace Liip\FooBundle\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ExampleFunctionalTest extends WebTestCase
+class ExampleFunctionalTest extends WebTestCase 
 {
-    use FixturesTrait;
+    /**
+     * @var AbstractDatabaseTool
+     */
+    protected $databaseTool;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+    }
 
     /**
      * Example using LiipFunctionalBundle the fixture loader.
@@ -42,7 +51,7 @@ class ExampleFunctionalTest extends WebTestCase
         // If you need a client, you must create it before loading fixtures because
         // creating the client boots the kernel, which is used by loadFixtures
         $client = $this->createClient();
-        $this->loadFixtures(['Liip\FooBundle\Tests\Fixtures\LoadUserData']);
+        $this->databaseTool->loadFixtures(['Liip\FooBundle\Tests\Fixtures\LoadUserData']);
 
         $crawler = $client->request('GET', '/users/foo');
         

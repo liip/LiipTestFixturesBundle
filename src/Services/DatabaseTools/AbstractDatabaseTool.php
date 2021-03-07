@@ -19,7 +19,6 @@ use Doctrine\Persistence\ObjectManager;
 use InvalidArgumentException;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -44,9 +43,14 @@ abstract class AbstractDatabaseTool
     protected $registry;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $omName;
+
+    /**
+     * @var string
+     */
+    protected $registryName = 'doctrine';
 
     /**
      * @var ObjectManager
@@ -59,14 +63,9 @@ abstract class AbstractDatabaseTool
     protected $connection;
 
     /**
-     * @var int
+     * @var null|int
      */
     protected $purgeMode;
-
-    /**
-     * @var KernelTestCase
-     */
-    protected $testCase;
 
     /**
      * @var bool
@@ -97,6 +96,11 @@ abstract class AbstractDatabaseTool
         $this->databaseCacheEnabled = $databaseCacheEnabled;
     }
 
+    public function isDatabaseCacheEnabled(): bool
+    {
+        return $this->databaseCacheEnabled;
+    }
+
     public function setObjectManagerName(string $omName = null): void
     {
         $this->omName = $omName;
@@ -104,14 +108,14 @@ abstract class AbstractDatabaseTool
         $this->connection = $this->registry->getConnection($omName);
     }
 
+    public function setRegistryName(string $registryName): void
+    {
+        $this->registryName = $registryName;
+    }
+
     public function setPurgeMode(int $purgeMode = null): void
     {
         $this->purgeMode = $purgeMode;
-    }
-
-    public function setTestCase(KernelTestCase $testCase): void
-    {
-        $this->testCase = $testCase;
     }
 
     abstract public function getType(): string;
@@ -119,6 +123,22 @@ abstract class AbstractDatabaseTool
     public function getDriverName(): string
     {
         return 'default';
+    }
+
+    public function withPurgeMode(int $purgeMode): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setPurgeMode($purgeMode);
+
+        return $newTool;
+    }
+
+    public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): AbstractDatabaseTool
+    {
+        $newTool = clone $this;
+        $newTool->setDatabaseCacheEnabled($databaseCacheEnabled);
+
+        return $newTool;
     }
 
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;

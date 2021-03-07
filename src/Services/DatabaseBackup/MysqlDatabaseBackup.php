@@ -61,12 +61,13 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         $port = isset($params['port']) && $params['port'] ? '--port='.$params['port'] : '';
 
         $dbUser = isset($params['user']) ? $params['user'] : '';
-        $dbPass = isset($params['password']) && $params['password'] ? '--password='.$params['password'] : '';
+        // Set password through environment variable to remove warning
+        $dbPass = isset($params['password']) && $params['password'] ? 'MYSQL_PWD='.$params['password'].' ' : '';
 
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
-        exec("mysqldump --host {$dbHost} {$port} {$dbPass} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact {$dbName} > {$this->getBackupFilePath()}");
+        exec("{$dbPass} mysqldump --host {$dbHost} {$port} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact {$dbName} > {$this->getBackupFilePath()}");
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void

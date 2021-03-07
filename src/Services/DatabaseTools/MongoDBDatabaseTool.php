@@ -77,12 +77,10 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
             $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
-            $this->testCase->preReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
 
             $backupService->backup($executor);
 
             $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
-            $this->testCase->postReferenceSave($this->om, $executor, $backupService->getBackupFilePath());
         }
 
         return $executor;

@@ -41,7 +41,7 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
         </service>
-        <service id="liip_test_fixtures.services.database_tool_collection" class="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true">
             <argument type="service" id="service_container" />
             <argument type="service" id="annotations.reader" />
             <call method="add">
@@ -57,5 +57,7 @@
                 <argument type="service" id="liip_test_fixtures.services_database_tools.phpcr_database_tool" />
             </call>
         </service>
+        <!-- Backward compatibility -->
+        <service id="liip_test_fixtures.services.database_tool_collection" alias="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true" />
     </services>
 </container>

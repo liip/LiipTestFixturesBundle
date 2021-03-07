@@ -16,9 +16,9 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
-use Liip\TestFixturesBundle\Annotations\DisableDatabaseCache;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -37,7 +37,12 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigEventsTest extends KernelTestCase
 {
-    use FixturesTrait;
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+    }
 
     /**
      * Check that events have been registered, they don't do anything but will
@@ -45,14 +50,16 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
-        $fixtures = $this->loadFixtures([]);
+        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
             $fixtures
         );
 
-        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+        $eventDispatcher = self::$container->get('event_dispatcher');
 
         $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
         $this->assertSame('preFixtureBackupRestore', $event[0][1]);
@@ -77,8 +84,11 @@ class ConfigEventsTest extends KernelTestCase
      *
      * @dataProvider fixturesEventsProvider
      */
-    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations): void
+    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations, bool $withCache = true): void
     {
+        /** @var AbstractDatabaseTool $databaseTool */
+        $databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+
         // Create the mock and declare that the method must be called (or not)
         $mock = $this->getMockBuilder(FixturesSubscriber::class)->getMock();
 
@@ -87,14 +97,18 @@ class ConfigEventsTest extends KernelTestCase
         ;
 
         // Register to the event
-        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
+        $eventDispatcher = self::$container->get('event_dispatcher');
         $eventDispatcher->addListener(
             $eventName,
             [$mock, $methodName]
         );
 
         // By loading fixtures, the events will be called (or not)
-        $fixtures = $this->loadFixtures([]);
+        if ($withCache) {
+            $fixtures = $databaseTool->loadFixtures([]);
+        } else {
+            $fixtures = $databaseTool->withDatabaseCacheEnabled(false)->loadFixtures([]);
+        }
 
         $this->assertInstanceOf(
             'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
@@ -105,8 +119,6 @@ class ConfigEventsTest extends KernelTestCase
     /**
      * We disable the cache to ensure that other events are called.
      *
-     * @DisableDatabaseCache()
-     *
      * @dataProvider fixturesEventsProvider
      */
     public function testLoadEmptyFixturesAndCheckEventsAreCalledWithoutCache(string $eventName, string $methodName, int $numberOfInvocations): void
@@ -114,7 +126,7 @@ class ConfigEventsTest extends KernelTestCase
         // Swap 0 → 1 and 1 → 0
         $numberOfInvocations = (int) (!$numberOfInvocations);
 
-        $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations);
+        $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations, false);
     }
 
     public function fixturesEventsProvider(): array
