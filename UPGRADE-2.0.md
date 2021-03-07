@@ -17,6 +17,9 @@ This is the list of actions that you need to take when upgrading this bundle fro
 - Removed the `@DisableDatabaseCache` annotation:
     - call `$databaseTool->withDatabaseCacheEnabled(false)->load…;` to use it on the fly
     - or `$this->databaseTool->setDatabaseCacheEnabled(false);` to change it globally
+- Removed callback functions passed from test classes to the fixtures service, they have been replaced by events, see these examples:
+    - [declare subscriber(s)](./tests/AppConfigEvents/EventListener/FixturesSubscriber.php)
+    - [service declaration to put in your test configuration](./tests/AppConfigEvents/config.yml)
 
 ### Tested based on KernelTestCase
 
