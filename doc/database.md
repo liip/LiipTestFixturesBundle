@@ -273,7 +273,7 @@ class AccountControllerTest extends WebTestCase
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
         if (!isset($metadatas)) {
-            $metadatas = $this->entityManagergetMetadataFactory()->getAllMetadata();
+            $metadatas = $em->getMetadataFactory()->getAllMetadata();
         }
         $schemaTool = new SchemaTool($em);
         $schemaTool->dropDatabase();
