@@ -45,7 +45,7 @@ Tips for Fixture Loading Tests
     # sf4: config/packages/test/framework.yaml
     liip_test_fixtures:
         cache_db:
-            sqlite: liip_test_fixtures.services_database_backup.sqlite
+            sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
     ```
 
  3. For create custom database cache service:
@@ -57,16 +57,16 @@ Tips for Fixture Loading Tests
     # app/config/config_test.yml
     liip_test_fixtures:
         cache_db:
-            mysql: liip_test_fixtures.services_database_backup.mysql
-            mongodb: liip_test_fixtures.services_database_backup.mongodb
+            mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+            mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
             phpcr: ...
             db2: ...
             [Other \Doctrine\DBAL\Platforms\AbstractPlatform name]: ...
     ```
 
-    **Attention: `liip_test_fixtures.services_database_backup.mysql` required `mysql-client` installed on server.**
+    **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup` requires `mysql-client` installed on server.**
 
-    **Attention: `liip_test_fixtures.services_database_backup.mongodb` required `mongodb-clients` installed on server.**
+    **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup` requires `mongodb-clients` installed on server.**
  
  4. Load your Doctrine fixtures in your tests:
 

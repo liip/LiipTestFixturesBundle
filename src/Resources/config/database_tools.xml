@@ -5,59 +5,57 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="liip_test_fixtures.services.fixtures_loader_factory" class="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" public="true">
+        <service id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" public="true">
             <argument type="service" id="service_container" />
             <argument type="service" id="doctrine.fixtures.loader" on-invalid="null"/>
         </service>
 
-        <service id="liip_test_fixtures.services_database_backup.sqlite" class="Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup" public="true">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
 
-        <service id="liip_test_fixtures.services_database_backup.mysql" class="Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup" public="true">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
 
-        <service id="liip_test_fixtures.services_database_backup.mongodb" class="Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup" public="true">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
 
-        <service id="liip_test_fixtures.services_database_tools.orm_database_tool" class="Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool" public="false">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool" public="false">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
-        <service id="liip_test_fixtures.services_database_tools.orm_sqlite_database_tool" class="Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool" public="false">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool" public="false">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
-        <service id="liip_test_fixtures.services_database_tools.mongodb_database_tool" class="Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool" public="false">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool" public="false">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
-        <service id="liip_test_fixtures.services_database_tools.phpcr_database_tool" class="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" public="false">
+        <service id="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" public="false">
             <argument type="service" id="service_container" />
-            <argument type="service" id="liip_test_fixtures.services.fixtures_loader_factory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
         <service id="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true">
             <argument type="service" id="service_container" />
             <argument type="service" id="annotations.reader" />
             <call method="add">
-                <argument type="service" id="liip_test_fixtures.services_database_tools.orm_database_tool" />
+                <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool" />
             </call>
             <call method="add">
-                <argument type="service" id="liip_test_fixtures.services_database_tools.orm_sqlite_database_tool" />
+                <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool" />
             </call>
             <call method="add">
-                <argument type="service" id="liip_test_fixtures.services_database_tools.mongodb_database_tool" />
+                <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool" />
             </call>
             <call method="add">
-                <argument type="service" id="liip_test_fixtures.services_database_tools.phpcr_database_tool" />
+                <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" />
             </call>
         </service>
-        <!-- Backward compatibility -->
-        <service id="liip_test_fixtures.services.database_tool_collection" alias="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true" />
     </services>
 </container>

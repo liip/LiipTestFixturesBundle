@@ -8,9 +8,9 @@ framework:
 # Define all the available parameters in this Bundle
 liip_test_fixtures:
     cache_db:
-        sqlite: liip_test_fixtures.services_database_backup.sqlite
-        mysql: liip_test_fixtures.services_database_backup.mysql
-        mongodb: liip_test_fixtures.services_database_backup.mongodb
+        sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
+        mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+        mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
 
 services:
     # HautelookAliceBundle: custom Faker provider
