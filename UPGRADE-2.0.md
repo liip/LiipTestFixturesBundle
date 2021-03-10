@@ -20,6 +20,10 @@ This is the list of actions that you need to take when upgrading this bundle fro
 - Removed callback functions passed from test classes to the fixtures service, they have been replaced by events, see these examples:
     - [declare subscriber(s)](./tests/AppConfigEvents/EventListener/FixturesSubscriber.php)
     - [service declaration to put in your test configuration](./tests/AppConfigEvents/config.yml)
+- Switched services ids to classes names:
+    - `liip_test_fixtures.services_database_backup.sqlite` → `Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup`
+    - `liip_test_fixtures.services_database_backup.mysql` → `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup`
+    - `liip_test_fixtures.services_database_backup.mongodb` → `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup`
 
 ### Tested based on KernelTestCase
 
