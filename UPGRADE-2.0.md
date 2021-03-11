@@ -24,6 +24,10 @@ This is the list of actions that you need to take when upgrading this bundle fro
     - `postReferenceSave` → `LiipTestFixturesEvents::postReferenceSave`
     - `preReferenceSave` → `LiipTestFixturesEvents::PRE_REFERENCE_SAVE`
     - see the [Events](doc/events.md) documentation for examples
+- Switched services ids to classes names:
+    - `liip_test_fixtures.services_database_backup.sqlite` → `Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup`
+    - `liip_test_fixtures.services_database_backup.mysql` → `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup`
+    - `liip_test_fixtures.services_database_backup.mongodb` → `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup`
 
 ### Tested based on KernelTestCase
 
