@@ -17,9 +17,13 @@ This is the list of actions that you need to take when upgrading this bundle fro
 - Removed the `@DisableDatabaseCache` annotation:
     - call `$databaseTool->withDatabaseCacheEnabled(false)->load…;` to use it on the fly
     - or `$this->databaseTool->setDatabaseCacheEnabled(false);` to change it globally
-- Removed callback functions passed from test classes to the fixtures service, they have been replaced by events, see these examples:
-    - [declare subscriber(s)](./tests/AppConfigEvents/EventListener/FixturesSubscriber.php)
-    - [service declaration to put in your test configuration](./tests/AppConfigEvents/config.yml)
+- Removed callback functions passed from test classes to the fixtures service, they have been replaced by events:
+    - `postFixtureSetup` → `LiipTestFixturesEvents::POST_FIXTURE_SETUP`
+    - `postFixtureBackupRestore` → `LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE`
+    - `preFixtureBackupRestore` → `LiipTestFixturesEvents::preFixtureBackupRestore`
+    - `postReferenceSave` → `LiipTestFixturesEvents::postReferenceSave`
+    - `preReferenceSave` → `LiipTestFixturesEvents::PRE_REFERENCE_SAVE`
+    - see the [Events](doc/events.md) documentation for examples
 - Switched services ids to classes names:
     - `liip_test_fixtures.services_database_backup.sqlite` → `Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup`
     - `liip_test_fixtures.services_database_backup.mysql` → `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup`
