@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/liip/LiipTestFixturesBundle.svg?branch=master)](https://travis-ci.com/liip/LiipTestFixturesBundle)
+[![CI](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml/badge.svg)](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/stable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/unstable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 
@@ -17,6 +17,3 @@ Documentation
 * [Events](doc/events.md)
 * [Examples](doc/examples.md)
 * [Caveats](doc/caveats.md)
-
-[Travis Master]: https://travis-ci.com/liip/LiipTestFixturesBundle
-[Travis Master image]: https://travis-ci.com/liip/LiipTestFixturesBundle.svg?branch=master
