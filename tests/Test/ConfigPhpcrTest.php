@@ -30,6 +30,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  *
  * @internal
