@@ -64,7 +64,7 @@ class ConfigSqliteTest extends KernelTestCase
         return AppConfigSqliteKernel::class;
     }
 
-    public function testToolType()
+    public function testToolType(): void
     {
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }
@@ -138,6 +138,78 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertTrue(
             $user->getEnabled()
+        );
+    }
+
+    public function testLoadAll(): void
+    {
+        // Load the fixtures with an invalid group. The database should be empty.
+        $fixtures = $this->databaseTool->loadAllFixtures(['wrongGroup']);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $repository = $fixtures->getReferenceRepository();
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            $repository
+        );
+
+        $users = $this->userRepository->findAll();
+
+        // Using a non-existing group will result in zero users
+        $this->assertSame(
+            0,
+            count($users)
+        );
+
+        // Load the fixtures with a valid group.
+        $fixtures = $this->databaseTool->loadAllFixtures(['myGroup']);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $repository = $fixtures->getReferenceRepository();
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            $repository
+        );
+
+        $users = $this->userRepository->findAll();
+
+        // The fixture group myGroup contains 3 users
+        $this->assertSame(
+            3,
+            count($users)
+        );
+
+        // Load all fixtures.
+        $fixtures = $this->databaseTool->loadAllFixtures();
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $repository = $fixtures->getReferenceRepository();
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            $repository
+        );
+
+        $users = $this->userRepository->findAll();
+
+        // Loading all fixtures results in 12 users.
+        $this->assertSame(
+            12,
+            count($users)
         );
     }
 
