@@ -12,6 +12,7 @@
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use BadMethodCallException;
+use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -142,6 +143,27 @@ abstract class AbstractDatabaseTool
     }
 
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
+
+    /**
+     * This loads all the fixtures defined in the project, including ordering
+     * them, e.g. by the DependentFixtureInterface. The call to this method
+     * does the same as running the console command doctrine:fixtures:load,
+     * including the use of the group parameter.
+     */
+    public function loadAllFixtures(array $groups = []): ?AbstractExecutor
+    {
+        /** @var SymfonyFixturesLoader $loader */
+        $fixtureClasses = [];
+        if ($this->container->has('test.service_container')) {
+            $loader = $this->container->get('test.service_container')->get('doctrine.fixtures.loader');
+            $fixtures = $loader->getFixtures($groups);
+            foreach ($fixtures as $fixture) {
+                $fixtureClasses[] = get_class($fixture);
+            }
+        }
+
+        return $this->loadFixtures($fixtureClasses);
+    }
 
     /**
      * @throws BadMethodCallException
