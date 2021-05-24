@@ -97,10 +97,10 @@ Tips for Fixture Loading Tests
     
             // add all your fixtures classes that implement
             // Doctrine\Common\DataFixtures\FixtureInterface
-            $this->databaseTool->loadFixtures(array(
+            $this->databaseTool->loadFixtures([
                 'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
                 'Me\MyBundle\DataFixtures\ORM\LoadData'
-            ));
+            ]);
 
             // you can now run your functional tests with a populated database
             // ...
@@ -145,10 +145,10 @@ Tips for Fixture Loading Tests
 
         public function testIndex()
         {
-            $this->setExcludedDoctrineTables(array('my_tablename_not_to_be_purged'));
-            $this->databaseTool->loadFixtures(array(
+            $this->setExcludedDoctrineTables(['my_tablename_not_to_be_purged']);
+            $this->databaseTool->loadFixtures([
                 'Me\MyBundle\DataFixtures\ORM\LoadData'
-            ));
+            ]);
             // ...
         }
     }
@@ -166,9 +166,9 @@ Tips for Fixture Loading Tests
 
             public function testIndex()
             {
-                $this->databaseTool->loadFixtures(array(
+                $this->databaseTool->loadFixtures([
                     'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData',
-                ), true);
+                ], true);
                 // ...
             }
         }
@@ -186,15 +186,39 @@ Tips for Fixture Loading Tests
 
         public function testIndex()
         {
-            $fixtures = array(
+            $fixtures = [
                 'Me\MyBundle\DataFixtures\MongoDB\LoadData'
-            );
+            ];
 
             // If you need a client, you must create it before loading fixtures because
             // creating the client boots the kernel, which is used by loadFixtures
             $client = $this->createClient();
             $this->databaseTool->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
         }
+    }
+    ```
+
+ 9. If you need to load all fixtures, you can call `loadAllFixtures`. With the optional argument 
+    groups, only those fixtures belonging to a group (i.e. using the `FixtureGroupInterface`)
+    are loaded, like when calling the command `doctrine:fixtures:load --group=...`:
+
+    ```php
+    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+    class MyControllerTest extends WebTestCase
+    {
+        // …
+
+       public function testIndex()
+       {
+           // If you need a client, you must create it before loading fixtures because
+           // creating the client boots the kernel, which is used by loadFixtures
+           $client = $this->createClient();
+           $this->databaseTool->loadAllFixtures(['mygroup1', 'mygroup2']);
+
+           // you can now run your functional tests with a populated database
+           // ...
+       }
     }
     ```
 
@@ -207,11 +231,11 @@ rather than the FunctionalTestBundle's load methods.
 You should be aware that there are some difference between the ways these two libraries handle loading.
 
 ```php
-$fixtures = $this->databaseTool->loadAliceFixture(array(
+$fixtures = $this->databaseTool->loadAliceFixture([
     '@AcmeBundle/DataFixtures/ORM/ObjectData.yml',
     '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
     __DIR__.'/../../DataFixtures/ORM/YetAnotherObjectData.yml',
-));
+]);
 ```
 
 If you want to clear tables you have the following two ways:
@@ -220,12 +244,11 @@ If you want to clear tables you have the following two ways:
 
 The first way is consisted in using the second parameter `$append` with value `false`. It allows you **only** to remove all records of table. Values of auto increment won't be reset. 
 ```php
-$fixtures = $this->databaseTool->loadAliceFixture(
-    array(
+$fixtures = $this->databaseTool->loadAliceFixture([
         '@AcmeBundle/DataFixtures/ORM/ObjectData.yml',
         '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
         __DIR__.'/../../DataFixtures/ORM/YetAnotherObjectData.yml',
-    ),
+    ],
     false
 );
 ```
@@ -237,11 +260,11 @@ The second way is consisted in using the second parameter `$append` with value `
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
-$files = array(
+$files = [
      '@AcmeBundle/DataFixtures/ORM/ObjectData.yml',
      '@AcmeBundle/DataFixtures/ORM/AnotherObjectData.yml',
      __DIR__.'/../../DataFixtures/ORM/YetAnotherObjectData.yml',
- );
+ ];
 $fixtures = $this->databaseTool->loadAliceFixture($files, false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE );
 ```
 
@@ -281,9 +304,9 @@ class AccountControllerTest extends WebTestCase
             $schemaTool->createSchema($metadatas);
         }
 
-        $fixtures = array(
+        $fixtures = [
             'Acme\MyBundle\DataFixtures\ORM\LoadUserData',
-        );
+        ];
         $this->databaseTool->loadFixtures($fixtures);
     }
 //...
