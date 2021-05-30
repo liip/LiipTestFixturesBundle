@@ -41,7 +41,6 @@ Tips for Fixture Loading Tests
     **Attention: you need Doctrine >= 2.2 to use this feature.**
 
     ```yaml
-    # sf3: app/config/config_test.yml
     # sf4: config/packages/test/framework.yaml
     liip_test_fixtures:
         cache_db:
