@@ -45,3 +45,5 @@ Installation
         // ...
     }
     ```
+
+[Configuration](./configuration.md) »

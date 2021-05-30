@@ -59,3 +59,5 @@ class ExampleFunctionalTest extends WebTestCase
     }
 }
 ```
+
+« [Events](./events.md) • [Caveats](./caveats.md) »
