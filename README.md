@@ -15,6 +15,8 @@ Documentation
 * [Upgrade to version 2.x](UPGRADE-2.0.md)
 * [Configuration](doc/configuration.md)
 * [Database test](doc/database.md)
+  * [Usage](doc/database.md#usage)
+  * [Methods](doc/database.md#methods)
 * [Events](doc/events.md)
 * [Examples](doc/examples.md)
 * [Caveats](doc/caveats.md)
