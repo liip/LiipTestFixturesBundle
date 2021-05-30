@@ -361,3 +361,5 @@ The following error can occur in the case where a Doctrine Slave configuration i
 This may also manifest itself in the command `doctrine:create:schema` doing nothing.
 
 To resolve the issue, it is recommended to configure your Doctrine slaves  specifically for the environments that require them.
+
+« [Configuration](./configuration.md) • [Events](./events.md) »

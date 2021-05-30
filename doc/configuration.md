@@ -17,3 +17,5 @@ liip_test_fixtures:
   - `sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'`
   - `mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'`
   - `mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'`
+
+« [Installation](./installation.md) • [Database](./database.md) »
