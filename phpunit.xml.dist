@@ -7,6 +7,8 @@
     bootstrap="tests/App/bootstrap.php"
     colors="true"
     beStrictAboutOutputDuringTests="true"
+    executionOrder="random"
+    resolveDependencies="true"
 >
 
     <php>
