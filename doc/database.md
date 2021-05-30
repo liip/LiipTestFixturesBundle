@@ -13,10 +13,76 @@ This will replace the database configured in
 will delete the contents from the database before loading the fixtures. That's
 why you should use a designated database for tests.
 
+Usage
+-----
+
+You'll have to make the following changes in order to use that bundle:
+
+```diff
++use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
++use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class MyControllerTest extends WebTestCase
+{
++    /** @var AbstractDatabaseTool */
++    protected $databaseTool;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
++        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+    }
+
+    public function testIndex()
+    {
+        // If you need a client, you must create it before loading fixtures because
+        // creating the client boots the kernel, which is used by loadFixtures
+        $client = $this->createClient();
+
++        // add all your fixtures classes that implement
++        // Doctrine\Common\DataFixtures\FixtureInterface
++        $this->databaseTool->loadFixtures([
++            'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
++            'Me\MyBundle\DataFixtures\ORM\LoadData'
++        ]);
+
+        // you can now run your functional tests with a populated database
+        // ...
+    }
+}
+```
+
+Methods
+-------
+
+`self::$container->get(DatabaseToolCollection::class)` has a method `get()` to load the default service, it also accepts several arguments:
+1. name of the object manager
+2. name of the registry, `doctrine` is the default value
+3. purge mode with `true` or `false`
+
+`$this->databaseTool` gives access to 3 methods to load fixtures:
+
+- `loadFixtures()`, the first parameter accepts an array of [fixtures](#load-fixtures-), the second argument is optional too and has to be set to true in order to append the fixtures to the existing data 
+- `loadAliceFixture()`, the first parameter accepts an array of [Alice fixtures](#loading-fixtures-using-alice-), the second argument is optional too and has to be set to true in order to append the fixtures to the existing data
+- `loadAllFixtures()`, it accepts an array of groups, see [load all fixtures](#load-all-fixtures-)
+
+It also give access to other helpers:
+
+- `setDatabaseCacheEnabled()` accept `true` or `false` to disable the cache
+  - you can call `$this->databaseTool->withDatabaseCacheEnabled(false)->loadFixtures(…)` to disable the cache on-demand
+
+- `setPurgeMode()` accept `true` or `false` to disable purging the database
+  - you can call `$this->databaseTool->withPurgeMode(false)->loadFixtures(…)` to disable the purging on-demand
+
+- `setExcludedDoctrineTables()` accepts an array of table names that will be preserved, see [Exclude some tables](#exclude-some-tables-)
+
+
 Tips for Fixture Loading Tests
 ------------------------------
 
-### SQLite
+### SQLite ([↑](#methods))
 
  1. If you want your tests to run against a completely isolated database (which
     is recommended for most functional-tests), you can configure your
@@ -47,181 +113,153 @@ Tips for Fixture Loading Tests
             sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
     ```
 
- 3. For create custom database cache service:
+### Custom database cache services ([↑](#methods))
+
+ To create custom database cache service:
+
+Create cache class, implement `\Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface` and add it to config
+
+For example:
+```yaml
+# app/config/config_test.yml
+liip_test_fixtures:
+    cache_db:
+        mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+        mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
+        phpcr: ...
+        db2: ...
+        [Other \Doctrine\DBAL\Platforms\AbstractPlatform name]: ...
+```
+
+**Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup` requires `mysql-client` installed on server.**
+
+**Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup` requires `mongodb-clients` installed on server.**
  
-    Create cache class, implement `\Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface` and add it to config
+### Load fixtures ([↑](#methods))
 
-    For example:
-    ```yaml
-    # app/config/config_test.yml
-    liip_test_fixtures:
-        cache_db:
-            mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
-            mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
-            phpcr: ...
-            db2: ...
-            [Other \Doctrine\DBAL\Platforms\AbstractPlatform name]: ...
-    ```
+Load your Doctrine fixtures in your tests:
 
-    **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup` requires `mysql-client` installed on server.**
+```php
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-    **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup` requires `mongodb-clients` installed on server.**
- 
- 4. Load your Doctrine fixtures in your tests:
+class MyControllerTest extends WebTestCase
+{
+    /**
+     * @var AbstractDatabaseTool
+     */
+    protected $databaseTool;
 
-    ```php
-    use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-    use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-    class MyControllerTest extends WebTestCase
+    public function setUp(): void
     {
-        /**
-         * @var AbstractDatabaseTool
-         */
-        protected $databaseTool;
+        parent::setUp();
 
-        public function setUp(): void
-        {
-            parent::setUp();
-
-            $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
-        }
-
-        public function testIndex()
-        {
-            // If you need a client, you must create it before loading fixtures because
-            // creating the client boots the kernel, which is used by loadFixtures
-            $client = $this->createClient();
-    
-            // add all your fixtures classes that implement
-            // Doctrine\Common\DataFixtures\FixtureInterface
-            $this->databaseTool->loadFixtures([
-                'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
-                'Me\MyBundle\DataFixtures\ORM\LoadData'
-            ]);
-
-            // you can now run your functional tests with a populated database
-            // ...
-        }
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
-    ```
 
- 5. If you don't need any fixtures to be loaded and just want to start off with
-    an empty database (initialized with your schema), you can simply call
-    `loadFixtures` without any argument.
-
-    ```php
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-    class MyControllerTest extends WebTestCase
+    public function testIndex()
     {
-        // …
+        // If you need a client, you must create it before loading fixtures because
+        // creating the client boots the kernel, which is used by loadFixtures
+        $client = $this->createClient();
 
-        public function testIndex()
-        {
-            // If you need a client, you must create it before loading fixtures because
-            // creating the client boots the kernel, which is used by loadFixtures
-            $client = $this->createClient();
-            $this->databaseTool->loadFixtures();
+        // add all your fixtures classes that implement
+        // Doctrine\Common\DataFixtures\FixtureInterface
+        $this->databaseTool->loadFixtures([
+            'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
+            'Me\MyBundle\DataFixtures\ORM\LoadData'
+        ]);
 
-            // you can now run your functional tests with a populated database
-            // ...
-        }
+        // you can now run your functional tests with a populated database
+        // ...
     }
-    ```
+}
+```
 
- 6. Given that you want to exclude some of your doctrine tables from being purged
-    when loading the fixtures, you can do so by passing an array of tablenames 
-    to the `setExcludedDoctrineTables` method before loading the fixtures.
+### Have an empty database without fixtures ([↑](#methods))
 
-    ```php
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+If you don't need any fixtures to be loaded and just want to start off with
+an empty database (initialized with your schema), you can simply call
+`loadFixtures` without any argument.
 
-    class MyControllerTest extends WebTestCase
-    {
-        // …
+```php
+$this->databaseTool->loadFixtures();
+}
+```
 
-        public function testIndex()
-        {
-            $this->setExcludedDoctrineTables(['my_tablename_not_to_be_purged']);
-            $this->databaseTool->loadFixtures([
-                'Me\MyBundle\DataFixtures\ORM\LoadData'
-            ]);
-            // ...
-        }
-    }
-    ```
+### Exclude some tables ([↑](#methods))
 
- 7. If you want to append fixtures instead of clean database and load them, you have
- to consider use the second parameter $append with value true.
+Given that you want to exclude some of your doctrine tables from being purged
+when loading the fixtures, you can do so by passing an array of tablenames 
+to the `setExcludedDoctrineTables` method before loading the fixtures.
 
-    ```php
-        use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+```php
+$this->databaseTool->setExcludedDoctrineTables(['my_tablename_not_to_be_purged']);
+$this->databaseTool->loadFixtures([
+```
 
-        class MyControllerTest extends WebTestCase
-        {
-            // …
+### Append data ([↑](#methods))
 
-            public function testIndex()
-            {
-                $this->databaseTool->loadFixtures([
-                    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData',
-                ], true);
-                // ...
-            }
-        }
-    ```
+If you want to append fixtures instead of clean database and load them, you have
+to consider use the second parameter $append with value true.
 
- 8. This bundle uses Doctrine ORM by default. If you are using another driver just
-    specify the service id of the registry manager:
+```php
+$this->databaseTool->loadFixtures([
+    'Me\MyBundle\DataFixtures\ORM\LoadAnotherObjectData',
+], true);
+```
 
-    ```php
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+### Other drivers ([↑](#methods))
 
-    class MyControllerTest extends WebTestCase
+This bundle uses Doctrine ORM by default. If you are using another driver just
+specify the service id of the registry manager:
+
+```php
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class MyControllerTest extends WebTestCase
+{
+    // …
+
+   
+    public function setUp(): void
     {
         // …
 
-        public function testIndex()
-        {
-            $fixtures = [
-                'Me\MyBundle\DataFixtures\MongoDB\LoadData'
-            ];
-
-            // If you need a client, you must create it before loading fixtures because
-            // creating the client boots the kernel, which is used by loadFixtures
-            $client = $this->createClient();
-            $this->databaseTool->loadFixtures($fixtures, false, null, 'doctrine_mongodb');
-        }
+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
     }
-    ```
+}
+```
 
- 9. If you need to load all fixtures, you can call `loadAllFixtures`. With the optional argument 
-    groups, only those fixtures belonging to a group (i.e. using the `FixtureGroupInterface`)
-    are loaded, like when calling the command `doctrine:fixtures:load --group=...`:
+### Load all fixtures ([↑](#methods))
 
-    ```php
-    use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+If you need to load all fixtures, you can call `loadAllFixtures`. With the optional argument 
+groups, only those fixtures belonging to a group (i.e. using the `FixtureGroupInterface`)
+are loaded, like when calling the command `doctrine:fixtures:load --group=...`:
 
-    class MyControllerTest extends WebTestCase
-    {
-        // …
+```php
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-       public function testIndex()
-       {
-           // If you need a client, you must create it before loading fixtures because
-           // creating the client boots the kernel, which is used by loadFixtures
-           $client = $this->createClient();
-           $this->databaseTool->loadAllFixtures(['mygroup1', 'mygroup2']);
+class MyControllerTest extends WebTestCase
+{
+    // …
 
-           // you can now run your functional tests with a populated database
-           // ...
-       }
-    }
-    ```
+   public function testIndex()
+   {
+       // If you need a client, you must create it before loading fixtures because
+       // creating the client boots the kernel, which is used by loadFixtures
+       $client = $this->createClient();
+       $this->databaseTool->loadAllFixtures(['mygroup1', 'mygroup2']);
 
-### Loading Fixtures Using Alice
+       // you can now run your functional tests with a populated database
+       // ...
+   }
+}
+```
+
+### Loading Fixtures Using Alice ([↑](#methods))
+
 If you would like to setup your fixtures with yml files using [Alice](https://github.com/nelmio/alice),
 there is an helper function `loadFixtureFiles`
 which takes an array of resources, or paths to yml files, and returns an array of objects.
@@ -267,7 +305,7 @@ $files = [
 $fixtures = $this->databaseTool->loadAliceFixture($files, false, null, 'doctrine', ORMPurger::PURGE_MODE_TRUNCATE );
 ```
 
-### Non-SQLite
+### Non-SQLite ([↑](#methods))
 
 The Bundle will not automatically create your schema for you unless you use SQLite
 or use `doctrine/orm` < 2.6.
@@ -315,7 +353,7 @@ class AccountControllerTest extends WebTestCase
 Without something like this in place, you'll have to load the schema into your
 test database manually, for your tests to pass.
 
-### Referencing fixtures in tests
+### Referencing fixtures in tests ([↑](#methods))
 
 In some cases you need to know for example the row ID of an object in order to write a functional test for it, e.g. 
 `$crawler = $client->request('GET', "/profiles/$accountId");` but since the `$accountId` keeps changing each test run, you need to figure out its current value. Instead of going via the entity manager repository and querying for the entity, you can use `setReference()/getReference()` from the fixture executor directly, as such:
@@ -349,8 +387,8 @@ and finally, in the test:
         $crawler = $client->request('GET', "/profiles/$accountId");
 ```
 
-Doctrine Slaves and SQLite
---------------------------
+Doctrine Slaves and SQLite ([↑](#methods))
+----------------------------------------
 
 If your main configuration for Doctrine uses Slaves, you need to ensure that the configuration for your SQLite test environment does not include the slave configuration.
 
