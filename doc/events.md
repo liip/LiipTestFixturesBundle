@@ -2,11 +2,11 @@
 
 Available events:
 
-- `LiipTestFixturesEvents::POST_FIXTURE_SETUP`
-- `LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE`
-- `LiipTestFixturesEvents::preFixtureBackupRestore`
-- `LiipTestFixturesEvents::postReferenceSave`
-- `LiipTestFixturesEvents::PRE_REFERENCE_SAVE`
+- `LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE`: triggered before restoring the backup
+- `LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE`: triggered after the backup has been restored
+- `LiipTestFixturesEvents::POST_FIXTURE_SETUP`: triggered before purging the database
+- `LiipTestFixturesEvents::PRE_REFERENCE_SAVE`: triggered before saving the backup of fixtures
+- `LiipTestFixturesEvents::POST_REFERENCE_SAVE`: triggered before the backup of fixtures has been saved
 
 ## Registering events
 
