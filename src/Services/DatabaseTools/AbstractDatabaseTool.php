@@ -199,7 +199,7 @@ abstract class AbstractDatabaseTool
 
         if ($this->container->hasParameter($backupServiceParamName)) {
             $backupServiceName = $this->container->getParameter($backupServiceParamName);
-            if ($this->container->has($backupServiceName)) {
+            if (is_string($backupServiceName) && $this->container->has($backupServiceName)) {
                 $backupService = $this->container->get($backupServiceName);
             } else {
                 @trigger_error("Could not find {$backupServiceName} in container. Possible misconfiguration.");
