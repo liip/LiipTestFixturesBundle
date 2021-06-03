@@ -74,7 +74,9 @@ jobs:
 
       - name: Require Symfony
         if: matrix.symfony-version != ''
-        run: composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
+        run: |
+          composer config extra.symfony.require "${{ matrix.symfony-version }}"
+          composer require --no-update symfony/flex symfony/framework-bundle=${{ matrix.symfony-version }}
 
       - name: Install Composer dependencies
         if: matrix.composer-flags == ''
