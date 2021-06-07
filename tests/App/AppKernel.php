@@ -28,21 +28,16 @@ abstract class AppKernel extends Kernel
 {
     public function registerBundles(): array
     {
-        $bundles = [
+        return [
             new FrameworkBundle(),
             new MonologBundle(),
             new DoctrineBundle(),
             new DoctrineFixturesBundle(),
+            new NelmioAliceBundle(),
+            new FidryAliceDataFixturesBundle(),
             new LiipTestFixturesBundle(),
             new AcmeBundle(),
         ];
-
-        if (class_exists(NelmioAliceBundle::class) && class_exists(FidryAliceDataFixturesBundle::class)) {
-            $bundles[] = new NelmioAliceBundle();
-            $bundles[] = new FidryAliceDataFixturesBundle();
-        }
-
-        return $bundles;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
