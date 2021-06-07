@@ -36,7 +36,6 @@
         "symfony/monolog-bridge": "^4.4 || ^5.0",
         "symfony/monolog-bundle": "^3.2",
         "symfony/phpunit-bridge": "^4.4 || ^5.0",
-        "symfony/property-access": "^4.4 || ^5.0 , <5.3",
         "theofidry/alice-data-fixtures": "^1.0.1"
     },
     "suggest": {
