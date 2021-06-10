@@ -185,7 +185,6 @@ an empty database (initialized with your schema), you can simply call
 
 ```php
 $this->databaseTool->loadFixtures();
-}
 ```
 
 ### Exclude some tables ([↑](#methods))
@@ -197,6 +196,8 @@ to the `setExcludedDoctrineTables` method before loading the fixtures.
 ```php
 $this->databaseTool->setExcludedDoctrineTables(['my_tablename_not_to_be_purged']);
 $this->databaseTool->loadFixtures([
+    'Me\MyBundle\DataFixtures\ORM\LoadData'
+]);
 ```
 
 ### Append data ([↑](#methods))
