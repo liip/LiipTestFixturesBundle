@@ -16,10 +16,21 @@ namespace Liip\Acme\Tests\App;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 abstract class AppKernel extends Kernel
 {
     use MicroKernelTrait;
+
+    public function registerBundles(): iterable
+    {
+        $contents = require __DIR__.'/config/bundles.php';
+        foreach ($contents as $class => $envs) {
+            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                yield new $class();
+            }
+        }
+    }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
@@ -29,5 +40,9 @@ abstract class AppKernel extends Kernel
     public function getProjectDir(): string
     {
         return __DIR__;
+    }
+
+    protected function configureRoutes(RoutingConfigurator $routes): void
+    {
     }
 }
