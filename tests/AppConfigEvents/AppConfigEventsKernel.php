@@ -26,4 +26,12 @@ class AppConfigEventsKernel extends AppConfigKernel
         // Load the file with the FixturesSubscriber service
         $container->import(__DIR__.'/config.yml');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir(): string
+    {
+        return __DIR__.'/var/cache/';
+    }
 }
