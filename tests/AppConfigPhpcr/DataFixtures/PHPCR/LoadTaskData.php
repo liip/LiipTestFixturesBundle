@@ -19,6 +19,7 @@ use Doctrine\Persistence\ObjectManager;
 use Exception;
 use Liip\Acme\Tests\AppConfigPhpcr\Document\Task;
 use RuntimeException;
+use function get_class;
 
 class LoadTaskData implements FixtureInterface
 {

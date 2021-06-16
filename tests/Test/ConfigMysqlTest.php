@@ -22,6 +22,7 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use function count;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager')
@@ -58,7 +59,7 @@ class ConfigMysqlTest extends KernelTestCase
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -71,7 +72,7 @@ class ConfigMysqlTest extends KernelTestCase
         $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
-    public function testToolType()
+    public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }

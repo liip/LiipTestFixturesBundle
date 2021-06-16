@@ -29,6 +29,7 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use function count;
 
 /**
  * @preserveGlobalState disabled
@@ -46,7 +47,7 @@ class ConfigSqliteTest extends KernelTestCase
     /** @var ObjectRepository */
     private $userRepository;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

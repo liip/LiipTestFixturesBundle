@@ -55,7 +55,7 @@ class ConfigTest extends KernelTestCase
     /** @var string */
     private $kernelCacheDir;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
