@@ -13,50 +13,21 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\App;
 
-use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
-use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
-use Liip\TestFixturesBundle\LiipTestFixturesBundle;
-use Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle;
-use ReflectionClass;
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\MonologBundle\MonologBundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel;
 
 abstract class AppKernel extends Kernel
 {
-    public function registerBundles(): array
+    use MicroKernelTrait;
+
+    protected function configureContainer(ContainerConfigurator $container): void
     {
-        return [
-            new FrameworkBundle(),
-            new MonologBundle(),
-            new DoctrineBundle(),
-            new DoctrineFixturesBundle(),
-            new NelmioAliceBundle(),
-            new FidryAliceDataFixturesBundle(),
-            new LiipTestFixturesBundle(),
-            new AcmeBundle(),
-        ];
+        $container->import('./config.yml');
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    public function getProjectDir(): string
     {
-        $loader->load(__DIR__.'/config.yml');
-    }
-
-    public function getCacheDir()
-    {
-        return $this->getBaseDir().'cache';
-    }
-
-    public function getLogDir()
-    {
-        return $this->getBaseDir().'log';
-    }
-
-    protected function getBaseDir()
-    {
-        return sys_get_temp_dir().'/LiipTestFixturesBundle/'.(new ReflectionClass($this))->getShortName().'/var/';
+        return __DIR__;
     }
 }

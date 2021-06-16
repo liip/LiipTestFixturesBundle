@@ -19,7 +19,7 @@
         "doctrine/common": "^2.13 || ^3.0",
         "symfony/event-dispatcher": "^4.4 || ^5.0",
         "symfony/event-dispatcher-contracts": "^1 || ^2",
-        "symfony/framework-bundle": "^4.4 || ^5.0 , <5.3",
+        "symfony/framework-bundle": "^4.4 || ^5.0",
         "symfony/yaml": "^4.4 || ^5.0"
     },
     "require-dev": {
