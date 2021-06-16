@@ -14,19 +14,16 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfigEvents;
 
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 class AppConfigEventsKernel extends AppConfigKernel
 {
-    /**
-     * Load the config.yml from the current directory.
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container);
 
         // Load the file with the FixturesSubscriber service
-        $loader->load(__DIR__.'/config.yml');
+        $container->import(__DIR__.'/config.yml');
     }
 }

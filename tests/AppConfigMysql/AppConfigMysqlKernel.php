@@ -14,19 +14,16 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfigMysql;
 
 use Liip\Acme\Tests\App\AppKernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 class AppConfigMysqlKernel extends AppKernel
 {
-    /**
-     * Load the config.yml from the current directory.
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container);
 
         // Load the file with MySQL configuration
-        $loader->load(__DIR__.'/config.yml');
+        $container->import(__DIR__.'/config.yml');
     }
 }

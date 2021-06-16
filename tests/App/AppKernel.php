@@ -23,7 +23,7 @@ abstract class AppKernel extends Kernel
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
-        $container->import('./config.yml');
+        $container->import(__DIR__.'/config.yml');
     }
 
     public function getProjectDir(): string
