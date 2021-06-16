@@ -26,4 +26,12 @@ class AppConfigKernel extends AppConfigSqliteKernel
         // Load the file with "liip_test_fixtures" parameters
         $container->import(__DIR__.'/config.yml');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir(): string
+    {
+        return __DIR__.'/var/cache/';
+    }
 }
