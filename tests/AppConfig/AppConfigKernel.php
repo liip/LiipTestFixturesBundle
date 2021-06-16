@@ -14,19 +14,16 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfig;
 
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 class AppConfigKernel extends AppConfigSqliteKernel
 {
-    /**
-     * Load the config.yml from the current directory.
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container);
 
         // Load the file with "liip_test_fixtures" parameters
-        $loader->load(__DIR__.'/config.yml');
+        $container->import(__DIR__.'/config.yml');
     }
 }

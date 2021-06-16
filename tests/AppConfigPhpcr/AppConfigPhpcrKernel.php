@@ -15,7 +15,7 @@ namespace Liip\Acme\Tests\AppConfigPhpcr;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 class AppConfigPhpcrKernel extends AppConfigSqliteKernel
 {
@@ -35,17 +35,14 @@ class AppConfigPhpcrKernel extends AppConfigSqliteKernel
         );
     }
 
-    /**
-     * Load the config.yml from the current directory.
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container);
 
         // Load the file with PHPCR configuration
         if (class_exists(DoctrinePHPCRBundle::class)) {
-            $loader->load(__DIR__.'/config.yml');
+            $container->import(__DIR__.'/config.yml');
         }
     }
 }
