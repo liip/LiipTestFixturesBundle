@@ -32,14 +32,14 @@ abstract class AppKernel extends Kernel
         }
     }
 
-    protected function configureContainer(ContainerConfigurator $container): void
-    {
-        $container->import(__DIR__.'/config.yml');
-    }
-
     public function getProjectDir(): string
     {
         return __DIR__;
+    }
+
+    protected function configureContainer(ContainerConfigurator $container): void
+    {
+        $container->import(__DIR__.'/config.yml');
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

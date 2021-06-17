@@ -18,6 +18,14 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 class AppConfigMysqlKernel extends AppKernel
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir(): string
+    {
+        return __DIR__.'/var/cache/';
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.
@@ -25,13 +33,5 @@ class AppConfigMysqlKernel extends AppKernel
 
         // Load the file with MySQL configuration
         $container->import(__DIR__.'/config.yml');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDir(): string
-    {
-        return __DIR__.'/var/cache/';
     }
 }
