@@ -14,27 +14,11 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfigPhpcr;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
-use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-class AppConfigPhpcrKernel extends AppConfigSqliteKernel
+class AppConfigPhpcrKernel extends AppConfigKernel
 {
-    public function registerBundles(): array
-    {
-        $bundles = [];
-
-        if (class_exists(DoctrinePHPCRBundle::class)) {
-            $bundles = [
-                new DoctrinePHPCRBundle(),
-            ];
-        }
-
-        return array_merge(
-            parent::registerBundles(),
-            $bundles
-        );
-    }
-
     protected function configureContainer(ContainerConfigurator $container): void
     {
         // Load the default file.

@@ -9,4 +9,5 @@ return [
     Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle::class => ['all' => true],
     Liip\TestFixturesBundle\LiipTestFixturesBundle::class => ['all' => true],
     Liip\Acme\Tests\App\AcmeBundle::class => ['all' => true],
+    Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle::class => ['phpcr' => true],
 ];
