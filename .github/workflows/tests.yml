@@ -8,9 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: PHP-CS-Fixer
-        uses: docker://jakzal/phpqa:php7.4-alpine
+        uses: docker://jakzal/phpqa:1.58.7-php7.4-alpine
         with:
-          args: php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi --rules=@PhpCsFixer fix
+          args: php-cs-fixer --dry-run --diff --no-interaction --ansi --rules=@PhpCsFixer fix
 
   tests:
     name: Symfony ${{ matrix.symfony-version }} on PHP ${{ matrix.php-version }} flags ${{ matrix.composer-flags }}
