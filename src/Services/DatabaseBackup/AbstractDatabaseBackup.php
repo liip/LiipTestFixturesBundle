@@ -67,7 +67,7 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
      */
     protected function isBackupUpToDate(string $backup): bool
     {
-        $backupLastModifiedDateTime = DateTime::createFromFormat('U', filemtime($backup));
+        $backupLastModifiedDateTime = DateTime::createFromFormat('U', (string) filemtime($backup));
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($this->classNames);
 
