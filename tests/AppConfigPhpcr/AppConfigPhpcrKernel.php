@@ -15,7 +15,8 @@ namespace Liip\Acme\Tests\AppConfigPhpcr;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppConfigPhpcrKernel extends AppConfigKernel
 {
@@ -27,14 +28,14 @@ class AppConfigPhpcrKernel extends AppConfigKernel
         return __DIR__.'/var/cache/';
     }
 
-    protected function configureContainer(ContainerConfigurator $container): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Load the default file.
-        parent::configureContainer($container);
+        parent::configureContainer($container, $loader);
 
         // Load the file with PHPCR configuration
         if (class_exists(DoctrinePHPCRBundle::class)) {
-            $container->import(__DIR__.'/config.yml');
+            $loader->load(__DIR__.'/config.yml');
         }
     }
 }

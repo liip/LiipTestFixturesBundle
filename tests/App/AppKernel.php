@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
@@ -37,9 +38,9 @@ abstract class AppKernel extends Kernel
         return __DIR__;
     }
 
-    protected function configureContainer(ContainerConfigurator $container): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $container->import(__DIR__.'/config.yml');
+        $loader->load($this->getProjectDir().'/config.yml');
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
