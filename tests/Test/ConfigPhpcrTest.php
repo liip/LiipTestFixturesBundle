@@ -41,7 +41,7 @@ class ConfigPhpcrTest extends KernelTestCase
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!class_exists(DoctrinePHPCRBundle::class)) {
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
@@ -66,7 +66,7 @@ class ConfigPhpcrTest extends KernelTestCase
         $this->initRepository();
     }
 
-    public function testToolType()
+    public function testToolType(): void
     {
         $this->assertInstanceOf(PHPCRDatabaseTool::class, $this->databaseTool);
     }

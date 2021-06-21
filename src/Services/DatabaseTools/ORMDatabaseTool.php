@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Liip/TestFixturesBundle
  *
@@ -88,7 +90,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         // TODO: handle case when using persistent connections. Fail loudly?
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
             $schemaTool = new SchemaTool($this->om);
-            if (count($this->excludedDoctrineTables) > 0 || true === $append) {
+            if (\count($this->excludedDoctrineTables) > 0 || true === $append) {
                 if (!empty($this->getMetadatas())) {
                     $schemaTool->updateSchema($this->getMetadatas());
                 }
@@ -148,7 +150,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         if (isset($params['master'])) {
             $params = $params['master'];
         }
-        $dbName = isset($params['dbname']) ? $params['dbname'] : '';
+        $dbName = $params['dbname'] ?? '';
 
         unset($params['dbname'], $params['url']);
 
@@ -158,7 +160,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $tmpConnection = DriverManager::getConnection($params);
         $tmpConnection->connect();
 
-        if (!in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases())) {
+        if (!\in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
             $tmpConnection->getSchemaManager()->createDatabase($dbName);
         }
 

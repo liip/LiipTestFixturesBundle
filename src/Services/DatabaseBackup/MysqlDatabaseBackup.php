@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Liip/TestFixturesBundle
  *
@@ -53,14 +55,14 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
             $params = $params['master'];
         }
 
-        $dbName = isset($params['dbname']) ? $params['dbname'] : '';
-        $dbHost = isset($params['host']) ? $params['host'] : '';
+        $dbName = $params['dbname'] ?? '';
+        $dbHost = $params['host'] ?? '';
 
         // Define parameter only if there's a value, to avoid warning from mysqldump:
         // mysqldump: [Warning] mysqldump: Empty value for 'port' specified. Will throw an error in future versions
         $port = isset($params['port']) && $params['port'] ? '--port='.$params['port'] : '';
 
-        $dbUser = isset($params['user']) ? $params['user'] : '';
+        $dbUser = $params['user'] ?? '';
         // Set password through environment variable to remove warning
         $dbPass = isset($params['password']) && $params['password'] ? 'MYSQL_PWD='.$params['password'].' ' : '';
 
@@ -82,7 +84,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         foreach ($this->metadatas as $classMetadata) {
             $tableName = $classMetadata->table['name'];
 
-            if (!in_array($tableName, $excludedTables)) {
+            if (!\in_array($tableName, $excludedTables, true)) {
                 $truncateSql[] = 'DELETE FROM '.$tableName; // in small tables it's really faster than truncate
             }
         }
@@ -121,7 +123,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         return file_get_contents($this->getReferenceBackupFilePath());
     }
 
-    protected function updateSchemaIfNeed(EntityManager $em)
+    protected function updateSchemaIfNeed(EntityManager $em): void
     {
         if (!self::$schemaUpdatedFlag) {
             $schemaTool = new SchemaTool($em);

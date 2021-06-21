@@ -46,7 +46,7 @@ class ConfigSqliteTest extends KernelTestCase
     /** @var ObjectRepository */
     private $userRepository;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -121,7 +121,7 @@ class ConfigSqliteTest extends KernelTestCase
         // There are 2 users.
         $this->assertSame(
             2,
-            count($users)
+            \count($users)
         );
 
         /** @var User $user */
@@ -163,7 +163,7 @@ class ConfigSqliteTest extends KernelTestCase
         // Using a non-existing group will result in zero users
         $this->assertSame(
             0,
-            count($users)
+            \count($users)
         );
 
         // Load the fixtures with a valid group.
@@ -186,7 +186,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The fixture group myGroup contains 3 users
         $this->assertSame(
             3,
-            count($users)
+            \count($users)
         );
 
         // Load all fixtures.
@@ -209,7 +209,7 @@ class ConfigSqliteTest extends KernelTestCase
         // Loading all fixtures results in 12 users.
         $this->assertSame(
             12,
-            count($users)
+            \count($users)
         );
     }
 
@@ -277,7 +277,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
             4,
-            count($users)
+            \count($users)
         );
     }
 
@@ -300,7 +300,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
             4,
-            count($users)
+            \count($users)
         );
     }
 
@@ -325,7 +325,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            count($users)
+            \count($users)
         );
 
         /** @var User $user */
@@ -421,7 +421,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            count($users)
+            \count($users)
         );
 
         /** @var User $user */
@@ -459,7 +459,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            count($users)
+            \count($users)
         );
     }
 

@@ -37,7 +37,7 @@ class LiipTestFixturesExtension extends Extension
             // "liip_test_fixtures.cache_db.mysql"
             // instead of an array "liip_test_fixtures.cache_db"
             // with a "mysql" key.
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $key2 => $value2) {
                     $container->setParameter($this->getAlias().'.'.$key.
                         '.'.$key2, $value2);

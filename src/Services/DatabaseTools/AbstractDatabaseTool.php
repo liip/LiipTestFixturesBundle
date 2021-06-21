@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Liip/TestFixturesBundle
  *
@@ -28,8 +30,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 abstract class AbstractDatabaseTool
 {
-    const KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME = 'liip_test_fixtures.keep_database_and_schema';
-    const CACHE_METADATA_PARAMETER_NAME = 'liip_test_fixtures.cache_metadata';
+    public const KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME = 'liip_test_fixtures.keep_database_and_schema';
+    public const CACHE_METADATA_PARAMETER_NAME = 'liip_test_fixtures.cache_metadata';
 
     protected $container;
 
@@ -44,7 +46,7 @@ abstract class AbstractDatabaseTool
     protected $registry;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     protected $omName;
 
@@ -64,7 +66,7 @@ abstract class AbstractDatabaseTool
     protected $connection;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     protected $purgeMode;
 
@@ -126,7 +128,7 @@ abstract class AbstractDatabaseTool
         return 'default';
     }
 
-    public function withPurgeMode(int $purgeMode): AbstractDatabaseTool
+    public function withPurgeMode(int $purgeMode): self
     {
         $newTool = clone $this;
         $newTool->setPurgeMode($purgeMode);
@@ -134,7 +136,7 @@ abstract class AbstractDatabaseTool
         return $newTool;
     }
 
-    public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): AbstractDatabaseTool
+    public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): self
     {
         $newTool = clone $this;
         $newTool->setDatabaseCacheEnabled($databaseCacheEnabled);
@@ -158,7 +160,7 @@ abstract class AbstractDatabaseTool
             $loader = $this->container->get('test.service_container')->get('doctrine.fixtures.loader');
             $fixtures = $loader->getFixtures($groups);
             foreach ($fixtures as $fixture) {
-                $fixtureClasses[] = get_class($fixture);
+                $fixtureClasses[] = \get_class($fixture);
             }
         }
 
@@ -199,7 +201,7 @@ abstract class AbstractDatabaseTool
 
         if ($this->container->hasParameter($backupServiceParamName)) {
             $backupServiceName = $this->container->getParameter($backupServiceParamName);
-            if (is_string($backupServiceName) && $this->container->has($backupServiceName)) {
+            if (\is_string($backupServiceName) && $this->container->has($backupServiceName)) {
                 $backupService = $this->container->get($backupServiceName);
             } else {
                 @trigger_error("Could not find {$backupServiceName} in container. Possible misconfiguration.");

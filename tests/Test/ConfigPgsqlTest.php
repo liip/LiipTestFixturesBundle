@@ -38,7 +38,7 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
  */
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
-    public function testToolType()
+    public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
