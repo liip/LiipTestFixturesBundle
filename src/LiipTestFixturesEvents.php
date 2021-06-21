@@ -21,17 +21,17 @@ use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 final class LiipTestFixturesEvents
 {
     /** @see PreFixtureBackupRestoreEvent */
-    const PRE_FIXTURE_BACKUP_RESTORE = 'liip_test_fixtures.pre_fixture_backup_restore';
+    public const PRE_FIXTURE_BACKUP_RESTORE = 'liip_test_fixtures.pre_fixture_backup_restore';
 
     /** @see FixtureEvent */
-    const POST_FIXTURE_SETUP = 'liip_test_fixtures.post_fixture_setup';
+    public const POST_FIXTURE_SETUP = 'liip_test_fixtures.post_fixture_setup';
 
     /** @see PostFixtureBackupRestoreEvent */
-    const POST_FIXTURE_BACKUP_RESTORE = 'liip_test_fixtures.post_fixture_backup_restore';
+    public const POST_FIXTURE_BACKUP_RESTORE = 'liip_test_fixtures.post_fixture_backup_restore';
 
     /** @see ReferenceSaveEvent */
-    const PRE_REFERENCE_SAVE = 'liip_test_fixtures.pre_reference_save';
+    public const PRE_REFERENCE_SAVE = 'liip_test_fixtures.pre_reference_save';
 
     /** @see ReferenceSaveEvent */
-    const POST_REFERENCE_SAVE = 'liip_test_fixtures.post_reference_save';
+    public const POST_REFERENCE_SAVE = 'liip_test_fixtures.post_reference_save';
 }

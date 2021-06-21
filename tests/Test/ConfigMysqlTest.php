@@ -58,7 +58,7 @@ class ConfigMysqlTest extends KernelTestCase
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -71,7 +71,7 @@ class ConfigMysqlTest extends KernelTestCase
         $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
-    public function testToolType()
+    public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
@@ -219,7 +219,7 @@ class ConfigMysqlTest extends KernelTestCase
         // Check that there are 2 users.
         $this->assertSame(
             2,
-            count($this->userRepository->findAll())
+            \count($this->userRepository->findAll())
         );
 
         $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
@@ -231,7 +231,7 @@ class ConfigMysqlTest extends KernelTestCase
         // The exclusion from purge worked, the user table is still alive and well.
         $this->assertSame(
             2,
-            count($this->userRepository->findAll())
+            \count($this->userRepository->findAll())
         );
     }
 
@@ -296,7 +296,7 @@ class ConfigMysqlTest extends KernelTestCase
         // The purge worked: there is no user.
         $this->assertSame(
             0,
-            count($this->userRepository->findAll())
+            \count($this->userRepository->findAll())
         );
     }
 
@@ -323,7 +323,7 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            count($users)
+            \count($users)
         );
 
         /** @var User $user */
