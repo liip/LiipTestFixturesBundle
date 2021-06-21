@@ -11,8 +11,9 @@ doctrine_phpcr:
                 mappings:
                     LiipAcme:
                         type: annotation
-                        dir: "%kernel.project_dir%/tests/AppConfigPhpcr/Document"
+                        dir: "%kernel.project_dir%/../AppConfigPhpcr/Document"
                         prefix: 'Liip\Acme\Tests\AppConfigPhpcr\Document'
+                        is_bundle: false
 
 services:
     Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR\:

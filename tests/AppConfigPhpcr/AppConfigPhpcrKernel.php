@@ -14,34 +14,24 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\AppConfigPhpcr;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
-use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class AppConfigPhpcrKernel extends AppConfigSqliteKernel
+class AppConfigPhpcrKernel extends AppConfigKernel
 {
-    public function registerBundles(): array
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir(): string
     {
-        $bundles = [];
-
-        if (class_exists(DoctrinePHPCRBundle::class)) {
-            $bundles = [
-                new DoctrinePHPCRBundle(),
-            ];
-        }
-
-        return array_merge(
-            parent::registerBundles(),
-            $bundles
-        );
+        return __DIR__.'/var/cache/';
     }
 
-    /**
-     * Load the config.yml from the current directory.
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container, $loader);
 
         // Load the file with PHPCR configuration
         if (class_exists(DoctrinePHPCRBundle::class)) {

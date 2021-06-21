@@ -49,7 +49,9 @@ class ConfigPhpcrTest extends KernelTestCase
 
         parent::setUp();
 
-        self::bootKernel();
+        self::bootKernel([
+            'environment' => 'phpcr',
+        ]);
 
         $entityManager = self::$container->get('doctrine')->getManager();
 

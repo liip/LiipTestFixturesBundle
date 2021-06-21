@@ -30,12 +30,12 @@ doctrine:
                 mappings:
                     LiipAcme:
                         type: php
-                        dir: "%kernel.project_dir%/tests/App/Entity"
+                        dir: "%kernel.project_dir%/Entity"
                         prefix: 'Liip\Acme\Tests\App\Entity'
                         is_bundle: false
                     LiipAcmeYml:
                         type: "yml"
-                        dir: "%kernel.project_dir%/tests/App/Resources/config/doctrine"
+                        dir: "%kernel.project_dir%/Resources/config/doctrine"
                         prefix: 'Liip\Acme\Tests\App\Entity'
                         is_bundle: false
 

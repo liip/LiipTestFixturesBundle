@@ -6,3 +6,5 @@ vendor
 # Ignore files created during tests
 /cov/
 !.gitkeep
+
+tests/App*/var/

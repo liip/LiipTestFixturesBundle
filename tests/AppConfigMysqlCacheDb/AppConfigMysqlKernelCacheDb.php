@@ -15,18 +15,24 @@ namespace Liip\Acme\Tests\AppConfigMysqlCacheDb;
 
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppConfigMysqlKernelCacheDb extends AppConfigMysqlKernel
 {
     /**
-     * Load the config.yml from the current directory.
+     * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    public function getCacheDir(): string
+    {
+        return __DIR__.'/var/cache/';
+    }
+
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container, $loader);
 
-        // Load the file with MySQL configuration
+        // Load the file with specific configuration
         $loader->load(__DIR__.'/config.yml');
     }
 }

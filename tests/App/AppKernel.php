@@ -13,50 +13,37 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\App;
 
-use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
-use Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle;
-use Liip\TestFixturesBundle\LiipTestFixturesBundle;
-use Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle;
-use ReflectionClass;
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 abstract class AppKernel extends Kernel
 {
-    public function registerBundles(): array
+    use MicroKernelTrait;
+
+    public function registerBundles(): iterable
     {
-        return [
-            new FrameworkBundle(),
-            new MonologBundle(),
-            new DoctrineBundle(),
-            new DoctrineFixturesBundle(),
-            new NelmioAliceBundle(),
-            new FidryAliceDataFixturesBundle(),
-            new LiipTestFixturesBundle(),
-            new AcmeBundle(),
-        ];
+        $contents = require __DIR__.'/config/bundles.php';
+        foreach ($contents as $class => $envs) {
+            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                yield new $class();
+            }
+        }
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    public function getProjectDir(): string
     {
-        $loader->load(__DIR__.'/config.yml');
+        return __DIR__;
     }
 
-    public function getCacheDir()
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        return $this->getBaseDir().'cache';
+        $loader->load($this->getProjectDir().'/config.yml');
     }
 
-    public function getLogDir()
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        return $this->getBaseDir().'log';
-    }
-
-    protected function getBaseDir()
-    {
-        return sys_get_temp_dir().'/LiipTestFixturesBundle/'.(new ReflectionClass($this))->getShortName().'/var/';
     }
 }

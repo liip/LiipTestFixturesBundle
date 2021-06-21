@@ -15,16 +15,22 @@ namespace Liip\Acme\Tests\AppConfigPgsql;
 
 use Liip\Acme\Tests\App\AppKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppConfigPgsqlKernel extends AppKernel
 {
     /**
-     * Load the config.yml from the current directory.
+     * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
+    public function getCacheDir(): string
+    {
+        return __DIR__.'/var/cache/';
+    }
+
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Load the default file.
-        parent::registerContainerConfiguration($loader);
+        parent::configureContainer($container, $loader);
 
         // Load the file with PostgreSQL configuration
         $loader->load(__DIR__.'/config.yml');
