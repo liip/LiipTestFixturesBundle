@@ -27,7 +27,8 @@ declare(strict_types=1);
 
 namespace Liip\FooBundle\Tests;
 
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ExampleFunctionalTest extends WebTestCase 
 {
