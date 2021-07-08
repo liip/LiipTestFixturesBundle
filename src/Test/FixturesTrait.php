@@ -19,6 +19,7 @@ use Doctrine\Persistence\ObjectManager;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 $staticCheck = new ReflectionMethod(KernelTestCase::class, 'getContainer');
