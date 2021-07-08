@@ -6,6 +6,7 @@ framework:
     test: ~
     profiler:
         collect: false
+    property_access: ~
 
 monolog:
     handlers:
