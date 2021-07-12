@@ -29,6 +29,7 @@ try {
 } catch (\ReflectionException $exception) {
     // getContainer not found case (4.4 and lower)
 }
+
 if ($isStatic) {
     trait FixturesTrait
     {
