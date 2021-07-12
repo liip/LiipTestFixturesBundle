@@ -22,8 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
-$staticCheck = new ReflectionMethod(KernelTestCase::class, 'getContainer');
-if ($staticCheck->isStatic()) {
+$isStatic = false;
+try {
+    $staticCheck = new ReflectionMethod(KernelTestCase::class, 'getContainer');
+    $isStatic = $staticCheck->isStatic();
+} catch (\ReflectionException $exception) {
+    // getContainer not found case (4.4 and lower)
+}
+if ($isStatic) {
     trait FixturesTrait
     {
         protected static $containers;
@@ -109,6 +115,9 @@ if ($staticCheck->isStatic()) {
         /**
          * Get an instance of the dependency injection container.
          * (this creates a kernel *without* parameters).
+         *
+         * Note: This whole construct could theoretically be removed in 5.3 but
+         * I'm keeping it in due to BC for people that eventually depend on the containers property
          */
         protected static function getContainer(): ContainerInterface
         {
