@@ -66,7 +66,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
-        exec("mysqldump --host {$dbHost} {$port} {$dbPass} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact {$dbName} > {$this->getBackupFilePath()}");
+        exec("mysqldump --host {$dbHost} {$port} {$dbPass} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact --column-statistics=0 {$dbName} > {$this->getBackupFilePath()}");
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
