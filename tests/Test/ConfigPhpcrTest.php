@@ -44,6 +44,10 @@ class ConfigPhpcrTest extends KernelTestCase
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
         }
 
+        if (!class_exists('Doctrine\Common\Cache\ArrayCache')) {
+            $this->markTestSkipped('doctrine/phpcr-bundle does not work with doctrine/cache >= 2.');
+        }
+
         // https://github.com/liip/LiipTestFixturesBundle/blob/master/doc/database.md#non-sqlite
         $em = $this->getContainer()->get('doctrine')->getManager();
         if (!isset($metadatas)) {
