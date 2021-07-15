@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 $isStatic = false;
+
 try {
     $staticCheck = new ReflectionMethod(KernelTestCase::class, 'getContainer');
     $isStatic = $staticCheck->isStatic();
