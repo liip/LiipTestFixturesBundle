@@ -35,7 +35,6 @@ use Liip\Acme\Tests\AppConfigMysqlKeepDatabaseAndSchema\AppConfigMysqlKernelKeep
  * @IgnoreAnnotation("group")
  *
  * @internal
- * @coversNothing
  */
 class ConfigMysqlKeepDatabaseAndSchemaTest extends ConfigMysqlTest
 {

@@ -34,7 +34,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
  * @preserveGlobalState disabled
  *
  * @internal
- * @coversNothing
  */
 class ConfigPgsqlTest extends ConfigMysqlTest
 {

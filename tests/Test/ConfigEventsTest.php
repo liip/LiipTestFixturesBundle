@@ -33,7 +33,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @IgnoreAnnotation("dataProvider")
  *
  * @internal
- * @coversNothing
  */
 class ConfigEventsTest extends KernelTestCase
 {
