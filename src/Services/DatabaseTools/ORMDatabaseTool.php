@@ -178,8 +178,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
 
     protected function disableForeignKeyChecksIfApplicable(): void
     {
-        // Don't disable FOREIGN_KEY_CHECKS is the database is not created yet
-        if (!$this->isMysql() || !$this->connection->isConnected()) {
+        if (!$this->isMysql()) {
             return;
         }
 
