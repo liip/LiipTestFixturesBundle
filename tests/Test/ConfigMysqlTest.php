@@ -94,7 +94,7 @@ class ConfigMysqlTest extends KernelTestCase
     /**
      * @group mysql
      */
-    public function testLoadFixtures(): void
+    public function testLoadFixtures(int $firstUserId = 1): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -114,7 +114,6 @@ class ConfigMysqlTest extends KernelTestCase
 
         $user1 = $repository->getReference('user');
 
-        $this->assertSame(1, $user1->getId());
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());
         $this->assertTrue($user1->getEnabled());
@@ -123,7 +122,7 @@ class ConfigMysqlTest extends KernelTestCase
         /** @var User $user */
         $user = $this->userRepository
             ->findOneBy([
-                'id' => 1,
+                'email' => 'foo@bar.com',
             ])
         ;
 
@@ -140,7 +139,7 @@ class ConfigMysqlTest extends KernelTestCase
     /**
      * @group mysql
      */
-    public function testAppendFixtures(): void
+    public function testAppendFixtures(int $firstUserId = 1, int $thirdUserId = 3): void
     {
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -163,7 +162,7 @@ class ConfigMysqlTest extends KernelTestCase
         /** @var User $user */
         $user1 = $this->userRepository
             ->findOneBy([
-                'id' => 1,
+                'email' => 'foo@bar.com',
             ])
         ;
 
@@ -181,7 +180,7 @@ class ConfigMysqlTest extends KernelTestCase
         /** @var User $user */
         $user3 = $this->userRepository
             ->findOneBy([
-                'id' => 3,
+                'email' => 'bar@foo.com',
             ])
         ;
 

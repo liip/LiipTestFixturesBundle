@@ -1,0 +1,4 @@
+# inherits configuration from ../AppConfigMysql/config.yml
+
+liip_test_fixtures:
+    keep_database_and_schema: true
