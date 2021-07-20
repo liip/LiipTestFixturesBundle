@@ -33,7 +33,6 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
  * @preserveGlobalState disabled
  *
  * @internal
- * @coversNothing
  */
 class ConfigMysqlUrlTest extends ConfigMysqlTest
 {

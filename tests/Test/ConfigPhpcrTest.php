@@ -34,7 +34,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @preserveGlobalState disabled
  *
  * @internal
- * @coversNothing
  */
 class ConfigPhpcrTest extends KernelTestCase
 {

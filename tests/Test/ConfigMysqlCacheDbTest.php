@@ -36,7 +36,6 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * @IgnoreAnnotation("group")
  *
  * @internal
- * @coversNothing
  */
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {

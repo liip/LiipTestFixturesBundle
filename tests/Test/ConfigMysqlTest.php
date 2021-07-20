@@ -48,7 +48,6 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
  * @IgnoreAnnotation("group")
  *
  * @internal
- * @coversNothing
  */
 class ConfigMysqlTest extends KernelTestCase
 {
