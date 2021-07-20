@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Services;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,7 +32,7 @@ final class DatabaseToolCollection
      */
     private $items = [];
 
-    public function __construct(ContainerInterface $container, AnnotationReader $annotationReader)
+    public function __construct(ContainerInterface $container, Reader $annotationReader)
     {
         $this->container = $container;
         $this->annotationReader = $annotationReader;
