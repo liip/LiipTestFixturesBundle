@@ -182,7 +182,13 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
-        $currentValue = $this->connection->fetchColumn('SELECT @@SESSION.foreign_key_checks');
+        // Doctrine DBAL 2.x deprecated fetchColumn() in favor of fetchOne()
+        if (\method_exists($this->connection, 'fetchColumn')) {
+            $currentValue = $this->connection->fetchColumn('SELECT @@SESSION.foreign_key_checks');
+        } else {
+            $currentValue = $this->connection->fetchOne('SELECT @@SESSION.foreign_key_checks');
+        }
+
         if ('0' === $currentValue) {
             return;
         }

@@ -113,7 +113,13 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
+        // Doctrine DBAL 2.x deprecated fetchColumn() in favor of fetchOne()
+        if (\method_exists($this->connection, 'fetchColumn')) {
+            $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
+        } else {
+            $currentValue = $this->connection->fetchOne('PRAGMA foreign_keys');
+        }
+
         if ('0' === $currentValue) {
             return;
         }
