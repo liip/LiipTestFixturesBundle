@@ -47,7 +47,7 @@ final class DatabaseToolCollection
     {
         /** @var ManagerRegistry $registry */
         $registry = $this->container->get($registryName);
-        $driverName = ('ORM' === $registry->getName()) ? get_class($registry->getConnection()->getDriver()) : 'default';
+        $driverName = ('ORM' === $registry->getName()) ? \get_class($registry->getConnection()->getDriver()) : 'default';
 
         $databaseTool = isset($this->items[$registry->getName()][$driverName])
             ? $this->items[$registry->getName()][$driverName]
