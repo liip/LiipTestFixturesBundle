@@ -39,6 +39,9 @@
         "symfony/phpunit-bridge": "^4.4 || ^5.0",
         "theofidry/alice-data-fixtures": "^1.0.1"
     },
+    "conflict": {
+        "doctrine/dbal": "<2.13"
+    },
     "suggest": {
         "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
         "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
