@@ -15,6 +15,7 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
+use Doctrine\DBAL\Driver\PDO\SQLite\Driver;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
@@ -35,7 +36,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
     public function getDriverName(): string
     {
-        return 'pdo_sqlite';
+        return Driver::class;
     }
 
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
@@ -112,7 +113,13 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
+        // Doctrine DBAL 2.x deprecated fetchColumn() in favor of fetchOne()
+        if (method_exists($this->connection, 'fetchColumn')) {
+            $currentValue = $this->connection->fetchColumn('PRAGMA foreign_keys');
+        } else {
+            $currentValue = $this->connection->fetchOne('PRAGMA foreign_keys');
+        }
+
         if ('0' === $currentValue) {
             return;
         }
