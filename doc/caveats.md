@@ -17,6 +17,8 @@ liip_test_fixtures:
     keep_database_and_schema: true
 ```
 
+You'll have to [create database and update schema](./configuration.md#configuration) before running your tests on local environment or CI.
+
 ## [Semantical Error] The annotation "@…" in method …::test…() was never imported
 
 See this [solution](https://github.com/liip/LiipFunctionalTestBundle/blob/901a5126e1e58740656cb816cefb2605d8aa47bb/doc/caveats.md).
