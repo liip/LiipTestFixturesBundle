@@ -1,0 +1,6 @@
+# inherits configuration from ../App/config.yml
+
+doctrine:
+    dbal:
+        url: 'sqlite:///%kernel.project_dir%/var/app.db'
+
