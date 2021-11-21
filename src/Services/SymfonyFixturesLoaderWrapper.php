@@ -30,6 +30,9 @@ final class SymfonyFixturesLoaderWrapper extends Loader
         $this->addFixture($this->symfonyFixturesLoader->getFixture($className));
     }
 
+    /**
+     * @return \Doctrine\Common\DataFixtures\FixtureInterface
+     */
     public function createFixture($class)
     {
         return $this->symfonyFixturesLoader->getFixture($class);
