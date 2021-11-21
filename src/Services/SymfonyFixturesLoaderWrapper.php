@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Services;
 
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
+use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 
 final class SymfonyFixturesLoaderWrapper extends Loader
@@ -30,7 +31,7 @@ final class SymfonyFixturesLoaderWrapper extends Loader
         $this->addFixture($this->symfonyFixturesLoader->getFixture($className));
     }
 
-    public function createFixture($class)
+    public function createFixture($class): FixtureInterface
     {
         return $this->symfonyFixturesLoader->getFixture($class);
     }
