@@ -58,7 +58,7 @@ class ConfigSqliteTest extends KernelTestCase
         $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
-    public static function getKernelClass()
+    public static function getKernelClass(): string
     {
         return AppConfigSqliteKernel::class;
     }
