@@ -25,6 +25,7 @@ use Doctrine\Persistence\ObjectRepository;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
@@ -40,6 +41,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigSqliteTest extends KernelTestCase
 {
+    use ContainerProvider;
+
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
     /** @var ObjectRepository */
@@ -51,14 +54,14 @@ class ConfigSqliteTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = self::$container->get('doctrine')
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    public static function getKernelClass()
+    public static function getKernelClass(): string
     {
         return AppConfigSqliteKernel::class;
     }
@@ -118,9 +121,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // There are 2 users.
-        $this->assertSame(
+        $this->assertCount(
             2,
-            \count($users)
+            $users
         );
 
         /** @var User $user */
@@ -160,9 +163,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // Using a non-existing group will result in zero users
-        $this->assertSame(
+        $this->assertCount(
             0,
-            \count($users)
+            $users
         );
 
         // Load the fixtures with a valid group.
@@ -183,9 +186,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // The fixture group myGroup contains 3 users
-        $this->assertSame(
+        $this->assertCount(
             3,
-            \count($users)
+            $users
         );
 
         // Load all fixtures.
@@ -206,9 +209,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // Loading all fixtures results in 12 users.
-        $this->assertSame(
+        $this->assertCount(
             12,
-            \count($users)
+            $users
         );
     }
 
@@ -274,9 +277,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
-        $this->assertSame(
+        $this->assertCount(
             4,
-            \count($users)
+            $users
         );
     }
 
@@ -297,9 +300,9 @@ class ConfigSqliteTest extends KernelTestCase
         $users = $this->userRepository->findAll();
 
         // The two files with fixtures have been loaded, there are 4 users.
-        $this->assertSame(
+        $this->assertCount(
             4,
-            \count($users)
+            $users
         );
     }
 
@@ -322,9 +325,9 @@ class ConfigSqliteTest extends KernelTestCase
 
         $users = $this->userRepository->findAll();
 
-        $this->assertSame(
+        $this->assertCount(
             10,
-            \count($users)
+            $users
         );
 
         /** @var User $user */
@@ -418,9 +421,9 @@ class ConfigSqliteTest extends KernelTestCase
 
         $users = $this->userRepository->findAll();
 
-        $this->assertSame(
+        $this->assertCount(
             10,
-            \count($users)
+            $users
         );
 
         /** @var User $user */
@@ -456,9 +459,9 @@ class ConfigSqliteTest extends KernelTestCase
 
         $users = $this->userRepository->findAll();
 
-        $this->assertSame(
+        $this->assertCount(
             10,
-            \count($users)
+            $users
         );
     }
 

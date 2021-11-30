@@ -16,6 +16,7 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool;
@@ -37,6 +38,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class ConfigPhpcrTest extends KernelTestCase
 {
+    use ContainerProvider;
+
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
@@ -52,9 +55,9 @@ class ConfigPhpcrTest extends KernelTestCase
             'environment' => 'phpcr',
         ]);
 
-        $entityManager = self::$container->get('doctrine')->getManager();
+        $entityManager = $this->getTestContainer()->get('doctrine')->getManager();
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
 
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
 

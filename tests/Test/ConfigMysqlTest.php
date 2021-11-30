@@ -18,6 +18,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
@@ -51,6 +52,8 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
  */
 class ConfigMysqlTest extends KernelTestCase
 {
+    use ContainerProvider;
+
     /** @var ObjectRepository */
     protected $userRepository;
 
@@ -63,11 +66,11 @@ class ConfigMysqlTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = self::$container->get('doctrine')
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testToolType(): void
@@ -215,9 +218,9 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         // Check that there are 2 users.
-        $this->assertSame(
+        $this->assertCount(
             2,
-            \count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
 
         $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
@@ -227,9 +230,9 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         // The exclusion from purge worked, the user table is still alive and well.
-        $this->assertSame(
+        $this->assertCount(
             2,
-            \count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
     }
 
@@ -292,9 +295,9 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         // The purge worked: there is no user.
-        $this->assertSame(
+        $this->assertCount(
             0,
-            \count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
     }
 
@@ -319,9 +322,9 @@ class ConfigMysqlTest extends KernelTestCase
 
         $users = $this->userRepository->findAll();
 
-        $this->assertSame(
+        $this->assertCount(
             10,
-            \count($users)
+            $users
         );
 
         /** @var User $user */

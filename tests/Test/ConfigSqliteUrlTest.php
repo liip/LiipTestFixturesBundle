@@ -34,7 +34,7 @@ use Liip\Acme\Tests\AppConfigSqliteUrl\AppConfigSqliteUrlKernel;
  */
 class ConfigSqliteUrlTest extends ConfigSqliteTest
 {
-    public static function getKernelClass()
+    public static function getKernelClass(): string
     {
         return AppConfigSqliteUrlKernel::class;
     }

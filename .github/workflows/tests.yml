@@ -27,6 +27,10 @@ jobs:
             composer-flags: "--prefer-lowest"
           - php-version: 7.2
             symfony-version: "^4.4"
+          - php-version: 8.0
+            symfony-version: "^6.0"
+          - php-version: 8.1
+            symfony-version: "^6.0"
 
     services:
       mysql:
@@ -75,12 +79,20 @@ jobs:
       - name: Require Symfony
         if: matrix.symfony-version != ''
         run: |
+          composer require --no-update symfony/flex:^1.17.3
           composer config extra.symfony.require "${{ matrix.symfony-version }}"
-          composer require --no-update symfony/flex symfony/framework-bundle=${{ matrix.symfony-version }}
+          composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
+
+      - name: Remove PHPCR with Symfony 6
+        if: matrix.symfony-version == '^6.0'
+        run: composer remove --no-update --dev doctrine/phpcr-bundle doctrine/phpcr-odm
 
       - name: Install Composer dependencies
         if: matrix.composer-flags == ''
         run: composer install
+
+      - name: Show Composer dependencies
+        run: composer show
 
       - name: Install Composer dependencies with options
         if: matrix.composer-flags != ''
