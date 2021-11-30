@@ -23,7 +23,6 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use function count;
 
 // BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
 if (interface_exists('\Doctrine\Persistence\ObjectManager')
@@ -219,9 +218,9 @@ class ConfigMysqlTest extends KernelTestCase
         );
 
         // Check that there are 2 users.
-        $this->assertSame(
+        $this->assertCount(
             2,
-            count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
 
         $this->databaseTool->setExcludedDoctrineTables(['liip_user']);
@@ -231,9 +230,9 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         // The exclusion from purge worked, the user table is still alive and well.
-        $this->assertSame(
+        $this->assertCount(
             2,
-            count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
     }
 
@@ -296,9 +295,9 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         // The purge worked: there is no user.
-        $this->assertSame(
+        $this->assertCount(
             0,
-            count($this->userRepository->findAll())
+            $this->userRepository->findAll()
         );
     }
 
@@ -323,9 +322,9 @@ class ConfigMysqlTest extends KernelTestCase
 
         $users = $this->userRepository->findAll();
 
-        $this->assertSame(
+        $this->assertCount(
             10,
-            count($users)
+            $users
         );
 
         /** @var User $user */
