@@ -23,6 +23,7 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -46,6 +47,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigTest extends KernelTestCase
 {
+    use ContainerProvider;
+
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
     /** @var ObjectRepository */
@@ -60,13 +63,13 @@ class ConfigTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = self::$container->get('doctrine')
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
 
-        $this->kernelCacheDir = self::$container->getParameter('kernel.cache_dir');
+        $this->kernelCacheDir = $this->getTestContainer()->getParameter('kernel.cache_dir');
     }
 
     /**

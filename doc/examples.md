@@ -41,7 +41,7 @@ class ExampleFunctionalTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     /**

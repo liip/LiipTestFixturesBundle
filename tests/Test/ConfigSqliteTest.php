@@ -25,10 +25,12 @@ use Doctrine\Persistence\ObjectRepository;
 use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
+use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use function count;
 
 /**
  * @preserveGlobalState disabled
@@ -40,6 +42,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ConfigSqliteTest extends KernelTestCase
 {
+    use ContainerProvider;
+
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
     /** @var ObjectRepository */
@@ -51,11 +55,11 @@ class ConfigSqliteTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = self::$container->get('doctrine')
+        $this->userRepository = $this->getTestContainer()->get('doctrine')
             ->getRepository('LiipAcme:User')
         ;
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public static function getKernelClass(): string
@@ -120,7 +124,7 @@ class ConfigSqliteTest extends KernelTestCase
         // There are 2 users.
         $this->assertSame(
             2,
-            \count($users)
+            count($users)
         );
 
         /** @var User $user */
@@ -162,7 +166,7 @@ class ConfigSqliteTest extends KernelTestCase
         // Using a non-existing group will result in zero users
         $this->assertSame(
             0,
-            \count($users)
+            count($users)
         );
 
         // Load the fixtures with a valid group.
@@ -185,7 +189,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The fixture group myGroup contains 3 users
         $this->assertSame(
             3,
-            \count($users)
+            count($users)
         );
 
         // Load all fixtures.
@@ -208,7 +212,7 @@ class ConfigSqliteTest extends KernelTestCase
         // Loading all fixtures results in 12 users.
         $this->assertSame(
             12,
-            \count($users)
+            count($users)
         );
     }
 
@@ -276,7 +280,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
             4,
-            \count($users)
+            count($users)
         );
     }
 
@@ -299,7 +303,7 @@ class ConfigSqliteTest extends KernelTestCase
         // The two files with fixtures have been loaded, there are 4 users.
         $this->assertSame(
             4,
-            \count($users)
+            count($users)
         );
     }
 
@@ -324,7 +328,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            \count($users)
+            count($users)
         );
 
         /** @var User $user */
@@ -420,7 +424,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            \count($users)
+            count($users)
         );
 
         /** @var User $user */
@@ -458,7 +462,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             10,
-            \count($users)
+            count($users)
         );
     }
 

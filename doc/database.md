@@ -32,7 +32,9 @@ class MyControllerTest extends WebTestCase
     {
         parent::setUp();
 
-+        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
++        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
++        // or with Symfony < 5.3
++        // $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
     public function testIndex()
@@ -57,7 +59,7 @@ class MyControllerTest extends WebTestCase
 Methods
 -------
 
-`self::$container->get(DatabaseToolCollection::class)` has a method `get()` to load the default service, it also accepts several arguments:
+`static::getContainer()->get(DatabaseToolCollection::class)` has a method `get()` to load the default service, it also accepts several arguments:
 1. name of the object manager
 2. name of the registry, `doctrine` is the default value
 3. purge mode with `true` or `false`
@@ -155,7 +157,7 @@ class MyControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testIndex()
@@ -228,7 +230,7 @@ class MyControllerTest extends WebTestCase
     {
         // …
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
     }
 }
 ```

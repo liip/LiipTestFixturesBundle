@@ -8,9 +8,9 @@ This is the list of actions that you need to take when upgrading this bundle fro
     - Use `loadAliceFixture(…)` instead of `loadFixtureFiles(…)`
     - `loadFixtures()` and `loadFixtureFiles()` only accept 2 arguments, here are the old arguments and the new way to use them:
       - 3rd argument `$omName`:
-        - call `self::$container->get(DatabaseToolCollection::class)->get($omName)` instead
+        - call `static::getContainer()->get(DatabaseToolCollection::class)->get($omName)` instead (or `self::$container->get(…)` with Symfony < 5.3)
       - 4th argument `$registryName`:
-        - call `self::$container->get(DatabaseToolCollection::class)->get(null, $registryName)` instead
+        - call `static::getContainer()->get(DatabaseToolCollection::class)->get(null, $registryName)` instead (or `self::$container->get(…)` with Symfony < 5.3)
       - 5th argument `$purgeMode`:
         - if you need to use that option only once: call `$databaseTool->withPurgeMode($purgeMode)->load…;`
         - if you need that option in all of your tests: call the setter `$databaseTool->setPurgeMode($purgeMode);` before loading fixtures
@@ -74,7 +74,7 @@ class ConfigTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
     }
     
     public function testLoadFixtures(): void
