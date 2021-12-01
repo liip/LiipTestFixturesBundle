@@ -18,7 +18,7 @@
         "php": "^7.2 || ^8.0",
         "doctrine/common": "^2.13 || ^3.0",
         "symfony/event-dispatcher": "^4.4 || ^5.4 || ^6.0",
-        "symfony/event-dispatcher-contracts": "^1 || ^2",
+        "symfony/event-dispatcher-contracts": "^1 || ^2 || ^3",
         "symfony/framework-bundle": "^4.4 || ^5.4 || ^6.0",
         "symfony/yaml": "^4.4 || ^5.4 || ^6.0"
     },
