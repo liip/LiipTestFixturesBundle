@@ -19,6 +19,7 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
