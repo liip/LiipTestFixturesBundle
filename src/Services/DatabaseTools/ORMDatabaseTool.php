@@ -160,7 +160,11 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $tmpConnection = DriverManager::getConnection($params);
         $tmpConnection->connect();
 
-        if (!\in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
+        $databases = $tmpConnection->getDatabasePlatform() instanceof SqlitePlatform
+            ? ['']
+            : $tmpConnection->getSchemaManager()->listDatabases();
+
+        if (!\in_array($dbName, $databases, true)) {
             $tmpConnection->getSchemaManager()->createDatabase($dbName);
         }
 
