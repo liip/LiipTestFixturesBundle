@@ -32,6 +32,7 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
+ * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  *
  * @IgnoreAnnotation("depends")
