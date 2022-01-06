@@ -34,6 +34,7 @@ class MyControllerTest extends WebTestCase
 
 +        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
 +        // or with Symfony < 5.3
++        // static::bootKernel();
 +        // $this->databaseTool = self::$container->get(DatabaseToolCollection::class)->get();
     }
 
