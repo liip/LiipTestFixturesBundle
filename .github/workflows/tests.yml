@@ -91,13 +91,13 @@ jobs:
         if: matrix.composer-flags == ''
         run: composer install
 
-      - name: Show Composer dependencies
-        run: composer show
-
       - name: Install Composer dependencies with options
         if: matrix.composer-flags != ''
         # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
         run: composer update ${{ matrix.composer-flags }}
+
+      - name: Show Composer dependencies
+        run: composer show
 
       - name: Run tests
         # In phpunit.xml.dist, tests annotated with "@group mysql" are excluded, revert this
