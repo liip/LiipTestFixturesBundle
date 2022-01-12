@@ -40,7 +40,8 @@
         "theofidry/alice-data-fixtures": "^1.0.1"
     },
     "conflict": {
-        "doctrine/dbal": "<2.11"
+        "doctrine/dbal": "<2.11",
+        "doctrine/persistence": ">=2.3.0"
     },
     "suggest": {
         "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
@@ -60,7 +61,11 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ocramius/package-versions": true
+        }
     },
     "extra": {
         "branch-alias": {
