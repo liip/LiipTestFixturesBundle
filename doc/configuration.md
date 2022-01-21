@@ -3,6 +3,7 @@
 Here is the full configuration with default values:
 
 ```yaml
+# config/packages/test/liip_fixtures.yaml
 liip_test_fixtures:
     keep_database_and_schema: false
     cache_metadata: true
