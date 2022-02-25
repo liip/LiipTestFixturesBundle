@@ -24,3 +24,16 @@ You'll have to [create database and update schema](./configuration.md#configurat
 See this [solution](https://github.com/liip/LiipFunctionalTestBundle/blob/901a5126e1e58740656cb816cefb2605d8aa47bb/doc/caveats.md).
 
 « [Examples](./examples.md)
+
+## Operation 'AbstractPlatform::getListDatabasesSQL' is not supported by platform
+
+This can be caused by `sentry/sentry-symfony` which decorates the database connection layer.
+
+Disable sentry in the `test` environment to avoid this issue:
+
+```yaml
+# config/packages/test/sentry.yaml
+sentry:
+    tracing:
+        enabled: false
+```
