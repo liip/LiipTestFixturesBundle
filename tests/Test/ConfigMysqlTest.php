@@ -71,10 +71,7 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
-    }
 
-    public function testToolType(): void
-    {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
 

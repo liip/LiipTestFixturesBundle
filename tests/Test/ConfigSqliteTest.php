@@ -60,16 +60,13 @@ class ConfigSqliteTest extends KernelTestCase
         ;
 
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }
 
     public static function getKernelClass(): string
     {
         return AppConfigSqliteKernel::class;
-    }
-
-    public function testToolType(): void
-    {
-        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }
 
     public function testLoadEmptyFixtures(): void
