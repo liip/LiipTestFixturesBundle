@@ -36,7 +36,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
     public function getDriverName(): string
     {
-        return Driver::class;
+        return SqlitePlatform::class;
     }
 
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
