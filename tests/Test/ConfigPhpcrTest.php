@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle;
+use Doctrine\DBAL\Logging\Connection as DBALLoggingConnection;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\Acme\Tests\AppConfigPhpcr\AppConfigPhpcrKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
@@ -47,6 +48,9 @@ class ConfigPhpcrTest extends KernelTestCase
     {
         if (!class_exists(DoctrinePHPCRBundle::class)) {
             $this->markTestSkipped('Need doctrine/phpcr-bundle package.');
+        }
+        if (class_exists(DBALLoggingConnection::class)) {
+            $this->markTestSkipped('Jackalope won\'t work if Doctrine\DBAL\Logging\Connection is provided by Doctrine.');
         }
 
         parent::setUp();
