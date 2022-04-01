@@ -63,6 +63,8 @@ class ConfigPhpcrTest extends KernelTestCase
 
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
 
+        $this->assertInstanceOf(PHPCRDatabaseTool::class, $this->databaseTool);
+
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
 
         $schemaTool = new SchemaTool($entityManager);
@@ -72,11 +74,6 @@ class ConfigPhpcrTest extends KernelTestCase
         }
 
         $this->initRepository();
-    }
-
-    public function testToolType(): void
-    {
-        $this->assertInstanceOf(PHPCRDatabaseTool::class, $this->databaseTool);
     }
 
     public function testLoadFixturesPhPCr(): void

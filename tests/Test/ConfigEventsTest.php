@@ -20,6 +20,7 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -53,6 +54,8 @@ class ConfigEventsTest extends KernelTestCase
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
         $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $databaseTool);
 
         $fixtures = $databaseTool->loadFixtures([]);
 
@@ -90,6 +93,8 @@ class ConfigEventsTest extends KernelTestCase
     {
         /** @var AbstractDatabaseTool $databaseTool */
         $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $databaseTool);
 
         // Create the mock and declare that the method must be called (or not)
         $mock = $this->getMockBuilder(FixturesSubscriber::class)->getMock();

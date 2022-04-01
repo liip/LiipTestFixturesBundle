@@ -26,6 +26,7 @@ use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -68,6 +69,8 @@ class ConfigTest extends KernelTestCase
         ;
 
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
 
         $this->kernelCacheDir = $this->getTestContainer()->getParameter('kernel.cache_dir');
     }
