@@ -1,4 +1,4 @@
-[![CI](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml/badge.svg)](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml)
+[![CI](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml/badge.svg)](https://github.com/liip/LiipTestFixturesBundle/actions/workflows/tests.yml?query=branch%3A2.x)
 [![Latest Stable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/stable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/liip/test-fixtures-bundle/v/unstable)](https://packagist.org/packages/liip/test-fixtures-bundle)
 
