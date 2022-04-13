@@ -51,7 +51,13 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements Databa
         $connection = $em->getConnection();
 
         $params = $connection->getParams();
-        if (isset($params['master'])) {
+
+        // doctrine-bundle >= 2.2
+        if (isset($params['primary'])) {
+            $params = $params['primary'];
+        }
+        // doctrine-bundle < 2.2
+        elseif (isset($params['master'])) {
             $params = $params['master'];
         }
 
