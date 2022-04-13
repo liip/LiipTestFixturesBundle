@@ -147,7 +147,13 @@ class ORMDatabaseTool extends AbstractDatabaseTool
     protected function createDatabaseIfNotExists(): void
     {
         $params = $this->connection->getParams();
-        if (isset($params['master'])) {
+
+        // doctrine-bundle >= 2.2
+        if (isset($params['primary'])) {
+            $params = $params['primary'];
+        }
+        // doctrine-bundle < 2.2
+        elseif (isset($params['master'])) {
             $params = $params['master'];
         }
         $dbName = $params['dbname'] ?? '';

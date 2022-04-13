@@ -59,7 +59,13 @@ final class SqliteDatabaseBackup extends AbstractDatabaseBackup implements Datab
     private function getDatabaseName(Connection $connection): string
     {
         $params = $connection->getParams();
-        if (isset($params['master'])) {
+
+        // doctrine-bundle >= 2.2
+        if (isset($params['primary'])) {
+            $params = $params['primary'];
+        }
+        // doctrine-bundle < 2.2
+        elseif (isset($params['master'])) {
             $params = $params['master'];
         }
 
