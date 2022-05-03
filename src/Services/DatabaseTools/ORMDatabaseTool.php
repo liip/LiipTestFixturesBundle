@@ -50,10 +50,10 @@ class ORMDatabaseTool extends AbstractDatabaseTool
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
-        $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
+        $cacheDriver = $this->om->getConnection()->getCacheDriver();
 
         if ($cacheDriver) {
-            $cacheDriver->deleteAll();
+            $cacheDriver->clear();
         }
 
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
