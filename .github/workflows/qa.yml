@@ -3,8 +3,10 @@ name: QA
 on: [push, pull_request]
 
 jobs:
-  static-code-analysis:
+  php-cs-fixer:
+    name: PHP-CS-Fixer
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@master
       - name: PHP-CS-Fixer
