@@ -56,7 +56,7 @@ class ConfigSqliteTest extends KernelTestCase
         self::bootKernel();
 
         $this->userRepository = $this->getTestContainer()->get('doctrine')
-            ->getRepository('LiipAcme:User')
+            ->getRepository(User::class)
         ;
 
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
