@@ -15,13 +15,17 @@ jobs:
         symfony-version: ['']
         include:
           - php-version: 7.2
-            composer-flags: "--prefer-lowest"
+            # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
+            composer-flags: "update --prefer-lowest"
           - php-version: 7.2
             symfony-version: "^4.4"
           - php-version: 8.0
             symfony-version: "^6.0"
           - php-version: 8.1
             symfony-version: "^6.0"
+          - php-version: 8.1
+            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
+            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
 
     services:
       mysql:
@@ -80,8 +84,7 @@ jobs:
 
       - name: Install Composer dependencies with options
         if: matrix.composer-flags != ''
-        # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
-        run: composer update ${{ matrix.composer-flags }}
+        run: composer ${{ matrix.composer-flags }}
 
       - name: Show Composer dependencies
         run: composer show
