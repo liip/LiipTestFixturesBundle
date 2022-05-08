@@ -16,6 +16,7 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
@@ -41,10 +42,22 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
-        $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
 
-        if ($cacheDriver) {
-            $cacheDriver->deleteAll();
+        /** @var Configuration $config */
+        $config = $this->om->getConfiguration();
+
+        if (method_exists($config, 'getMetadataCache')) {
+            $cacheDriver = $config->getMetadataCache();
+
+            if ($cacheDriver) {
+                $cacheDriver->clear();
+            }
+        } else {
+            $cacheDriver = $config->getMetadataCacheImpl();
+
+            if ($cacheDriver) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         $backupService = $this->getBackupService();
