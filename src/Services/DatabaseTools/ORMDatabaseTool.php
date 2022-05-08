@@ -19,6 +19,7 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
@@ -50,10 +51,22 @@ class ORMDatabaseTool extends AbstractDatabaseTool
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
-        $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
 
-        if ($cacheDriver) {
-            $cacheDriver->deleteAll();
+        /** @var Configuration $config */
+        $config = $this->om->getConfiguration();
+
+        if (method_exists($config, 'getMetadataCache')) {
+            $cacheDriver = $config->getMetadataCache();
+
+            if ($cacheDriver) {
+                $cacheDriver->clear();
+            }
+        } else {
+            $cacheDriver = $config->getMetadataCacheImpl();
+
+            if ($cacheDriver) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {

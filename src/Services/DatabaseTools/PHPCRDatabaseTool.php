@@ -17,6 +17,7 @@ use Doctrine\Bundle\PHPCRBundle\Initializer\InitializerManager;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\PHPCRPurger;
+use Doctrine\ODM\PHPCR\Configuration;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
@@ -41,7 +42,11 @@ class PHPCRDatabaseTool extends AbstractDatabaseTool
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
-        $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
+
+        /** @var Configuration $config */
+        $config = $this->om->getConfiguration();
+
+        $cacheDriver = $config->getMetadataCacheImpl();
 
         if ($cacheDriver) {
             $cacheDriver->deleteAll();

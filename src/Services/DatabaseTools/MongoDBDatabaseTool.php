@@ -17,6 +17,7 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
+use Doctrine\ODM\MongoDB\Configuration;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
@@ -37,10 +38,22 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
-        $cacheDriver = $this->om->getMetadataFactory()->getCacheDriver();
 
-        if ($cacheDriver) {
-            $cacheDriver->deleteAll();
+        /** @var Configuration $config */
+        $config = $this->om->getConfiguration();
+
+        if (method_exists($config, 'getMetadataCache')) {
+            $cacheDriver = $config->getMetadataCache();
+
+            if ($cacheDriver) {
+                $cacheDriver->clear();
+            }
+        } else {
+            $cacheDriver = $config->getMetadataCacheImpl();
+
+            if ($cacheDriver) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         $this->createDatabaseOnce();
