@@ -239,4 +239,10 @@ class ConfigTest extends KernelTestCase
     {
         return AppConfigKernel::class;
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->userRepository, $this->databaseTool);
+    }
 }

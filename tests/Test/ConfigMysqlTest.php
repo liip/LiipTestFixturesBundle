@@ -352,4 +352,10 @@ class ConfigMysqlTest extends KernelTestCase
     {
         return AppConfigMysqlKernel::class;
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->databaseTool);
+    }
 }
