@@ -115,4 +115,10 @@ class ConfigPhpcrTest extends KernelTestCase
             ['command' => $command->getName()]
         );
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->databaseTool);
+    }
 }

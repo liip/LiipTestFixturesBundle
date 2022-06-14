@@ -54,6 +54,12 @@ class MyControllerTest extends WebTestCase
         // you can now run your functional tests with a populated database
         // ...
     }
++
++    protected function tearDown(): void
++    {
++        parent::tearDown();
++        unset($this->databaseTool);
++    }
 }
 ```
 
@@ -177,6 +183,12 @@ class MyControllerTest extends WebTestCase
         // you can now run your functional tests with a populated database
         // ...
     }
+
+     protected function tearDown(): void
+     {
+         parent::tearDown();
+         unset($this->databaseTool);
+     }
 }
 ```
 
@@ -232,6 +244,12 @@ class MyControllerTest extends WebTestCase
         // …
 
         $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_phpcr');
+    }
+    
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->databaseTool);
     }
 }
 ```

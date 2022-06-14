@@ -474,4 +474,10 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->databaseTool->loadAliceFixture($path);
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->databaseTool, $this->userRepository);
+    }
 }

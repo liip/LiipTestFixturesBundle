@@ -58,6 +58,12 @@ class ExampleFunctionalTest extends WebTestCase
         
         // …
     }
+    
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->databaseTool);
+    }
 }
 ```
 
