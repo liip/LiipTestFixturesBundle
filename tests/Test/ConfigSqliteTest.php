@@ -113,7 +113,6 @@ class ConfigSqliteTest extends KernelTestCase
         $this->assertSame(1, $user1->getId());
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());
-        $this->assertTrue($user1->getEnabled());
 
         // Load data from database
         $users = $this->userRepository->findAll();
@@ -134,10 +133,6 @@ class ConfigSqliteTest extends KernelTestCase
         $this->assertSame(
             'foo@bar.com',
             $user->getEmail()
-        );
-
-        $this->assertTrue(
-            $user->getEnabled()
         );
     }
 
@@ -237,10 +232,6 @@ class ConfigSqliteTest extends KernelTestCase
             $user->getEmail()
         );
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
-
         /** @var User $user */
         $user = $this->userRepository
             ->findOneBy([
@@ -251,10 +242,6 @@ class ConfigSqliteTest extends KernelTestCase
         $this->assertSame(
             'bar@foo.com',
             $user->getEmail()
-        );
-
-        $this->assertTrue(
-            $user->getEnabled()
         );
     }
 
@@ -337,9 +324,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
+        $this->assertIsString($user->getName());
 
         $user = $this->userRepository
             ->findOneBy([
@@ -347,9 +332,7 @@ class ConfigSqliteTest extends KernelTestCase
             ])
         ;
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
+        $this->assertIsString($user->getName());
     }
 
     /**
@@ -414,8 +397,7 @@ class ConfigSqliteTest extends KernelTestCase
         /** @var User $user1 */
         $user1 = $fixtures['id1'];
 
-        $this->assertIsString($user1->getUsername());
-        $this->assertTrue($user1->getEnabled());
+        $this->assertIsString($user1->getEmail());
 
         $users = $this->userRepository->findAll();
 
@@ -433,9 +415,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
+        $this->assertIsString($user->getName());
     }
 
     /**

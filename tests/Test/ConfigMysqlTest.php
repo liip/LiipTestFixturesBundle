@@ -115,7 +115,6 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());
-        $this->assertTrue($user1->getEnabled());
 
         // Load data from database
         /** @var User $user */
@@ -128,10 +127,6 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertSame(
             'foo@bar.com',
             $user->getEmail()
-        );
-
-        $this->assertTrue(
-            $user->getEnabled()
         );
     }
 
@@ -172,10 +167,6 @@ class ConfigMysqlTest extends KernelTestCase
             $user1->getEmail()
         );
 
-        $this->assertTrue(
-            $user1->getEnabled()
-        );
-
         /** @var User $user */
         $user3 = $this->userRepository
             ->findOneBy([
@@ -188,10 +179,6 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertSame(
             'bar@foo.com',
             $user3->getEmail()
-        );
-
-        $this->assertTrue(
-            $user3->getEnabled()
         );
     }
 
@@ -333,19 +320,13 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
-
         $user = $this->userRepository
             ->findOneBy([
                 'id' => 10,
             ])
         ;
 
-        $this->assertTrue(
-            $user->getEnabled()
-        );
+        $this->assertInstanceOf(User::class, $user);
     }
 
     protected static function getKernelClass(): string
