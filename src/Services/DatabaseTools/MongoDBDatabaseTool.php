@@ -82,12 +82,9 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
-        if (false === $append) {
-            $executor->purge();
-        }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
-        $executor->execute($loader->getFixtures(), true);
+        $executor->execute($loader->getFixtures(), $append);
 
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());

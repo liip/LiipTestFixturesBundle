@@ -27,6 +27,8 @@ use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
+use function count;
+use function in_array;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -103,7 +105,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         // TODO: handle case when using persistent connections. Fail loudly?
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
             $schemaTool = new SchemaTool($this->om);
-            if (\count($this->excludedDoctrineTables) > 0 || true === $append) {
+            if (count($this->excludedDoctrineTables) > 0 || true === $append) {
                 if (!empty($this->getMetadatas())) {
                     $schemaTool->updateSchema($this->getMetadatas());
                 }
@@ -120,14 +122,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
 
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
-        if (false === $append) {
-            $this->disableForeignKeyChecksIfApplicable();
-            $executor->purge();
-            $this->enableForeignKeyChecksIfApplicable();
-        }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
-        $executor->execute($loader->getFixtures(), true);
+        $executor->execute($loader->getFixtures(), $append);
 
         if ($backupService) {
             $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
@@ -179,7 +176,7 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         $tmpConnection = DriverManager::getConnection($params);
         $tmpConnection->connect();
 
-        if (!\in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
+        if (!in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
             $tmpConnection->getSchemaManager()->createDatabase($dbName);
         }
 
