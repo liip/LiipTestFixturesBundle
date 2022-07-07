@@ -24,6 +24,7 @@ use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
+use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
@@ -54,9 +55,8 @@ class ConfigTest extends KernelTestCase
     protected $databaseTool;
     /** @var ObjectRepository */
     private $userRepository;
-
-    /** @var string */
-    private $kernelCacheDir;
+    /** @var SqliteDatabaseBackup */
+    private $sqliteDatabaseBackup;
 
     protected function setUp(): void
     {
@@ -72,7 +72,9 @@ class ConfigTest extends KernelTestCase
 
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
 
-        $this->kernelCacheDir = $this->getTestContainer()->getParameter('kernel.cache_dir');
+        $this->sqliteDatabaseBackup = $this->getTestContainer()->get(SqliteDatabaseBackup::class);
+
+        $this->assertInstanceOf(SqliteDatabaseBackup::class, $this->sqliteDatabaseBackup);
     }
 
     /**
@@ -154,9 +156,6 @@ class ConfigTest extends KernelTestCase
      */
     public function testBackupIsRefreshed(): void
     {
-        // MD5 hash corresponding to these fixtures files.
-        $md5 = '779547fe76503b90075f8d15c74a28be';
-
         $fixtures = [
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
         ];
@@ -176,10 +175,11 @@ class ConfigTest extends KernelTestCase
 
         $dependentFixtureFilemtime = filemtime($dependentFixtureFilePath);
 
-        $databaseFilePath = $this->kernelCacheDir.'/test_sqlite_'.$md5.'.db';
+        // The backup service provide the path of the backup file
+        $databaseFilePath = $this->sqliteDatabaseBackup->getBackupFilePath();
 
         if (!is_file($databaseFilePath)) {
-            $this->markTestSkipped($databaseFilePath.' is not a file.');
+            $this->fail($databaseFilePath.' is not a file.');
         }
 
         $databaseFilemtime = filemtime($databaseFilePath);
