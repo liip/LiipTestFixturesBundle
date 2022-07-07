@@ -10,19 +10,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.2','7.3', '7.4', '8.0']
+        # Symfony 5.4 requires PHP 7.2, it will be installed on PHP 7.2 to 7.4
+        # Symfony 6.0 requires PHP 8.0, it will be installed on PHP >= 8.0
+        php-version: ['7.2', '7.3', '7.4', '8.0', '8.1']
         composer-flags: ['']
         symfony-version: ['']
         include:
           - php-version: 7.2
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
             composer-flags: "update --prefer-lowest"
-          - php-version: 7.2
+          - php-version: 7.4
+            # add a specific job to test Symfony 4.4, otherwise Symfony 5.4 would be installed
             symfony-version: "^4.4"
-          - php-version: 8.0
-            symfony-version: "^6.0"
-          - php-version: 8.1
-            symfony-version: "^6.0"
           - php-version: 8.1
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
@@ -65,11 +64,11 @@ jobs:
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-${{ hashFiles('composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-
 
       - name: Require Symfony
         if: matrix.symfony-version != ''
