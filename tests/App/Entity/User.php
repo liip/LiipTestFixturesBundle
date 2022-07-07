@@ -18,48 +18,25 @@ namespace Liip\Acme\Tests\App\Entity;
  */
 class User
 {
-    // Properties which will be serialized have to be "protected"
-    // @see http://stackoverflow.com/questions/9384836/symfony2-serialize-entity-object-to-session/10014802#10014802
-
     /**
      * @var int
      */
-    protected $id;
+    private $id;
 
     /**
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @var string
      */
-    protected $password;
-
-    /**
-     * @var string
-     */
-    protected $salt;
+    private $salt;
 
     /**
      * @var string
      */
     private $email;
-
-    /**
-     * @var string
-     */
-    private $algorithm;
-
-    /**
-     * @var bool
-     */
-    private $enabled;
-
-    /**
-     * @var string
-     */
-    private $confirmationToken;
 
     public function __construct()
     {
@@ -69,242 +46,51 @@ class User
         );
     }
 
-    // @see http://stackoverflow.com/questions/9384836/symfony2-serialize-entity-object-to-session/19133985#19133985
-
-    public function __sleep()
-    {
-        // these are field names to be serialized, others will be excluded
-        // but note that you have to fill other field values by your own
-        return ['id', 'name', 'password', 'salt'];
-    }
-
-    /**
-     * Set id.
-     *
-     * @param int $id
-     *
-     * @return User
-     */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return User
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password.
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * Set salt.
-     *
-     * @param string $salt
-     *
-     * @return User
-     */
-    public function setSalt($salt)
+    public function setSalt(string $salt): self
     {
         $this->salt = $salt;
 
         return $this;
     }
 
-    /**
-     * Get salt.
-     *
-     * @return string
-     */
-    public function getSalt()
+    public function getSalt(): string
     {
         return $this->salt;
-    }
-
-    /**
-     * Set algorithm.
-     *
-     * @param string $algorithm
-     *
-     * @return User
-     */
-    public function setAlgorithm($algorithm)
-    {
-        $this->algorithm = $algorithm;
-
-        return $this;
-    }
-
-    /**
-     * Get algorithm.
-     *
-     * @return string
-     */
-    public function getAlgorithm()
-    {
-        return $this->algorithm;
-    }
-
-    /**
-     * Set enabled.
-     *
-     * @param bool $enabled
-     *
-     * @return User
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * Get enabled.
-     *
-     * @return bool
-     */
-    public function getEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * Set confirmationToken.
-     *
-     * @param string $confirmationToken
-     *
-     * @return User
-     */
-    public function setConfirmationToken($confirmationToken)
-    {
-        $this->confirmationToken = $confirmationToken;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationToken.
-     *
-     * @return string
-     */
-    public function getConfirmationToken()
-    {
-        return $this->confirmationToken;
-    }
-
-    // Functions required for compatibility with UserInterface
-    // @see http://symfony.com/doc/2.3/cookbook/security/custom_provider.html
-
-    public function getRoles()
-    {
-        return ['ROLE_ADMIN'];
-    }
-
-    public function getUsername()
-    {
-        return $this->getName();
-    }
-
-    public function eraseCredentials(): void
-    {
-    }
-
-    public function isEqualTo($user)
-    {
-        if (!$user instanceof self) {
-            return false;
-        }
-
-        if ($this->id !== $user->getId()) {
-            return false;
-        }
-
-        if ($this->password !== $user->getPassword()) {
-            return false;
-        }
-
-        if ($this->salt !== $user->getSalt()) {
-            return false;
-        }
-
-        return true;
     }
 }

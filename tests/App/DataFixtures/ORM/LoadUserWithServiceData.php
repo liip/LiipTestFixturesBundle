@@ -30,10 +30,6 @@ class LoadUserWithServiceData extends AbstractFixture implements FixtureInterfac
         $user->setId(1);
         $user->setName('foo bar');
         $user->setEmail('foo@bar.com');
-        $user->setPassword('12341234');
-        $user->setAlgorithm('plaintext');
-        $user->setEnabled(true);
-        $user->setConfirmationToken(null);
 
         $manager->persist($user);
         $manager->flush();

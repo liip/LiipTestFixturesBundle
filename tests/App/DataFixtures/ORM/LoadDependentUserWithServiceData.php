@@ -16,29 +16,16 @@ namespace Liip\Acme\Tests\App\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Liip\Acme\Tests\App\Entity\User;
 
 class LoadDependentUserWithServiceData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function load(ObjectManager $manager): void
     {
-        /** @var \Liip\Acme\Tests\App\Entity\User $user */
+        /** @var User $user */
         $user = clone $this->getReference('serviceUser');
 
         $user->setId(3);

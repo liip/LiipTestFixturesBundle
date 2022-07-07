@@ -71,10 +71,6 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             $user1->getEmail()
         );
 
-        $this->assertTrue(
-            $user1->getEnabled()
-        );
-
         // Store salt for later use
         $salt = $user1->getSalt();
 
