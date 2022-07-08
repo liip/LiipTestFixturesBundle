@@ -29,6 +29,7 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use function count;
 
 /**
  * @runTestsInSeparateProcesses
@@ -370,7 +371,7 @@ class ConfigSqliteTest extends KernelTestCase
         // There are 10 users in the database
         $this->assertSame(
             10,
-            \count($users)
+            count($users)
         );
 
         $this->databaseTool->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
@@ -393,7 +394,7 @@ class ConfigSqliteTest extends KernelTestCase
         // There are only 10 users in the database
         $this->assertSame(
             10,
-            \count($users)
+            count($users)
         );
 
         // Auto-increment hasn't been altered, so ids start from 11
