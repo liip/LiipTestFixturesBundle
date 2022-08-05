@@ -12,7 +12,7 @@ jobs:
       matrix:
         # Symfony 5.4 requires PHP 7.2, it will be installed on PHP 7.2 to 7.4
         # Symfony 6.0 requires PHP 8.0, it will be installed on PHP >= 8.0
-        php-version: ['7.2', '7.3', '7.4', '8.0', '8.1']
+        php-version: ['7.2', '7.3', '8.0']
         composer-flags: ['']
         symfony-version: ['']
         include:
@@ -22,6 +22,12 @@ jobs:
           - php-version: 7.4
             # add a specific job to test Symfony 4.4, otherwise Symfony 5.4 would be installed
             symfony-version: "^4.4"
+          - php-version: 7.4
+            # add a specific job to test 5.4 for all Symfony packages
+            symfony-version: "^5.4"
+          - php-version: 8.1
+            # add a specific job to test ^6.0 for all Symfony packages
+            symfony-version: "^6.0"
           - php-version: 8.1
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
@@ -73,7 +79,7 @@ jobs:
       - name: Require Symfony
         if: matrix.symfony-version != ''
         run: |
-          composer require --no-update symfony/flex:^1.17.3
+          composer require --no-update symfony/flex
           composer config extra.symfony.require "${{ matrix.symfony-version }}"
           composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
 
