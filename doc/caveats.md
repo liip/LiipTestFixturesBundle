@@ -40,10 +40,21 @@ sentry:
 
 ## You have requested a non-existent service "Liip\TestFixturesBundle\Services\DatabaseToolCollection"
 
-Check that the parameter `framework.test` is enabled.
+Check that the parameter `framework.test` is enabled:
+
+Symfony 4 and 5:
 
 ```yaml
 # config/package/test/framework.yaml
 framework:
     test: true
+```
+
+Symfony 6:
+
+```yaml
+# config/package/framework.yaml
+when@test:
+    framework:
+        test: true
 ```
