@@ -37,3 +37,13 @@ sentry:
     tracing:
         enabled: false
 ```
+
+## You have requested a non-existent service "Liip\TestFixturesBundle\Services\DatabaseToolCollection"
+
+Check that the parameter `framework.test` is enabled.
+
+```yaml
+# config/package/test/framework.yaml
+framework:
+    test: true
+```
