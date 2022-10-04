@@ -1,0 +1,35 @@
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: preconditions
+    attributes:
+      label: Preconditions
+      description: |
+        Provide a more detailed information of environment you use
+        Bundle version, tag, HEAD, etc., PHP version, etc..
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide a set of unambiguous steps to reproduce this bug include code, if relevant
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: Tell us what should happen
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Tell us what happens instead [Screenshot, logs]
+    validations:
+      required: true
