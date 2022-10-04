@@ -17,9 +17,18 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
+use Liip\Acme\Tests\App\Service\DummyService;
 
 class LoadDependentUserWithServiceData extends AbstractFixture implements DependentFixtureInterface
 {
+    /** @var DummyService */
+    private $dummyService;
+
+    public function __construct(DummyService $dummyService)
+    {
+        $this->dummyService = $dummyService;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -29,6 +38,7 @@ class LoadDependentUserWithServiceData extends AbstractFixture implements Depend
         $user = clone $this->getReference('serviceUser');
 
         $user->setId(3);
+        $user->setDummyText($this->dummyService->getText());
 
         $manager->persist($user);
         $manager->flush();

@@ -19,6 +19,9 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
 
+/**
+ * @see \Liip\Acme\Tests\Test\ConfigSqliteTest::loadAllFixtures()
+ */
 class LoadUserDataInGroup extends AbstractFixture implements FixtureInterface, FixtureGroupInterface
 {
     /**

@@ -17,3 +17,7 @@ Liip\Acme\Tests\App\Entity\User:
         salt:
             type: string
             length: '255'
+        dummyText:
+            type: string
+            length: '255'
+            nullable: true

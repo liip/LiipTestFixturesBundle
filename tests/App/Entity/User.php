@@ -18,25 +18,20 @@ namespace Liip\Acme\Tests\App\Entity;
  */
 class User
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $salt;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $email;
+
+    /** @var string */
+    private $dummyText;
 
     public function __construct()
     {
@@ -92,5 +87,17 @@ class User
     public function getSalt(): string
     {
         return $this->salt;
+    }
+
+    public function setDummyText(?string $dummyText): self
+    {
+        $this->dummyText = $dummyText;
+
+        return $this;
+    }
+
+    public function getDummyText(): ?string
+    {
+        return $this->dummyText;
     }
 }
