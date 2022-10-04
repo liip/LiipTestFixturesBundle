@@ -136,7 +136,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
     }
 
-    public function testLoadAll(): void
+    public function loadAllFixtures(): void
     {
         // Load the fixtures with an invalid group. The database should be empty.
         $fixtures = $this->databaseTool->loadAllFixtures(['wrongGroup']);
@@ -289,6 +289,14 @@ class ConfigSqliteTest extends KernelTestCase
             4,
             $users
         );
+
+        $user1 = $this->userRepository->find(1);
+        $this->assertSame(1, $user1->getId());
+        $this->assertSame('text from DummyService', $user1->getDummyText());
+
+        $user3 = $this->userRepository->find(3);
+        $this->assertSame(3, $user3->getId());
+        $this->assertSame('text from DummyService', $user3->getDummyText());
     }
 
     /**
