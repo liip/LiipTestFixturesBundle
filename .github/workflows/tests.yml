@@ -83,6 +83,10 @@ jobs:
           composer config extra.symfony.require "${{ matrix.symfony-version }}"
           composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
 
+      # This is needed to fix builds on Symfony 5.4 where the `annotation_reader` service may not be set up if the Annotations package is not in the production dependencies
+      - name: Move Annotations to require
+        run: composer require --no-update "doctrine/annotations:^1.2.7|^2.0"
+
       - name: Install Composer dependencies
         if: matrix.composer-flags == ''
         run: composer install

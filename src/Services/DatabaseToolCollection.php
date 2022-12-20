@@ -32,10 +32,14 @@ final class DatabaseToolCollection
      */
     private $items = [];
 
-    public function __construct(ContainerInterface $container, Reader $annotationReader)
+    public function __construct(ContainerInterface $container, ?Reader $annotationReader = null)
     {
         $this->container = $container;
         $this->annotationReader = $annotationReader;
+
+        if (null !== $annotationReader) {
+            trigger_deprecation('liip/test-fixtures-bundle', '2.5', 'Passing a "%s" to the "%s" constructor is deprecated.', Reader::class, self::class);
+        }
     }
 
     public function add(AbstractDatabaseTool $databaseTool): void
