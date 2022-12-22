@@ -43,7 +43,7 @@
         </service>
         <service id="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true">
             <argument type="service" id="service_container" />
-            <argument type="service" id="annotations.reader" />
+            <argument>null</argument> <!-- deprecated argument -->
             <call method="add">
                 <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool" />
             </call>
