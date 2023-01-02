@@ -31,6 +31,9 @@ jobs:
           - php-version: 8.1
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
+          - php-version: 8.2
+            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
+            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
 
     services:
       mysql:
@@ -57,7 +60,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
@@ -67,7 +70,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composercache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
         uses: actions/cache@v3
