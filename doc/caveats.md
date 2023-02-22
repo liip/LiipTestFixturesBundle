@@ -13,6 +13,7 @@ Doctrine\DBAL\Driver\PDOException: SQLSTATE[42000]: Syntax error or access viola
 To avoid this, disable automatic changes to database and schema:
 
 ```
+# config/packages/test/liip_fixtures.yaml
 liip_test_fixtures:
     keep_database_and_schema: true
 ```
