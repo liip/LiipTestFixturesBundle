@@ -18,7 +18,7 @@ namespace Liip\Acme\Tests\App\Entity;
  */
 class User
 {
-    private ?int $id;
+    private ?int $id = null;
 
     private string $name;
 
