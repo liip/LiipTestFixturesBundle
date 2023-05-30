@@ -20,7 +20,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-final class MysqlDatabaseBackup extends AbstractDatabaseBackup implements DatabaseBackupInterface
+final class MysqlDatabaseBackup extends AbstractDatabaseBackup
 {
     protected static $metadata;
 

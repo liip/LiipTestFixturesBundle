@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\App\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\App\Service\DummyService;
@@ -22,7 +21,7 @@ use Liip\Acme\Tests\App\Service\DummyService;
 /**
  * @see LoadDependentUserWithServiceData::getDependencies()
  */
-class LoadUserWithServiceData extends AbstractFixture implements FixtureInterface
+class LoadUserWithServiceData extends AbstractFixture
 {
     /** @var DummyService */
     private $dummyService;
@@ -37,7 +36,6 @@ class LoadUserWithServiceData extends AbstractFixture implements FixtureInterfac
      */
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
         $user = new User();
         $user->setId(1);
         $user->setName('foo bar');

@@ -21,7 +21,7 @@ use InvalidArgumentException;
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-final class SqliteDatabaseBackup extends AbstractDatabaseBackup implements DatabaseBackupInterface
+final class SqliteDatabaseBackup extends AbstractDatabaseBackup
 {
     public function getBackupFilePath(): string
     {
