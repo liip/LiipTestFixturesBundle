@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: PHP-CS-Fixer
-        uses: docker://jakzal/phpqa:1.58.7-php7.4-alpine
+        uses: docker://jakzal/phpqa:1.80.0-php7.4-alpine
         with:
           args: php-cs-fixer --dry-run --diff --no-interaction --ansi fix
 
