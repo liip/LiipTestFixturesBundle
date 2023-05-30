@@ -23,14 +23,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class DatabaseToolCollection
 {
-    private $container;
+    private ContainerInterface $container;
 
+    /** @var Reader|null */
     private $annotationReader;
 
     /**
      * @var AbstractDatabaseTool[][]
      */
-    private $items = [];
+    private array $items = [];
 
     public function __construct(ContainerInterface $container, ?Reader $annotationReader = null)
     {
@@ -53,9 +54,7 @@ final class DatabaseToolCollection
         $registry = $this->container->get($registryName);
         $driverName = ('ORM' === $registry->getName()) ? \get_class($registry->getConnection()->getDatabasePlatform()) : 'default';
 
-        $databaseTool = isset($this->items[$registry->getName()][$driverName])
-            ? $this->items[$registry->getName()][$driverName]
-            : $this->items[$registry->getName()]['default'];
+        $databaseTool = $this->items[$registry->getName()][$driverName] ?? $this->items[$registry->getName()]['default'];
 
         $databaseTool->setRegistry($registry);
         $databaseTool->setObjectManagerName($omName);

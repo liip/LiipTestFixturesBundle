@@ -22,9 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class FixturesLoaderFactory
 {
-    private $container;
+    private ContainerInterface $container;
 
-    private $loader;
+    private ?SymfonyFixturesLoader $loader;
 
     public function __construct(ContainerInterface $container, SymfonyFixturesLoader $loader = null)
     {
