@@ -10,13 +10,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Symfony 5.4 requires PHP 7.2, it will be installed on PHP 7.2 to 7.4
-        # Symfony 6.0 requires PHP 8.0, it will be installed on PHP >= 8.0
-        php-version: ['7.2', '7.3', '8.0']
+        # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
+        # Symfony 6.0 requires PHP >= 8.0, it will be installed on PHP >= 8.0
+        php-version: ['8.0']
         composer-flags: ['']
         symfony-version: ['']
         include:
-          - php-version: 7.2
+          - php-version: 7.4
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
             composer-flags: "update --prefer-lowest"
           - php-version: 7.4

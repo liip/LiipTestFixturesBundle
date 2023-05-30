@@ -18,20 +18,15 @@ namespace Liip\Acme\Tests\App\Entity;
  */
 class User
 {
-    /** @var int */
-    private $id;
+    private int $id;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $salt;
+    private string $salt;
 
-    /** @var string */
-    private $email;
+    private string $email;
 
-    /** @var string */
-    private $dummyText;
+    private string $dummyText;
 
     public function __construct()
     {
