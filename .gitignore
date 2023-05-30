@@ -3,6 +3,7 @@ composer.lock
 vendor
 .php_cs.cache
 .phpunit.result.cache
+.phpunit.cache
 
 # Ignore files created during tests
 /cov/
