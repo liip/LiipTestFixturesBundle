@@ -26,7 +26,7 @@ class User
 
     private string $email;
 
-    private string $dummyText;
+    private ?string $dummyText = null;
 
     public function __construct()
     {
