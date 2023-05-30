@@ -19,7 +19,7 @@ use Doctrine\Common\DataFixtures\Loader;
 
 final class SymfonyFixturesLoaderWrapper extends Loader
 {
-    private $symfonyFixturesLoader;
+    private SymfonyFixturesLoader $symfonyFixturesLoader;
 
     public function __construct(SymfonyFixturesLoader $symfonyFixturesLoader)
     {
