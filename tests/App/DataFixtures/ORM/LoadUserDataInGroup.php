@@ -15,21 +15,19 @@ namespace Liip\Acme\Tests\App\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
 
 /**
  * @see \Liip\Acme\Tests\Test\ConfigSqliteTest::loadAllFixtures()
  */
-class LoadUserDataInGroup extends AbstractFixture implements FixtureInterface, FixtureGroupInterface
+class LoadUserDataInGroup extends AbstractFixture implements FixtureGroupInterface
 {
     /**
      * {@inheritdoc}
      */
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
         $user = new User();
         $user->setId(1);
         $user->setName('foo bar');

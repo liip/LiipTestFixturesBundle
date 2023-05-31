@@ -14,18 +14,16 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\App\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Liip\Acme\Tests\App\Entity\User;
 
-class LoadSecondUserData extends AbstractFixture implements FixtureInterface
+class LoadSecondUserData extends AbstractFixture
 {
     /**
      * {@inheritdoc}
      */
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
         $user = new User();
         $user->setName('bar foo');
         $user->setEmail('bar@foo.com');

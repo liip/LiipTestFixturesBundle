@@ -20,7 +20,7 @@ use MongoDB\Driver\Server;
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-final class MongodbDatabaseBackup extends AbstractDatabaseBackup implements DatabaseBackupInterface
+final class MongodbDatabaseBackup extends AbstractDatabaseBackup
 {
     protected static $referenceData;
 
