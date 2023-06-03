@@ -31,6 +31,7 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
  * So it must be loaded in a separate process.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
  *
  * @internal

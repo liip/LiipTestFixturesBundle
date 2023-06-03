@@ -32,7 +32,9 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * So it must be loaded in a separate process.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
+ *
  * @IgnoreAnnotation("group")
  *
  * @internal

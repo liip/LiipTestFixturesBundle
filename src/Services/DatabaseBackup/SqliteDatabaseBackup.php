@@ -16,7 +16,6 @@ namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use InvalidArgumentException;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -71,7 +70,7 @@ final class SqliteDatabaseBackup extends AbstractDatabaseBackup
 
         $name = $params['path'] ?? ($params['dbname'] ?? false);
         if (!$name) {
-            throw new InvalidArgumentException("Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped.");
+            throw new \InvalidArgumentException("Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped.");
         }
 
         return $name;

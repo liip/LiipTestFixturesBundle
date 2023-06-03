@@ -38,6 +38,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * So it must be loaded in a separate process.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
  *
  * Avoid conflict with PHPUnit annotation when reading QueryCount
@@ -144,7 +145,7 @@ class ConfigTest extends KernelTestCase
         /** @var User $user1 */
         $user1 = $this->userRepository->findOneBy(['id' => 1]);
 
-        //The salt are not the same because cache were not used
+        // The salt are not the same because cache were not used
         $this->assertNotSame($user1Salt, $user1->getSalt());
 
         // Enable the cache again

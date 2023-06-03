@@ -22,7 +22,6 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
-use InvalidArgumentException;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\Acme\Tests\Traits\ContainerProvider;
@@ -33,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
  *
  * @IgnoreAnnotation("depends")
@@ -348,7 +348,7 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadNonexistentFixturesFiles(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/nonexistent.yml',
@@ -458,7 +458,7 @@ class ConfigSqliteTest extends KernelTestCase
     {
         $path = ['/nonexistent.yml'];
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->databaseTool->loadAliceFixture($path);
     }

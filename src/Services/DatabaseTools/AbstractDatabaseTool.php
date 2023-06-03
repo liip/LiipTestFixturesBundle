@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
-use BadMethodCallException;
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use InvalidArgumentException;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -168,13 +166,13 @@ abstract class AbstractDatabaseTool
     }
 
     /**
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      */
     public function loadAliceFixture(array $paths = [], bool $append = false): array
     {
         $persisterLoaderServiceName = 'fidry_alice_data_fixtures.loader.doctrine';
         if (!$this->container->has($persisterLoaderServiceName)) {
-            throw new BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
+            throw new \BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
         }
 
         if (false === $append) {
@@ -219,7 +217,7 @@ abstract class AbstractDatabaseTool
     /**
      * Locate fixture files.
      *
-     * @throws InvalidArgumentException if a wrong path is given outside a bundle
+     * @throws \InvalidArgumentException if a wrong path is given outside a bundle
      */
     protected function locateResources(array $paths): array
     {
@@ -230,7 +228,7 @@ abstract class AbstractDatabaseTool
         foreach ($paths as $path) {
             if ('@' !== $path[0]) {
                 if (!file_exists($path)) {
-                    throw new InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
+                    throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
                 }
                 $files[] = $path;
 

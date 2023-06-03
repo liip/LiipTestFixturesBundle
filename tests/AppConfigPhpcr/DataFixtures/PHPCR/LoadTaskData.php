@@ -16,9 +16,7 @@ namespace Liip\Acme\Tests\AppConfigPhpcr\DataFixtures\PHPCR;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\Persistence\ObjectManager;
-use Exception;
 use Liip\Acme\Tests\AppConfigPhpcr\Document\Task;
-use RuntimeException;
 
 class LoadTaskData implements FixtureInterface
 {
@@ -27,13 +25,13 @@ class LoadTaskData implements FixtureInterface
         if (!$manager instanceof DocumentManager) {
             $class = \get_class($manager);
 
-            throw new RuntimeException("Fixture requires a PHPCR ODM DocumentManager instance, instance of '{$class}' given.");
+            throw new \RuntimeException("Fixture requires a PHPCR ODM DocumentManager instance, instance of '{$class}' given.");
         }
 
         $rootTask = $manager->find(null, '/');
 
         if (!$rootTask) {
-            throw new Exception('Could not find / document!');
+            throw new \Exception('Could not find / document!');
         }
 
         $task = new Task();

@@ -31,7 +31,9 @@ use Liip\Acme\Tests\AppConfigMysqlKeepDatabaseAndSchema\AppConfigMysqlKernelKeep
  * So it must be loaded in a separate process.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
+ *
  * @IgnoreAnnotation("group")
  *
  * @internal
