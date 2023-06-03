@@ -31,7 +31,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * So it must be loaded in a separate process.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
+ *
  * @IgnoreAnnotation("dataProvider")
  *
  * @internal

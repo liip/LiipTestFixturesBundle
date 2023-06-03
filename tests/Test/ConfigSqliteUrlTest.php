@@ -26,6 +26,7 @@ use Liip\Acme\Tests\AppConfigSqliteUrl\AppConfigSqliteUrlKernel;
  * Run SQLite tests by using an URL for Doctrine.
  *
  * @runTestsInSeparateProcesses
+ *
  * @preserveGlobalState disabled
  *
  * @IgnoreAnnotation("depends")
