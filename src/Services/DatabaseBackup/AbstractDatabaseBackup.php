@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
 use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -93,7 +92,7 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
     {
         $lastModifiedDateTime = null;
 
-        $reflClass = new ReflectionClass($class);
+        $reflClass = new \ReflectionClass($class);
         $classFileName = $reflClass->getFileName();
 
         if (file_exists($classFileName)) {

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
-use BadMethodCallException;
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
@@ -167,13 +166,13 @@ abstract class AbstractDatabaseTool
     }
 
     /**
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      */
     public function loadAliceFixture(array $paths = [], bool $append = false): array
     {
         $persisterLoaderServiceName = 'fidry_alice_data_fixtures.loader.doctrine';
         if (!$this->container->has($persisterLoaderServiceName)) {
-            throw new BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
+            throw new \BadMethodCallException('theofidry/alice-data-fixtures must be installed to use this method.');
         }
 
         if (false === $append) {
