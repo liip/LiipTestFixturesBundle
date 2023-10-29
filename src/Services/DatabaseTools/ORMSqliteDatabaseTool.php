@@ -136,7 +136,12 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        $this->connection->query('PRAGMA foreign_keys = 0');
+        if (method_exists($this->connection, 'executeQuery')) {
+            $this->connection->executeQuery('PRAGMA foreign_keys = 0');
+        } else {
+            $this->connection->query('PRAGMA foreign_keys = 0');
+        }
+
         $this->shouldEnableForeignKeyChecks = true;
     }
 
@@ -150,7 +155,12 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        $this->connection->query('PRAGMA foreign_keys = 1');
+        if (method_exists($this->connection, 'executeQuery')) {
+            $this->connection->executeQuery('PRAGMA foreign_keys = 1');
+        } else {
+            $this->connection->query('PRAGMA foreign_keys = 1');
+        }
+
         $this->shouldEnableForeignKeyChecks = false;
     }
 

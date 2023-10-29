@@ -212,7 +212,12 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
-        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        if (method_exists($this->connection, 'executeQuery')) {
+            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
+        } else {
+            $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        }
+
         $this->shouldEnableForeignKeyChecks = true;
     }
 
@@ -226,7 +231,12 @@ class ORMDatabaseTool extends AbstractDatabaseTool
             return;
         }
 
-        $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
+        if (method_exists($this->connection, 'executeQuery')) {
+            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
+        } else {
+            $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
+        }
+
         $this->shouldEnableForeignKeyChecks = false;
     }
 
