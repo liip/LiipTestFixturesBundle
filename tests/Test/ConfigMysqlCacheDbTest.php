@@ -119,19 +119,28 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
      */
     public function testLoadFixturesCheckReferences(): void
     {
-        $this->markTestSkipped('This test is broken right now.');
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(1, $referenceRepository->getReferences());
+        $references = (method_exists($referenceRepository, 'getReferencesByClass'))
+            // with getReferencesByClass(), references are grouped by class
+            ? $referenceRepository->getReferencesByClass()['Liip\Acme\Tests\App\Entity\User']
+            : $referenceRepository->getReferences();
+
+        $this->assertCount(1, $references);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferences());
+        $references = (method_exists($referenceRepository, 'getReferencesByClass'))
+            // with getReferencesByClass(), references are grouped by class
+            ? $referenceRepository->getReferencesByClass()['Liip\Acme\Tests\App\Entity\User']
+            : $referenceRepository->getReferences();
+
+        $this->assertCount(2, $references);
     }
 
     protected static function getKernelClass(): string
