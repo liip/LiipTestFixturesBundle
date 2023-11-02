@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
-        # Symfony 6.0 requires PHP >= 8.0, it will be installed on PHP >= 8.0
+        # Symfony 6.3 requires PHP >= 8.0, it will be installed on PHP >= 8.0
         php-version: ['8.0']
         composer-flags: ['']
         symfony-version: ['']
@@ -27,8 +27,8 @@ jobs:
             # add a specific job to test 5.4 for all Symfony packages
             symfony-version: "^5.4"
           - php-version: 8.1
-            # add a specific job to test ^6.0 for all Symfony packages
-            symfony-version: "^6.0"
+            # add a specific job to test ^6.3 for all Symfony packages
+            symfony-version: "^6.3"
           - php-version: 8.1
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
