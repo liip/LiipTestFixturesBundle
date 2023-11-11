@@ -34,12 +34,12 @@ class LoadUserData extends AbstractFixture
 
         $this->addReference('user', $user);
 
-        /* @var User $user2 */
-        $user2 = clone $this->getReference('user', User::class);
+        /* @var User $user */
+        $user = clone $this->getReference('user', User::class);
 
-        $user2->setId(2);
+        $user->setId(2);
 
-        $manager->persist($user2);
+        $manager->persist($user);
         $manager->flush();
     }
 }
