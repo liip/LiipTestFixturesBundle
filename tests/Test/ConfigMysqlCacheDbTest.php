@@ -124,15 +124,14 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
-        var_dump($referenceRepository->getReferencesByClass());
-        $this->assertCount(1, $referenceRepository->getReferencesByClass()['Liip\Acme\Tests\App\Entity\User']);
+        $this->assertCount(1, $referenceRepository->getReferences());;
 
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferencesByClass()['Liip\Acme\Tests\App\Entity\User']);
+        $this->assertCount(2, $referenceRepository->getReferences());
     }
 
     protected static function getKernelClass(): string
