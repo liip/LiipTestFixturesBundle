@@ -39,7 +39,7 @@
         "symfony/monolog-bridge": "^5.4 || ^6.3",
         "symfony/monolog-bundle": "^3.2",
         "symfony/phpunit-bridge": "^5.4 || ^6.3",
-        "theofidry/alice-data-fixtures": "^1.0.1"
+        "theofidry/alice-data-fixtures": "^1.5.2"
     },
     "conflict": {
         "doctrine/annotations": "<1.2.7 || >=3.0",
