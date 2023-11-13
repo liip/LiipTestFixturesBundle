@@ -66,7 +66,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "symfony/flex": true
+            "symfony/flex": true,
+            "ocramius/package-versions": true
         }
     },
     "extra": {

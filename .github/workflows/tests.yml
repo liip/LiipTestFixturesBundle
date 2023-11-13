@@ -76,10 +76,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-${{ hashFiles('composer.json') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-
 
-      - name: Allow Composer Plugins
-        run: |
-          composer config --no-plugins allow-plugins.ocramius/package-versions true
-
       - name: Require Symfony
         if: matrix.symfony-version != ''
         run: |
