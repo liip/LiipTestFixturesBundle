@@ -20,10 +20,6 @@ jobs:
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
             composer-flags: "update --prefer-lowest"
           - php-version: 7.4
-            # add a specific job to test Symfony 4.4, otherwise Symfony 5.4 would be installed
-            symfony-version: "^4.4"
-            composer-flags: "require --dev --no-progress doctrine/annotations:^1.8.0"
-          - php-version: 7.4
             # add a specific job to test 5.4 for all Symfony packages
             symfony-version: "^5.4"
           - php-version: 8.1
@@ -61,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
