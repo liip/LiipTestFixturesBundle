@@ -16,6 +16,9 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
@@ -58,10 +61,7 @@ abstract class AbstractDatabaseTool
      */
     protected $om;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var int|null
@@ -193,7 +193,7 @@ abstract class AbstractDatabaseTool
     {
         $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
             ('ORM' === $this->getType())
-                ? $this->connection->getDatabasePlatform()->getName()
+                ? $this->getPlatformName()
                 : $this->getType()
         ));
 
@@ -269,5 +269,20 @@ abstract class AbstractDatabaseTool
     {
         return $this->container->hasParameter(self::CACHE_METADATA_PARAMETER_NAME)
             && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);
+    }
+
+    private function getPlatformName(): string
+    {
+        $platform = $this->connection->getDatabasePlatform();
+
+        if ($platform instanceof AbstractMySQLPlatform) {
+            return 'mysql';
+        } elseif ($platform instanceof SqlitePlatform) {
+            return 'sqlite';
+        } elseif ($platform instanceof PostgreSQLPlatform) {
+            return 'pgsql';
+        }
+
+        return (new \ReflectionClass($platform))->getShortName();
     }
 }
