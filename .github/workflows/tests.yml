@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    name: Symfony ${{ matrix.symfony-version }} on PHP ${{ matrix.php-version }} flags ${{ matrix.composer-flags }}
+    name: Symfony ${{ matrix.symfony-version }} - PHP ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }} - mysqldump ${{ matrix.mysql-client }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,6 +15,7 @@ jobs:
         php-version: ['8.2']
         composer-flags: ['']
         symfony-version: ['']
+        mysql-client: [ "default-mysql-client" ]
         include:
           - php-version: 7.4
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
@@ -25,6 +26,10 @@ jobs:
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
+          - php-version: 8.1
+            symfony-version: "^5.4"
+            # add a specific job to test mysqldump from MariaDB
+            mysql-client: "mariadb-client"
           - php-version: 8.2
             # add a specific job to test ^6.3 for all Symfony packages
             symfony-version: "^6.3"
@@ -60,6 +65,11 @@ jobs:
           - 5432:5432
 
     steps:
+      - name: Install mysqldump
+        run: |
+          sudo apt install -y -q ${{ matrix.mysql-client }}
+          mysqldump --version
+
       - name: Checkout
         uses: actions/checkout@v4
 
