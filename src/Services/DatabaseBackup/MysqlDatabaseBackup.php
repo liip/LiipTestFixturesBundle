@@ -75,7 +75,22 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
         $executor->getReferenceRepository()->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
-        exec("{$dbPass} mysqldump --host {$dbHost} {$port} --user {$dbUser} --no-create-info --skip-triggers --no-create-db --no-tablespaces --compact --column-statistics=0 {$dbName} > {$this->getBackupFilePath()}");
+        $mysqldumpOptions = '--no-create-info --skip-triggers --no-create-db --no-tablespaces --compact';
+        $mysqldumpCommand = 'mysqldump --host '.$dbHost.' '.$port.' --user '.$dbUser.' '.$dbName.' '.$mysqldumpOptions;
+
+        exec(
+            'mysqldump --version',
+            $output,
+        );
+
+        if (false === stripos(implode('', $output), 'MariaDB')) {
+            // when mysqldump is provided by MySQL (and not MariaDB), “--column-statistics=0” is a valid option, add it
+            $mysqldumpCommand .= ' --column-statistics=0';
+        }
+
+        exec(
+            $dbPass.' '.$mysqldumpCommand.' > '.$this->getBackupFilePath()
+        );
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
