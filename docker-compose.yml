@@ -1,0 +1,33 @@
+version: '3.1'
+services:
+    mariadb:
+        image: 'mariadb:11.0'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=acme
+            - MYSQL_USER=root
+            - MYSQL_PASSWORD=root
+        ports:
+            - '11003:3306'
+
+    postgres:
+        image: 'postgres:15-alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
+        ports:
+            - '11004:5432'
+
+    php-fpm:
+        build: phpdocker/php-fpm
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/fpm/conf.d/99-overrides.ini'
