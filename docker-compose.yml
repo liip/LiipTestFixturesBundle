@@ -26,8 +26,7 @@ services:
             - '11004:5432'
 
     php-fpm:
-        build: phpdocker/php-fpm
+        build: .
         working_dir: /application
         volumes:
             - '.:/application'
-            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/fpm/conf.d/99-overrides.ini'

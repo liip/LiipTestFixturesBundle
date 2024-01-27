@@ -9,18 +9,17 @@ After that, we've prepared a docker setup to help you get started quickly.
 Install docker and docker-compose on your machine, then run the following commands:
 
 ```bash
-docker-compose up -d
-docker-compose exec php-fpm bash
+docker-compose up --detach
 ```
 
-When you are on the container, you can install the dependencies with composer:
+Install the dependencies with composer:
 
 ```bash
-composer install
+docker-compose exec php-fpm composer install
 ```
 
 Now you can execute the tests with the following command:
 
 ```bash
-./vendor/bin/phpunit
+docker-compose exec php-fpm ./vendor/bin/phpunit
 ```
