@@ -7,6 +7,7 @@ RUN apt-get update \
     libsqlite3-dev \
     unzip \
     wget \
+    default-mysql-client \
     && docker-php-ext-install \
         pdo_mysql \
         pdo_pgsql \

@@ -8,8 +8,6 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_DATABASE=acme
-            - MYSQL_USER=root
-            - MYSQL_PASSWORD=root
         ports:
             - '11003:3306'
 
