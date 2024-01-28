@@ -45,7 +45,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: acme
         ports:
           - 3306:3306
@@ -111,6 +111,9 @@ jobs:
 
       - name: Show Composer dependencies
         run: composer show
+
+      - name: Set up hosts file
+        run: echo '127.0.0.1 mariadb postgres' | sudo tee -a /etc/hosts
 
       - name: Run tests
         # In phpunit.xml.dist, tests annotated with "@group mysql" are excluded, revert this

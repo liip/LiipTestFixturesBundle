@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+    mariadb:
+        image: 'mariadb:11.0'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=acme
+        ports:
+            - '11003:3306'
+
+    postgres:
+        image: 'postgres:15-alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
+            - POSTGRES_HOST=postgres
+        ports:
+            - '11004:5432'
+
+    php-fpm:
+        build: .
+        working_dir: /application
+        volumes:
+            - '.:/application'

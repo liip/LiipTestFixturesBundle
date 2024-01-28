@@ -20,3 +20,4 @@ Documentation
 * [Events](doc/events.md)
 * [Examples](doc/examples.md)
 * [Caveats](doc/caveats.md)
+* [Contributing](doc/contributing.md)

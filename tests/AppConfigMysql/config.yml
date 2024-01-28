@@ -3,8 +3,8 @@
 doctrine:
     dbal:
         driver: pdo_mysql
-        host: 127.0.0.1
-        port: null
+        host: mariadb
+        port: 3306
         dbname: acme
         user: root
-        password: ""
+        password: root
