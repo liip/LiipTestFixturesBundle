@@ -6,5 +6,5 @@ doctrine:
         host: postgres
         port: 5432
         dbname: postgres
-        user: root
-        password: root
+        user: postgres
+        password: postgres

@@ -21,5 +21,5 @@ docker-compose exec php-fpm composer install
 Now you can execute the tests with the following command:
 
 ```bash
-docker-compose exec php-fpm ./vendor/bin/phpunit
+docker-compose exec php-fpm ./vendor/bin/phpunit --exclude-group ""
 ```
