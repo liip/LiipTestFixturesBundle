@@ -45,8 +45,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: root
           MYSQL_DATABASE: acme
+          MYSQL_HOST: mariadb
         ports:
           - 3306:3306
       postgresql:
@@ -65,6 +67,10 @@ jobs:
           - 5432:5432
 
     steps:
+      - name: Set up hosts file
+        run: |
+          echo '127.0.0.1 mariadb' | sudo tee -a /etc/hosts
+          echo '127.0.0.1 postgres' | sudo tee -a /etc/hosts
       - name: Install mysqldump
         run: |
           sudo apt install -y -q ${{ matrix.mysql-client }}
