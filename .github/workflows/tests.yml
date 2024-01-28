@@ -67,6 +67,7 @@ jobs:
     steps:
       - name: Install mysqldump
         run: |
+          sudo apt update
           sudo apt install -y -q ${{ matrix.mysql-client }}
           mysqldump --version
 
