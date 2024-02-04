@@ -11,7 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
-        # Symfony 6.3 requires PHP >= 8.0, it will be installed on PHP >= 8.0
+        # Symfony 6.4 requires PHP >= 8.0, it will be installed on PHP >= 8.0
+        # Symfony 7.0 requires PHP >= 8.2, it will be installed on PHP >= 8.2
         php-version: ['8.2']
         composer-flags: ['']
         symfony-version: ['']
@@ -31,12 +32,16 @@ jobs:
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
           - php-version: 8.2
-            # add a specific job to test ^6.3 for all Symfony packages
-            symfony-version: "^6.3"
+            # add a specific job to test ^6.4 for all Symfony packages
+            symfony-version: "^6.4"
           - php-version: 8.2
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
           - php-version: 8.2
+            symfony-version: "^7.0"
+            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
+            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
+          - php-version: 8.3
             symfony-version: "^7.0"
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
