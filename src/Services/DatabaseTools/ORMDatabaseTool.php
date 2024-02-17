@@ -18,6 +18,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -157,6 +158,9 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         return $purger;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function createDatabaseIfNotExists(): void
     {
         $params = $this->connection->getParams();
@@ -177,10 +181,10 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         // “An exception occurred in driver: SQLSTATE[HY000] [1049] Unknown database 'test'”
 
         $tmpConnection = DriverManager::getConnection($params);
-        $tmpConnection->connect();
 
-        if (!\in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
-            $tmpConnection->getSchemaManager()->createDatabase($dbName);
+        if (!\in_array($dbName, $tmpConnection->createSchemaManager()->listDatabases(), true)) {
+
+            $tmpConnection->createSchemaManager()->createDatabase($dbName);
         }
 
         $tmpConnection->close();
