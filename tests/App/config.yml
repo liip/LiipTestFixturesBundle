@@ -29,13 +29,8 @@ doctrine:
                 connection: default
                 mappings:
                     LiipAcme:
-                        type: php
+                        type: attribute
                         dir: "%kernel.project_dir%/Entity"
-                        prefix: 'Liip\Acme\Tests\App\Entity'
-                        is_bundle: false
-                    LiipAcmeYml:
-                        type: "yml"
-                        dir: "%kernel.project_dir%/Resources/config/doctrine"
                         prefix: 'Liip\Acme\Tests\App\Entity'
                         is_bundle: false
 

@@ -53,6 +53,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
                 $cacheDriver->clear();
             }
         } else {
+            # legacy
             $cacheDriver = $config->getMetadataCacheImpl();
 
             if ($cacheDriver) {
@@ -139,6 +140,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         if (method_exists($this->connection, 'executeQuery')) {
             $this->connection->executeQuery('PRAGMA foreign_keys = 0');
         } else {
+            # legacy
             $this->connection->query('PRAGMA foreign_keys = 0');
         }
 
@@ -158,6 +160,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         if (method_exists($this->connection, 'executeQuery')) {
             $this->connection->executeQuery('PRAGMA foreign_keys = 1');
         } else {
+            # legacy
             $this->connection->query('PRAGMA foreign_keys = 1');
         }
 

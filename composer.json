@@ -1,78 +1,80 @@
 {
-    "name": "liip/test-fixtures-bundle",
-    "description": "This bundles enables efficient loading of Doctrine fixtures in functional test-cases for Symfony applications",
-    "keywords": ["symfony", "testing", "fixtures"],
-    "type": "symfony-bundle",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Liip AG",
-            "homepage": "http://www.liip.ch/"
-        },
-        {
-            "name": "Community contributions",
-            "homepage": "https://github.com/liip/LiipTestFixturesBundle/contributors"
-        }
-    ],
-    "require": {
-        "php": "^7.4 || ^8.0",
-        "doctrine/common": "^2.13 || ^3.0",
-        "doctrine/persistence": "^1.3.3 || ^2.0 || ^3.0",
-        "symfony/deprecation-contracts": "^2.1 || ^3.0",
-        "symfony/event-dispatcher": "^5.4 || ^6.3 || ^7.0",
-        "symfony/event-dispatcher-contracts": "^1 || ^2 || ^3",
-        "symfony/framework-bundle": "^5.4 || ^6.3 || ^7.0",
-        "symfony/yaml": "^5.4 || ^6.3 || ^7.0"
+  "name": "liip/test-fixtures-bundle",
+  "description": "This bundles enables efficient loading of Doctrine fixtures in functional test-cases for Symfony applications",
+  "keywords": ["symfony", "testing", "fixtures"],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Liip AG",
+      "homepage": "http://www.liip.ch/"
     },
-    "require-dev": {
-        "doctrine/annotations": "^1.8.0 || ^2.0",
-        "doctrine/data-fixtures": "^1.7",
-        "doctrine/doctrine-bundle": "^2.11",
-        "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
-        "doctrine/orm": "^2.7",
-        "doctrine/phpcr-bundle": "^2.4.3 || ^3.0",
-        "doctrine/phpcr-odm": "^1.7.2 || ^2.0",
-        "jackalope/jackalope-doctrine-dbal": "^1.10.1 || ^2.0",
-        "monolog/monolog": "^1.25.1 || ^2.0 || ^3.0",
-        "phpunit/phpunit": "^9.6 || ^10.4",
-        "symfony/doctrine-bridge": "^5.4 || ^6.3 || ^7.0",
-        "symfony/monolog-bridge": "^5.4 || ^6.3 || ^7.0",
-        "symfony/monolog-bundle": "^3.2",
-        "symfony/phpunit-bridge": "^5.4 || ^6.3 || ^7.0",
-        "theofidry/alice-data-fixtures": "^1.5.2"
-    },
-    "conflict": {
-        "doctrine/annotations": "<1.2.7 || >=3.0",
-        "doctrine/dbal": "<2.11"
-    },
-    "suggest": {
-        "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
-        "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
-        "doctrine/orm": "Required when using the fixture loading functionality with an ORM and SQLite",
-        "hautelook/alice-bundle": "Required when using loadFixtureFiles functionality with custom providers",
-        "theofidry/alice-data-fixtures": "Required when using loadFixtureFiles functionality"
-    },
-    "autoload": {
-        "psr-4": {
-            "Liip\\TestFixturesBundle\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Liip\\Acme\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "symfony/flex": true,
-            "ocramius/package-versions": true
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.x-dev"
-        }
+    {
+      "name": "Community contributions",
+      "homepage": "https://github.com/liip/LiipTestFixturesBundle/contributors"
     }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "doctrine/common": "^2.13 || ^3.0",
+    "doctrine/persistence": "^1.3.3 || ^2.0 || ^3.0",
+    "symfony/deprecation-contracts": "^2.1 || ^3.0",
+    "symfony/event-dispatcher": "^5.4 || ^6.3 || ^7.0",
+    "symfony/event-dispatcher-contracts": "^1 || ^2 || ^3",
+    "symfony/framework-bundle": "^5.4 || ^6.3 || ^7.0",
+    "symfony/yaml": "^5.4 || ^6.3 || ^7.0"
+  },
+  "require-dev": {
+    "doctrine/annotations": "^1.8.0 || ^2.0",
+    "doctrine/data-fixtures": "^1.7",
+    "doctrine/doctrine-bundle": "^2.11",
+    "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
+    "doctrine/orm": "^2.7 || ^3.0",
+    "doctrine/phpcr-bundle": "^2.4.3 || 3.x-dev as 3.0",
+    "doctrine/phpcr-odm": "^1.7.2 || 2.x-dev as 2.0",
+    "jackalope/jackalope-doctrine-dbal": "2.0.0-RC1 @dev",
+    "monolog/monolog": "^1.25.1 || ^2.0 || ^3.0",
+    "phpunit/phpunit": "^9.6 || ^10.4",
+    "symfony/doctrine-bridge": "^5.4 || ^6.3 || ^7.0",
+    "symfony/monolog-bridge": "^5.4 || ^6.3 || ^7.0",
+    "symfony/monolog-bundle": "^3.2",
+    "symfony/phpunit-bridge": "^5.4 || ^6.3 || ^7.0",
+    "theofidry/alice-data-fixtures": "^1.5.2"
+  },
+  "conflict": {
+    "doctrine/annotations": "<1.2.7 || >=3.0",
+    "doctrine/dbal": "<2.11"
+  },
+  "suggest": {
+    "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
+    "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
+    "doctrine/orm": "Required when using the fixture loading functionality with an ORM and SQLite",
+    "hautelook/alice-bundle": "Required when using loadFixtureFiles functionality with custom providers",
+    "theofidry/alice-data-fixtures": "Required when using loadFixtureFiles functionality"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liip\\TestFixturesBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liip\\Acme\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "symfony/flex": true,
+      "ocramius/package-versions": true
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
+    }
+  }
 }
