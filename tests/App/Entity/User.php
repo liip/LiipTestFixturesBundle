@@ -13,19 +13,49 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * User.
+ * @ORM\Entity
+ * @ORM\Table(name="app_users")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'app_users')]
 class User
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
+    /**
+     * @ORM\Column
+     */
+    #[ORM\Column]
     private string $name;
 
+    /**
+     * @ORM\Column
+     */
+    #[ORM\Column]
     private string $salt;
 
+    /**
+     * @ORM\Column
+     */
+    #[ORM\Column]
     private string $email;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    #[ORM\Column(nullable: true)]
     private ?string $dummyText = null;
 
     public function __construct()
