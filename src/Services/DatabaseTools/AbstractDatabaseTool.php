@@ -61,7 +61,10 @@ abstract class AbstractDatabaseTool
      */
     protected $om;
 
-    protected Connection $connection;
+    /**
+     * @var Connection
+     */
+    protected $connection;
 
     /**
      * @var int|null
