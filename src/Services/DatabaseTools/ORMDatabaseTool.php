@@ -177,10 +177,12 @@ class ORMDatabaseTool extends AbstractDatabaseTool
         // “An exception occurred in driver: SQLSTATE[HY000] [1049] Unknown database 'test'”
 
         $tmpConnection = DriverManager::getConnection($params);
-        $tmpConnection->connect();
 
-        if (!\in_array($dbName, $tmpConnection->getSchemaManager()->listDatabases(), true)) {
-            $tmpConnection->getSchemaManager()->createDatabase($dbName);
+        try {
+            if (!\in_array($dbName, $tmpConnection->createSchemaManager()->listDatabases(), true)) {
+                $tmpConnection->createSchemaManager()->createDatabase($dbName);
+            }
+        } catch (\Doctrine\DBAL\Platforms\Exception\NotSupported $e) {
         }
 
         $tmpConnection->close();
