@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
         # Symfony 6.4 requires PHP >= 8.0, it will be installed on PHP >= 8.0
