@@ -34,11 +34,11 @@
         "doctrine/phpcr-odm": "^1.7.2 || ^2.0",
         "jackalope/jackalope-doctrine-dbal": "^1.10.1 || ^2.0",
         "monolog/monolog": "^1.25.1 || ^2.0 || ^3.0",
-        "phpunit/phpunit": "^9.6 || ^10.5 || ^11.0",
+        "phpunit/phpunit": "^9.6.17 || ^10.5.11 || ^11.0.4",
         "symfony/doctrine-bridge": "^5.4 || ^6.3 || ^7.0",
         "symfony/monolog-bridge": "^5.4 || ^6.3 || ^7.0",
         "symfony/monolog-bundle": "^3.2",
-        "symfony/phpunit-bridge": "^5.4 || ^6.3 || ^7.0",
+        "symfony/phpunit-bridge": "^7.0",
         "theofidry/alice-data-fixtures": "^1.5.2"
     },
     "conflict": {
