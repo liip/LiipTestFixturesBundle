@@ -1,0 +1,24 @@
+# inherits configuration from ../App/config.yml
+doctrine_mongodb:
+    connections:
+        default:
+            server: 'mongodb://mongodb:27017/test'
+            options: {}
+    document_managers:
+        default:
+            mappings:
+                LiipAcme:
+                    type: attribute
+                    dir: "%kernel.project_dir%/../AppConfigMongodb/Document"
+                    prefix: 'Liip\Acme\Tests\AppConfigMongodb\Document'
+                    is_bundle: false
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+    
+    Liip\Acme\Tests\AppConfigMongodb\:
+        resource: './*'
+        exclude: '{Document,*.php,var}'

@@ -68,6 +68,10 @@ jobs:
             --health-retries 5
         ports:
           - 5432:5432
+      mongodb:
+        image: mongo:5
+        ports:
+          - 27017:27017
 
     steps:
       - name: Install mysqldump
@@ -75,6 +79,12 @@ jobs:
           sudo apt update
           sudo apt install -y -q ${{ matrix.mysql-client }}
           mysqldump --version
+
+      - name: Install mongodb database tools
+        run: |
+          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian92-x86_64-100.3.1.deb
+          sudo apt install ./mongodb-database-tools-*.deb
+          rm -f mongodb-database-tools-*.deb
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,7 +129,7 @@ jobs:
         run: composer show
 
       - name: Set up hosts file
-        run: echo '127.0.0.1 mariadb postgres' | sudo tee -a /etc/hosts
+        run: echo '127.0.0.1 mariadb postgres mongodb' | sudo tee -a /etc/hosts
 
       - name: Run tests
         # In phpunit.xml.dist, tests annotated with "@group mysql" are excluded, revert this

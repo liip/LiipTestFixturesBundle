@@ -29,6 +29,7 @@
         "doctrine/data-fixtures": "^1.7",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
+        "doctrine/mongodb-odm-bundle": "^4.2 || ^5.0",
         "doctrine/orm": "^2.7",
         "doctrine/phpcr-bundle": "^2.4.3 || ^3.0",
         "doctrine/phpcr-odm": "^1.7.2 || ^2.0",

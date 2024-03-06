@@ -29,3 +29,8 @@ services:
         working_dir: /application
         volumes:
             - '.:/application'
+
+    mongodb:
+        image: mongo:5
+        ports:
+            - '27017:27017'

@@ -21,4 +21,5 @@ return [
     Liip\TestFixturesBundle\LiipTestFixturesBundle::class => ['all' => true],
     Liip\Acme\Tests\App\AcmeBundle::class => ['all' => true],
     Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle::class => ['phpcr' => true],
+    Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle::class => ['mongodb' => true],
 ];

@@ -31,7 +31,7 @@ use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-class ORMDatabaseTool extends AbstractDatabaseTool
+class ORMDatabaseTool extends AbstractDbalDatabaseTool
 {
     /**
      * @var EntityManager

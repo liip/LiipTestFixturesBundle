@@ -119,4 +119,9 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
             self::$databaseCreated = true;
         }
     }
+
+    protected function getPlatformName(): string
+    {
+        return 'mongodb';
+    }
 }
