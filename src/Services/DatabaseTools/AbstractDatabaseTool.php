@@ -15,14 +15,10 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
-use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Liip\TestFixturesBundle\FixturesLoaderFactoryInterface;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
-use Liip\TestFixturesBundle\Services\FixturesLoaderFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -39,7 +35,7 @@ abstract class AbstractDatabaseTool
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    protected $fixturesLoaderFactory;
+    protected FixturesLoaderFactoryInterface $fixturesLoaderFactory;
 
     /**
      * @var ManagerRegistry
@@ -61,8 +57,6 @@ abstract class AbstractDatabaseTool
      */
     protected $om;
 
-    protected Connection $connection;
-
     /**
      * @var int|null
      */
@@ -80,7 +74,7 @@ abstract class AbstractDatabaseTool
      */
     private static $cachedMetadatas = [];
 
-    public function __construct(ContainerInterface $container, FixturesLoaderFactory $fixturesLoaderFactory)
+    public function __construct(ContainerInterface $container, FixturesLoaderFactoryInterface $fixturesLoaderFactory)
     {
         $this->container = $container;
         $this->eventDispatcher = $container->get('event_dispatcher');
@@ -106,7 +100,6 @@ abstract class AbstractDatabaseTool
     {
         $this->omName = $omName;
         $this->om = $this->registry->getManager($omName);
-        $this->connection = $this->registry->getConnection($omName);
     }
 
     public function setRegistryName(string $registryName): void
@@ -271,18 +264,5 @@ abstract class AbstractDatabaseTool
             && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);
     }
 
-    private function getPlatformName(): string
-    {
-        $platform = $this->connection->getDatabasePlatform();
-
-        if ($platform instanceof AbstractMySQLPlatform) {
-            return 'mysql';
-        } elseif ($platform instanceof SqlitePlatform) {
-            return 'sqlite';
-        } elseif ($platform instanceof PostgreSQLPlatform) {
-            return 'pgsql';
-        }
-
-        return (new \ReflectionClass($platform))->getShortName();
-    }
+    abstract protected function getPlatformName(): string;
 }

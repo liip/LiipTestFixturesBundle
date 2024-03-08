@@ -9,6 +9,10 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="doctrine.fixtures.loader" on-invalid="null"/>
         </service>
+        <service id="Liip\TestFixturesBundle\Services\MongoDBFixturesLoaderFactory" public="true">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="doctrine_mongodb.odm.symfony.fixtures.loader" on-invalid="null"/>
+        </service>
 
         <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
@@ -22,7 +26,7 @@
 
         <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
-            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\MongoDBFixturesLoaderFactory" />
         </service>
 
         <service id="Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool" public="false">
@@ -35,7 +39,7 @@
         </service>
         <service id="Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool" public="false">
             <argument type="service" id="service_container" />
-            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\MongoDBFixturesLoaderFactory" />
         </service>
         <service id="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" public="false">
             <argument type="service" id="service_container" />
