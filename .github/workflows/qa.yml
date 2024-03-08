@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Delete composer files to avoid installing dependencies
-        run: rm -v composer.json composer.lock
+        run: rm -v composer.json
       - name: PHP-CS-Fixer
         uses: docker://jakzal/phpqa:1.80.0-php7.4-alpine
         with:
