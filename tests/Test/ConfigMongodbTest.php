@@ -5,16 +5,17 @@ declare(strict_types=1);
 /*
  * This file is part of the Liip/TestFixturesBundle
  *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
 
-
 use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
-use Liip\Acme\Tests\AppConfigMongodb\DataFixtures\MongoDB\LoadUserDataFixture;
 use Liip\Acme\Tests\AppConfigMongodb\AppConfigMongodbKernel;
+use Liip\Acme\Tests\AppConfigMongodb\DataFixtures\MongoDB\LoadUserDataFixture;
 use Liip\Acme\Tests\AppConfigMongodb\Document\User;
 use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -41,7 +42,7 @@ class ConfigMongodbTest extends KernelTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-    
+
     private DocumentRepository $userRepository;
 
     protected function setUp(): void
@@ -49,7 +50,7 @@ class ConfigMongodbTest extends KernelTestCase
         if (!class_exists(DoctrineMongoDBBundle::class)) {
             $this->markTestSkipped('Need doctrine/mongodb-odm-bundle package.');
         }
-        if (version_compare(PHP_VERSION, '8.1.0') < 0) {
+        if (version_compare(\PHP_VERSION, '8.1.0') < 0) {
             $this->markTestSkipped('MongoDB Tests doesn\'t support Outdated PHP Version. <8.1.0');
         }
 
@@ -61,7 +62,7 @@ class ConfigMongodbTest extends KernelTestCase
 
         $this->userRepository = $this->getTestContainer()->get('doctrine_mongodb')
             ->getRepository(User::class);
-        
+
         $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_mongodb');
 
         $this->assertInstanceOf(MongoDBDatabaseTool::class, $this->databaseTool);
