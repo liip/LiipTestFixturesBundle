@@ -31,7 +31,6 @@
         "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
         "doctrine/mongodb-odm-bundle": "^4.2 || ^5.0",
         "doctrine/orm": "^2.7",
-        "jackalope/jackalope-doctrine-dbal": "^1.10.1 || ^2.0",
         "monolog/monolog": "^1.25.1 || ^2.0 || ^3.0",
         "phpunit/phpunit": "^9.6.17 || ^10.5.11 || ^11.0.4",
         "symfony/doctrine-bridge": "^5.4 || ^6.3 || ^7.0",
