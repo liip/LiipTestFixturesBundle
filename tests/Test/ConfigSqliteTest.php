@@ -19,7 +19,6 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
     class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
 }
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
@@ -28,18 +27,14 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("depends")
- * @IgnoreAnnotation("expectedException")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigSqliteTest extends KernelTestCase
 {
     use ContainerProvider;
@@ -357,9 +352,8 @@ class ConfigSqliteTest extends KernelTestCase
 
     /**
      * Use nelmio/alice with PURGE_MODE_TRUNCATE.
-     *
-     * @depends testLoadFixturesFiles
      */
+    #[Depends('testLoadFixturesFiles')]
     public function testLoadFixturesFilesWithPurgeModeTruncate(): void
     {
         $this->databaseTool->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);

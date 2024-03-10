@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -31,19 +32,11 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("group")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
-    /**
-     * @group mysql
-     */
     public function testLoadFixturesAndCheckBackup(): void
     {
         $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
@@ -114,9 +107,6 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
     }
 
-    /**
-     * @group mysql
-     */
     public function testLoadFixturesCheckReferences(): void
     {
         $this->markTestSkipped('This test is broken right now.');

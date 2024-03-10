@@ -25,7 +25,6 @@
         "symfony/yaml": "^5.4 || ^6.3 || ^7.0"
     },
     "require-dev": {
-        "doctrine/annotations": "^1.8.0 || ^2.0",
         "doctrine/data-fixtures": "^1.7",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
