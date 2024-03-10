@@ -27,7 +27,13 @@ docker-compose exec php-fpm composer update --prefer-lowest
 Now you can execute the tests with the following command:
 
 ```bash
-docker-compose exec php-fpm ./vendor/bin/phpunit
+docker-compose exec php-fpm ./vendor/bin/phpunit --process-isolation
+```
+
+If one test fails, run it without the `--process-isolation` option
+
+```bash
+docker-compose exec php-fpm ./vendor/bin/phpunit tests/Test/ConfigMongodbTest.php
 ```
 
 ## Delete the cache
