@@ -22,7 +22,7 @@ abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
 {
     protected Connection $connection;
 
-    public function setObjectManagerName(string $omName = null): void
+    public function setObjectManagerName(?string $omName = null): void
     {
         parent::setObjectManagerName($omName);
         $this->connection = $this->registry->getConnection($omName);

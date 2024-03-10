@@ -23,9 +23,6 @@ use Liip\Acme\Tests\App\Entity\User;
  */
 class LoadUserDataInGroup extends AbstractFixture implements FixtureGroupInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
@@ -53,9 +50,6 @@ class LoadUserDataInGroup extends AbstractFixture implements FixtureGroupInterfa
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getGroups(): array
     {
         return ['myGroup'];

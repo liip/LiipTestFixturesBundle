@@ -75,7 +75,7 @@ class ConfigMongodbTest extends KernelTestCase
         ]);
 
         $this->assertInstanceOf(
-            \Doctrine\Common\DataFixtures\Executor\MongoDBExecutor::class,
+            Doctrine\Common\DataFixtures\Executor\MongoDBExecutor::class,
             $fixtures
         );
 
