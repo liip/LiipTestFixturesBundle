@@ -19,21 +19,15 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
     class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
 }
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigSqliteUrl\AppConfigSqliteUrlKernel;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Run SQLite tests by using an URL for Doctrine.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("depends")
- * @IgnoreAnnotation("expectedException")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigSqliteUrlTest extends ConfigSqliteTest
 {
     public static function getKernelClass(): string

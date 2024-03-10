@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
@@ -22,6 +21,7 @@ use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -31,17 +31,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * Avoid conflict with PHPUnit annotation when reading QueryCount
- * annotation:
- *
- * @IgnoreAnnotation("expectedException")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigTest extends KernelTestCase
 {
     use ContainerProvider;

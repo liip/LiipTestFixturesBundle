@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Test MySQL database with a configuration by url.
@@ -29,12 +30,9 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigMysqlUrlTest extends ConfigMysqlTest
 {
     protected static function getKernelClass(): string

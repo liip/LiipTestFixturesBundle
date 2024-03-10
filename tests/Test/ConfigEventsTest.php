@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
 use Liip\Acme\Tests\Traits\ContainerProvider;
@@ -21,6 +20,8 @@ use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -30,14 +31,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("dataProvider")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigEventsTest extends KernelTestCase
 {
     use ContainerProvider;
@@ -88,10 +84,9 @@ class ConfigEventsTest extends KernelTestCase
      * Check that events are called.
      *
      * We disable the cache to ensure that all the code is executed.
-     *
-     * @dataProvider fixturesEventsProvider
      */
-    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations, bool $withCache = true): void
+    #[DataProvider('fixturesEventsProvider')]
+    public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations, ?bool $withCache = true): void
     {
         /** @var AbstractDatabaseTool $databaseTool */
         $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
@@ -127,9 +122,8 @@ class ConfigEventsTest extends KernelTestCase
 
     /**
      * We disable the cache to ensure that other events are called.
-     *
-     * @dataProvider fixturesEventsProvider
      */
+    #[DataProvider('fixturesEventsProvider')]
     public function testLoadEmptyFixturesAndCheckEventsAreCalledWithoutCache(string $eventName, string $methodName, int $numberOfInvocations): void
     {
         // Swap 0 → 1 and 1 → 0
@@ -138,15 +132,13 @@ class ConfigEventsTest extends KernelTestCase
         $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations, false);
     }
 
-    public static function fixturesEventsProvider(): array
+    public static function fixturesEventsProvider(): iterable
     {
-        return [
-            [LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE, 'preFixtureBackupRestore', 1],
-            [LiipTestFixturesEvents::POST_FIXTURE_SETUP, 'postFixtureSetup', 0],
-            [LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE, 'postFixtureBackupRestore', 1],
-            [LiipTestFixturesEvents::PRE_REFERENCE_SAVE, 'preReferenceSave', 0],
-            [LiipTestFixturesEvents::POST_REFERENCE_SAVE, 'postReferenceSave', 0],
-        ];
+        yield 'preFixtureBackupRestore' => [LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE, 'preFixtureBackupRestore', 1];
+        yield 'postFixtureSetup' => [LiipTestFixturesEvents::POST_FIXTURE_SETUP, 'postFixtureSetup', 0];
+        yield 'postFixtureBackupRestore' => [LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE, 'postFixtureBackupRestore', 1];
+        yield 'preReferenceSave' => [LiipTestFixturesEvents::PRE_REFERENCE_SAVE, 'preReferenceSave', 0];
+        yield 'postReferenceSave' => [LiipTestFixturesEvents::POST_REFERENCE_SAVE, 'postReferenceSave', 0];
     }
 
     protected static function getKernelClass(): string

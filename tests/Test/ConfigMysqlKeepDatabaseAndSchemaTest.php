@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigMysqlKeepDatabaseAndSchema\AppConfigMysqlKernelKeepDatabaseAndSchema;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -30,14 +30,9 @@ use Liip\Acme\Tests\AppConfigMysqlKeepDatabaseAndSchema\AppConfigMysqlKernelKeep
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("group")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigMysqlKeepDatabaseAndSchemaTest extends ConfigMysqlTest
 {
     protected static function getKernelClass(): string

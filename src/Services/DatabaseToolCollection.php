@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Services;
 
-use Doctrine\Common\Annotations\Reader;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,21 +24,17 @@ final class DatabaseToolCollection
 {
     private ContainerInterface $container;
 
-    /** @var Reader|null */
-    private $annotationReader;
-
     /**
      * @var AbstractDatabaseTool[][]
      */
     private array $items = [];
 
-    public function __construct(ContainerInterface $container, ?Reader $annotationReader = null)
+    public function __construct(ContainerInterface $container, mixed $annotationReader = null)
     {
         $this->container = $container;
-        $this->annotationReader = $annotationReader;
 
         if (null !== $annotationReader) {
-            trigger_deprecation('liip/test-fixtures-bundle', '2.5', 'Passing a "%s" to the "%s" constructor is deprecated.', Reader::class, self::class);
+            throw new \RuntimeException(sprintf('Passing a second argument to the "%s" constructor is not supported since liip/test-fixtures-bundle 3.0.', self::class));
         }
     }
 

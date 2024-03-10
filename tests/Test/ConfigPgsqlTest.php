@@ -15,6 +15,7 @@ namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Test PostgreSQL database.
@@ -30,12 +31,9 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
     public function testToolType(): void
