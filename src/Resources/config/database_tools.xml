@@ -41,10 +41,6 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="Liip\TestFixturesBundle\Services\MongoDBFixturesLoaderFactory" />
         </service>
-        <service id="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" public="false">
-            <argument type="service" id="service_container" />
-            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
-        </service>
         <service id="Liip\TestFixturesBundle\Services\DatabaseToolCollection" public="true">
             <argument type="service" id="service_container" />
             <argument>null</argument> <!-- deprecated argument -->
@@ -56,9 +52,6 @@
             </call>
             <call method="add">
                 <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool" />
-            </call>
-            <call method="add">
-                <argument type="service" id="Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool" />
             </call>
         </service>
     </services>
