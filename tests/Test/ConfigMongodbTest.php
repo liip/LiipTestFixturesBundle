@@ -60,9 +60,6 @@ class ConfigMongodbTest extends KernelTestCase
         if (!class_exists(DoctrineMongoDBBundle::class)) {
             $this->markTestSkipped('Need doctrine/mongodb-odm-bundle package.');
         }
-        if (version_compare(\PHP_VERSION, '8.1.0') < 0) {
-            $this->markTestSkipped('MongoDB Tests doesn\'t support Outdated PHP Version. <8.1.0');
-        }
 
         parent::setUp();
 

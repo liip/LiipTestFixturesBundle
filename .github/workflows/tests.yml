@@ -10,20 +10,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
-        # Symfony 6.4 requires PHP >= 8.0, it will be installed on PHP >= 8.0
-        # Symfony 7.0 requires PHP >= 8.2, it will be installed on PHP >= 8.2
-        php-version: ['8.2']
+        php-version: ['']
         composer-flags: ['']
         symfony-version: ['']
         mysql-client: [ "default-mysql-client" ]
         include:
-          - php-version: 7.4
+          - php-version: 8.1
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
             composer-flags: "update --prefer-lowest"
-          - php-version: 7.4
-            # add a specific job to test 5.4 for all Symfony packages
-            symfony-version: "^5.4"
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
@@ -34,7 +28,6 @@ jobs:
           - php-version: 8.2
             # add a specific job to test ^6.4 for all Symfony packages
             symfony-version: "^6.4"
-          - php-version: 8.2
           - php-version: 8.2
             symfony-version: "^7.0"
           - php-version: 8.3
@@ -124,5 +117,5 @@ jobs:
       - name: Run tests
         # Run tests twice to ensure that tests are idempotent even if database caching is enabled
         run: |
-          php ./vendor/bin/phpunit --testdox
-          php ./vendor/bin/phpunit --testdox
+          php ./vendor/bin/phpunit --testdox --process-isolation
+          php ./vendor/bin/phpunit --testdox --process-isolation
