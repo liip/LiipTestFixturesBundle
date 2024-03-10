@@ -122,8 +122,7 @@ jobs:
         run: echo '127.0.0.1 mariadb postgres mongodb' | sudo tee -a /etc/hosts
 
       - name: Run tests
-        # In phpunit.xml.dist, tests annotated with "@group mysql" are excluded, revert this
         # Run tests twice to ensure that tests are idempotent even if database caching is enabled
         run: |
-          php ./vendor/bin/phpunit --testdox --exclude-group ""
-          php ./vendor/bin/phpunit --testdox --exclude-group ""
+          php ./vendor/bin/phpunit --testdox
+          php ./vendor/bin/phpunit --testdox

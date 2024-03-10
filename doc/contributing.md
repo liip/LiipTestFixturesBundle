@@ -18,10 +18,24 @@ Install the dependencies with composer:
 docker-compose exec php-fpm composer install
 ```
 
+Install the lowest dependencies with composer:
+
+```bash
+docker-compose exec php-fpm composer update --prefer-lowest
+```
+
 Now you can execute the tests with the following command:
 
 ```bash
-docker-compose exec php-fpm ./vendor/bin/phpunit --exclude-group ""
+docker-compose exec php-fpm ./vendor/bin/phpunit
+```
+
+## Delete the cache
+
+If you change the version of PHP or dependencies, the caches may cause issues, they can be deleted:
+
+```bash
+docker-compose exec php-fpm bash -c "rm -rf tests/App*/var/cache/*"
 ```
 
 ## Apply changes suggested by PHP-CS-Fixer

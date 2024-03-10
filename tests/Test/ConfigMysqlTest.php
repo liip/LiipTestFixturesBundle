@@ -37,8 +37,7 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
  * they are disabled by default (see phpunit.xml.dist).
  *
  * In order to run them, you have to set the MySQL connection
- * parameters in the Tests/AppConfigMysql/config.yml file and
- * add “--exclude-group ""” when running PHPUnit.
+ * parameters in the Tests/AppConfigMysql/config.yml file.
  *
  * Use Tests/AppConfigMysql/AppConfigMysqlKernel.php instead of
  * Tests/App/AppKernel.php.
