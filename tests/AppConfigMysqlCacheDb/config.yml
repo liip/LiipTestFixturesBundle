@@ -1,5 +1,0 @@
-# inherits configuration from ../AppConfigMysql/config.yml
-
-liip_test_fixtures:
-    cache_db:
-        mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'

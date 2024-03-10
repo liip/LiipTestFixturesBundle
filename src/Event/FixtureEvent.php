@@ -13,16 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle\Event;
 
-// Compatibility layer to use Contract if Symfony\Contracts\EventDispatcher\Event is not available
 use Symfony\Contracts\EventDispatcher\Event;
 
-if (class_exists('\Symfony\Component\EventDispatcher\Event')) {
-    // Symfony < 5.0
-    class FixtureEvent extends \Symfony\Component\EventDispatcher\Event
-    {
-    }
-} else {
-    class FixtureEvent extends Event
-    {
-    }
+class FixtureEvent extends Event
+{
 }

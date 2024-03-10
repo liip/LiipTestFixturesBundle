@@ -109,40 +109,6 @@ Tips for Fixture Loading Tests
 
     NB: If you have an existing Doctrine configuration which uses slaves be sure to separate out the configuration for the slaves. Further detail is provided at the bottom of this README.
 
- 2. In order to run your tests even faster, use LiipFunctionalBundle cached database.
-    This will create backups of the initial databases (with all fixtures loaded)
-    and re-load them when required.
-
-    **Attention: you need Doctrine >= 2.2 to use this feature.**
-
-    ```yaml
-    # sf4: config/packages/test/framework.yaml
-    liip_test_fixtures:
-        cache_db:
-            sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
-    ```
-
-### Custom database cache services ([↑](#methods))
-
- To create custom database cache service:
-
-Create cache class, implement `\Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface` and add it to config
-
-For example:
-```yaml
-# app/config/config_test.yml
-liip_test_fixtures:
-    cache_db:
-        mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
-        mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
-        db2: ...
-        [Other \Doctrine\DBAL\Platforms\AbstractPlatform name]: ...
-```
-
-**Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup` requires `mysql-client` installed on server.**
-
-**Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup` requires `mongodb-clients` installed on server.**
- 
 ### Load fixtures ([↑](#methods))
 
 Load your Doctrine fixtures in your tests:

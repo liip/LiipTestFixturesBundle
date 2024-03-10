@@ -18,10 +18,6 @@ use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Doctrine\ODM\MongoDB\Configuration;
-use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
-use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
-use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
-use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
@@ -50,28 +46,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
         $this->createDatabaseOnce();
 
-        $backupService = $this->getBackupService();
-        if ($backupService) {
-            $backupService->init($this->getMetadatas(), $classNames);
-
-            if ($backupService->isBackupActual()) {
-                $this->om->flush();
-                $this->om->clear();
-
-                $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
-
-                $executor = $this->getExecutor($this->getPurger());
-                $executor->setReferenceRepository($referenceRepository);
-                $backupService->restore($executor);
-
-                $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
-                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
-
-                return $executor;
-            }
-        }
-
         $executor = $this->getExecutor($this->getPurger());
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
@@ -80,15 +54,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
         $executor->execute($loader->getFixtures(), true);
-
-        if ($backupService) {
-            $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
-            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
-
-            $backupService->backup($executor);
-
-            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
-        }
 
         return $executor;
     }

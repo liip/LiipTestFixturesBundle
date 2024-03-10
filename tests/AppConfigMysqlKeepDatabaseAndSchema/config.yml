@@ -1,4 +1,14 @@
 # inherits configuration from ../AppConfigMysql/config.yml
 
+# use a different database
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: mariadb
+        port: 3306
+        dbname: acme_keep
+        user: root
+        password: root
+
 liip_test_fixtures:
     keep_database_and_schema: true
