@@ -141,7 +141,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
         return $executor;
     }
 
-    protected function getExecutor(ORMPurger $purger = null): ORMExecutor
+    protected function getExecutor(?ORMPurger $purger = null): ORMExecutor
     {
         return new ORMExecutor($this->om, $purger);
     }

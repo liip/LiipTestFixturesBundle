@@ -101,7 +101,7 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         return $executor;
     }
 
-    protected function getExecutor(MongoDBPurger $purger = null): MongoDBExecutor
+    protected function getExecutor(?MongoDBPurger $purger = null): MongoDBExecutor
     {
         return new MongoDBExecutor($this->om, $purger);
     }

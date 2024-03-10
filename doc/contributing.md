@@ -23,3 +23,11 @@ Now you can execute the tests with the following command:
 ```bash
 docker-compose exec php-fpm ./vendor/bin/phpunit --exclude-group ""
 ```
+
+## Apply changes suggested by PHP-CS-Fixer
+
+Use it through Docker:
+
+```bash
+docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.96.3-php8.2-alpine php-cs-fixer --diff --no-interaction --ansi fix --show-progress none
+```

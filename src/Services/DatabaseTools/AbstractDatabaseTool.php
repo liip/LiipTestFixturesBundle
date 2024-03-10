@@ -96,7 +96,7 @@ abstract class AbstractDatabaseTool
         return $this->databaseCacheEnabled;
     }
 
-    public function setObjectManagerName(string $omName = null): void
+    public function setObjectManagerName(?string $omName = null): void
     {
         $this->omName = $omName;
         $this->om = $this->registry->getManager($omName);
@@ -107,7 +107,7 @@ abstract class AbstractDatabaseTool
         $this->registryName = $registryName;
     }
 
-    public function setPurgeMode(int $purgeMode = null): void
+    public function setPurgeMode(?int $purgeMode = null): void
     {
         $this->purgeMode = $purgeMode;
     }
@@ -151,7 +151,7 @@ abstract class AbstractDatabaseTool
             $loader = $this->container->get('test.service_container')->get('doctrine.fixtures.loader');
             $fixtures = $loader->getFixtures($groups);
             foreach ($fixtures as $fixture) {
-                $fixtureClasses[] = \get_class($fixture);
+                $fixtureClasses[] = $fixture::class;
             }
         }
 

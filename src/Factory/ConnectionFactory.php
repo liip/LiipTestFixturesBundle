@@ -27,12 +27,9 @@ class ConnectionFactory extends BaseConnectionFactory
     /**
      * Create a connection by name.
      *
-     * @param Configuration $config
-     * @param EventManager  $eventManager
-     *
      * @return Connection
      */
-    public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = [])
+    public function createConnection(array $params, ?Configuration $config = null, ?EventManager $eventManager = null, array $mappingTypes = [])
     {
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }

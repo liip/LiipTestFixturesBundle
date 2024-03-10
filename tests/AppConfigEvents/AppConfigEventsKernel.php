@@ -19,9 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppConfigEventsKernel extends AppConfigKernel
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
         return __DIR__.'/var/cache/';

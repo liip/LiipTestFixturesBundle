@@ -24,7 +24,7 @@ class MongoDBFixturesLoaderFactory implements FixturesLoaderFactoryInterface
 
     private ?SymfonyFixturesLoader $loader;
 
-    public function __construct(ContainerInterface $container, SymfonyFixturesLoader $loader = null)
+    public function __construct(ContainerInterface $container, ?SymfonyFixturesLoader $loader = null)
     {
         $this->container = $container;
         $this->loader = $loader;

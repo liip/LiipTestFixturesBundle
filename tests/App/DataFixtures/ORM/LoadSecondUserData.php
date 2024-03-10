@@ -19,9 +19,6 @@ use Liip\Acme\Tests\App\Entity\User;
 
 class LoadSecondUserData extends AbstractFixture
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
