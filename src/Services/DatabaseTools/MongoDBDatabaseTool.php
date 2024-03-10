@@ -42,18 +42,10 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
-        if (method_exists($config, 'getMetadataCache')) {
-            $cacheDriver = $config->getMetadataCache();
+        $cacheDriver = $config->getMetadataCache();
 
-            if ($cacheDriver) {
-                $cacheDriver->clear();
-            }
-        } else {
-            $cacheDriver = $config->getMetadataCacheImpl();
-
-            if ($cacheDriver) {
-                $cacheDriver->deleteAll();
-            }
+        if ($cacheDriver) {
+            $cacheDriver->clear();
         }
 
         $this->createDatabaseOnce();
