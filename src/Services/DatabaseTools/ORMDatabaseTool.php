@@ -55,18 +55,10 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
-        if (method_exists($config, 'getMetadataCache')) {
-            $cacheDriver = $config->getMetadataCache();
+        $cacheDriver = $config->getMetadataCache();
 
-            if ($cacheDriver) {
-                $cacheDriver->clear();
-            }
-        } else {
-            $cacheDriver = $config->getMetadataCacheImpl();
-
-            if ($cacheDriver) {
-                $cacheDriver->deleteAll();
-            }
+        if ($cacheDriver) {
+            $cacheDriver->clear();
         }
 
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
@@ -214,11 +206,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
-        } else {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
-        }
+        $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
 
         $this->shouldEnableForeignKeyChecks = true;
     }
@@ -233,11 +221,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
-        } else {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
-        }
+        $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
 
         $this->shouldEnableForeignKeyChecks = false;
     }

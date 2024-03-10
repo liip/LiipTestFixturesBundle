@@ -24,12 +24,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-// BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager')
-    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
-    class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
-}
-
 /**
  * Test MySQL database.
  *
