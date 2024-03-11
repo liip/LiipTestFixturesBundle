@@ -126,9 +126,12 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
 
         $tmpConnection = DriverManager::getConnection($params);
 
+        $schemaManager = $tmpConnection->createSchemaManager();
+
+        // DBAL 4.x does not support creating databases for SQLite anymore; for now we silently ignore this error
         try {
-            if (!\in_array($dbName, $tmpConnection->createSchemaManager()->listDatabases(), true)) {
-                $tmpConnection->createSchemaManager()->createDatabase($dbName);
+            if (!\in_array($dbName, $schemaManager->listDatabases(), true)) {
+                $schemaManager->createDatabase($dbName);
             }
         } catch (\Doctrine\DBAL\Platforms\Exception\NotSupported $e) {
         }
