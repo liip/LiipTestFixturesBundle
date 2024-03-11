@@ -26,8 +26,8 @@
     },
     "require-dev": {
         "doctrine/data-fixtures": "^1.7",
-        "doctrine/doctrine-bundle": "^2.11",
-        "doctrine/doctrine-fixtures-bundle": "^3.5.1 || ^4.0",
+        "doctrine/doctrine-bundle": "^2.8",
+        "doctrine/doctrine-fixtures-bundle": "^3.4.4 || ^4.0",
         "doctrine/mongodb-odm-bundle": "^4.4 || ^5.0",
         "doctrine/orm": "^2.7",
         "doctrine/mongodb-odm": "^2.5",
@@ -39,8 +39,10 @@
         "theofidry/alice-data-fixtures": "^1.5.2"
     },
     "conflict": {
-        "doctrine/annotations": "<1.2.7 || >=3.0",
-        "doctrine/dbal": "<2.11"
+        "doctrine/annotations": "<1.13.1 || >=3.0",
+        "doctrine/dbal": "<2.13.1 || ~3.0.0 || >=4.0",
+        "doctrine/mongodb-odm": "<2.2 || >=3.0",
+        "doctrine/orm": "<2.14 || >=3.0"
     },
     "suggest": {
         "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
