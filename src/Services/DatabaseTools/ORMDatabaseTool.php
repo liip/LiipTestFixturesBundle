@@ -17,6 +17,7 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Configuration;
@@ -28,7 +29,7 @@ use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-class ORMDatabaseTool extends AbstractDbalDatabaseTool
+class ORMDatabaseTool extends AbstractDatabaseTool
 {
     /**
      * @var EntityManager
@@ -36,6 +37,14 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
     protected $om;
 
     private bool $shouldEnableForeignKeyChecks = false;
+
+    protected Connection $connection;
+
+    public function setObjectManagerName(?string $omName = null): void
+    {
+        parent::setObjectManagerName($omName);
+        $this->connection = $this->registry->getConnection($omName);
+    }
 
     public function getType(): string
     {
