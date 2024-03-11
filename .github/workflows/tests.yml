@@ -10,9 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['']
+        # the default job will test ^6.4 for all Symfony packages, with PHP 8.2
+        php-version: ['8.2']
         composer-flags: ['']
-        symfony-version: ['']
+        symfony-version: ['^6.4']
         mysql-client: [ "default-mysql-client" ]
         include:
           - php-version: 8.1
@@ -21,13 +22,10 @@ jobs:
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
-          - php-version: 8.1
-            symfony-version: "^5.4"
+          - php-version: 8.2
+            symfony-version: "^6.4"
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
-          - php-version: 8.2
-            # add a specific job to test ^6.4 for all Symfony packages
-            symfony-version: "^6.4"
           - php-version: 8.2
             symfony-version: "^7.0"
           - php-version: 8.3
