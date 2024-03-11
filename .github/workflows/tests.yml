@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    name: Symfony ${{ matrix.symfony-version }} - PHP ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }} - mysqldump ${{ matrix.mysql-client }}
+    name: Symfony ${{ matrix.symfony-version }} - PHP ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -14,7 +14,6 @@ jobs:
         php-version: ['8.2']
         composer-flags: ['']
         symfony-version: ['^6.4']
-        mysql-client: [ "default-mysql-client" ]
         include:
           - php-version: 8.1
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
@@ -22,10 +21,6 @@ jobs:
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
-          - php-version: 8.2
-            symfony-version: "^6.4"
-            # add a specific job to test mysqldump from MariaDB
-            mysql-client: "mariadb-client"
           - php-version: 8.2
             symfony-version: "^7.0"
           - php-version: 8.3
@@ -59,18 +54,6 @@ jobs:
           - 27017:27017
 
     steps:
-      - name: Install mysqldump
-        run: |
-          sudo apt update
-          sudo apt install -y -q ${{ matrix.mysql-client }}
-          mysqldump --version
-
-      - name: Install mongodb database tools
-        run: |
-          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian92-x86_64-100.3.1.deb
-          sudo apt install ./mongodb-database-tools-*.deb
-          rm -f mongodb-database-tools-*.deb
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -113,7 +96,7 @@ jobs:
         run: echo '127.0.0.1 mariadb postgres mongodb' | sudo tee -a /etc/hosts
 
       - name: Run tests
-        # Run tests twice to ensure that tests are idempotent even if database caching is enabled
+        # Run tests twice to ensure that tests are idempotent
         run: |
           php ./vendor/bin/phpunit --testdox --process-isolation
           php ./vendor/bin/phpunit --testdox --process-isolation

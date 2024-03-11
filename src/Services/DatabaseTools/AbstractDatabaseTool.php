@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Liip\TestFixturesBundle\FixturesLoaderFactoryInterface;
-use Liip\TestFixturesBundle\Services\DatabaseBackup\DatabaseBackupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -62,11 +61,6 @@ abstract class AbstractDatabaseTool
      */
     protected $purgeMode;
 
-    /**
-     * @var bool
-     */
-    protected $databaseCacheEnabled = true;
-
     protected $excludedDoctrineTables = [];
 
     /**
@@ -84,16 +78,6 @@ abstract class AbstractDatabaseTool
     public function setRegistry(ManagerRegistry $registry): void
     {
         $this->registry = $registry;
-    }
-
-    public function setDatabaseCacheEnabled(bool $databaseCacheEnabled): void
-    {
-        $this->databaseCacheEnabled = $databaseCacheEnabled;
-    }
-
-    public function isDatabaseCacheEnabled(): bool
-    {
-        return $this->databaseCacheEnabled;
     }
 
     public function setObjectManagerName(?string $omName = null): void
@@ -123,14 +107,6 @@ abstract class AbstractDatabaseTool
     {
         $newTool = clone $this;
         $newTool->setPurgeMode($purgeMode);
-
-        return $newTool;
-    }
-
-    public function withDatabaseCacheEnabled(bool $databaseCacheEnabled): self
-    {
-        $newTool = clone $this;
-        $newTool->setDatabaseCacheEnabled($databaseCacheEnabled);
 
         return $newTool;
     }
@@ -180,26 +156,6 @@ abstract class AbstractDatabaseTool
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
     {
         $this->excludedDoctrineTables = $excludedDoctrineTables;
-    }
-
-    protected function getBackupService(): ?DatabaseBackupInterface
-    {
-        $backupServiceParamName = strtolower('liip_test_fixtures.cache_db.'.(
-            ('ORM' === $this->getType())
-                ? $this->getPlatformName()
-                : $this->getType()
-        ));
-
-        if ($this->container->hasParameter($backupServiceParamName)) {
-            $backupServiceName = $this->container->getParameter($backupServiceParamName);
-            if (\is_string($backupServiceName) && $this->container->has($backupServiceName)) {
-                $backupService = $this->container->get($backupServiceName);
-            } else {
-                @trigger_error("Could not find {$backupServiceName} in container. Possible misconfiguration.");
-            }
-        }
-
-        return (isset($backupService) && $backupService instanceof DatabaseBackupInterface) ? $backupService : null;
     }
 
     protected function cleanDatabase(): void
