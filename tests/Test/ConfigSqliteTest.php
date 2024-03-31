@@ -165,7 +165,7 @@ class ConfigSqliteTest extends KernelTestCase
             $repository
         );
 
-        $users = $this->userRepository->findAll();
+        $users = $repository->findAll();
 
         // The fixture group myGroup contains 3 users
         $this->assertCount(
@@ -188,7 +188,7 @@ class ConfigSqliteTest extends KernelTestCase
             $repository
         );
 
-        $users = $this->userRepository->findAll();
+        $users = $repository->findAll();
 
         // Loading all fixtures results in 12 users.
         $this->assertCount(
@@ -209,8 +209,17 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         // Load data from database
-        /** @var User $user */
-        $user = $this->userRepository
+        $users = $this->userRepository->findAll();
+
+        // Check that there are 3 users.
+        $this->assertCount(
+            3,
+            $users
+        );
+
+        // Load data from database
+        /** @var User $user1 */
+        $user1 = $this->userRepository
             ->findOneBy([
                 'id' => 1,
             ])
@@ -218,19 +227,31 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertSame(
             'foo@bar.com',
-            $user->getEmail()
+            $user1->getEmail()
         );
 
-        /** @var User $user */
-        $user = $this->userRepository
+        /** @var User $user2 */
+        $user2 = $this->userRepository
+            ->findOneBy([
+                'id' => 2,
+            ])
+        ;
+
+        $this->assertSame(
+            'bob@bar.com',
+            $user2->getEmail()
+        );
+
+        /** @var User $user3 */
+        $user3 = $this->userRepository
             ->findOneBy([
                 'id' => 3,
             ])
         ;
 
         $this->assertSame(
-            'bar@foo.com',
-            $user->getEmail()
+            'alice@bar.com',
+            $user3->getEmail()
         );
     }
 
@@ -390,8 +411,12 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        $fixtureId = 'user_id_1';
+
+        $this->assertArrayHasKey($fixtureId, $fixtures);
+
         /** @var User $user1 */
-        $user1 = $fixtures['id1'];
+        $user1 = $fixtures[$fixtureId];
 
         $this->assertIsString($user1->getEmail());
 

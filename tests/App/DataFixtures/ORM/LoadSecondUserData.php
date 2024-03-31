@@ -22,8 +22,9 @@ class LoadSecondUserData extends AbstractFixture
     public function load(ObjectManager $manager): void
     {
         $user = new User();
-        $user->setName('bar foo');
-        $user->setEmail('bar@foo.com');
+        $user->setId(3);
+        $user->setName('alice bar');
+        $user->setEmail('alice@bar.com');
 
         $manager->persist($user);
         $manager->flush();

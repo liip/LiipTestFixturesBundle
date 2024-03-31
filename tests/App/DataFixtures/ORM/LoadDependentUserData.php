@@ -22,17 +22,18 @@ class LoadDependentUserData extends AbstractFixture implements DependentFixtureI
 {
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
-        $user = clone $this->getReference('user');
-
+        $user = new User();
         $user->setId(3);
+        $user->setName('alice bar');
+        $user->setEmail('alice@bar.com');
 
         $manager->persist($user);
         $manager->flush();
 
-        $user = clone $this->getReference('user');
-
+        $user = new User();
         $user->setId(4);
+        $user->setName('eve bar');
+        $user->setEmail('eve@bar.com');
 
         $manager->persist($user);
         $manager->flush();

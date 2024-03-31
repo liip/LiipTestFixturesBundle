@@ -33,18 +33,18 @@ class LoadUserDataInGroup extends AbstractFixture implements FixtureGroupInterfa
         $manager->persist($user);
         $manager->flush();
 
-        $this->addReference('groupUser', $user);
-
-        $user = clone $this->getReference('groupUser');
-
+        $user = new User();
         $user->setId(2);
+        $user->setName('bob bar');
+        $user->setEmail('bob@bar.com');
 
         $manager->persist($user);
         $manager->flush();
 
-        $user = clone $this->getReference('groupUser');
-
+        $user = new User();
         $user->setId(3);
+        $user->setName('alice bar');
+        $user->setEmail('alice@bar.com');
 
         $manager->persist($user);
         $manager->flush();

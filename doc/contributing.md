@@ -36,6 +36,18 @@ If one test fails, run it without the `--process-isolation` option
 docker-compose exec php-fpm ./vendor/bin/phpunit tests/Test/ConfigMongodbTest.php
 ```
 
+You can also use the `--filter` option to run tests matching a class and name:
+
+```bash
+docker-compose exec php-fpm ./vendor/bin/phpunit --process-isolation --filter=ConfigSqliteTest::testAppendFixtures
+```
+
+You can also use the `--filter` option to run tests matching a name:
+
+```bash
+docker-compose exec php-fpm ./vendor/bin/phpunit --process-isolation --filter=testAppendFixtures
+```
+
 ## Delete the cache
 
 If you change the version of PHP or dependencies, the caches may cause issues, they can be deleted:

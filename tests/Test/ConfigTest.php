@@ -75,27 +75,37 @@ class ConfigTest extends KernelTestCase
             $fixtures
         );
 
-        /** @var User $user */
-        $user = $fixtures['id1'];
+        $fixtureId = 'user_id_1';
+
+        $this->assertArrayHasKey($fixtureId, $fixtures);
+
+        /** @var User $user1 */
+        $user1 = $fixtures[$fixtureId];
 
         // The custom provider has not been used successfully.
         $this->assertStringStartsNotWith(
             'foo',
-            $user->getName()
+            $user1->getName()
         );
+
+        $this->getTestContainer()->get('doctrine')->getManager()->clear();
 
         // Load Data Fixtures with custom loader defined in configuration.
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
         ]);
 
-        /** @var User $user */
-        $user = $fixtures['id1'];
+        $fixtureId = 'custom_user_id_11';
+
+        $this->assertArrayHasKey($fixtureId, $fixtures);
+
+        /** @var User $user11 */
+        $user11 = $fixtures[$fixtureId];
 
         // The custom provider "foo" has been loaded and used successfully.
         $this->assertSame(
             'fooa string',
-            $user->getName()
+            $user11->getName()
         );
     }
 
