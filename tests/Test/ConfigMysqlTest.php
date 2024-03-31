@@ -74,7 +74,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
-    public function testLoadFixtures(int $firstUserId = 1): void
+    public function testLoadFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -111,7 +111,7 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
-    public function testAppendFixtures(int $firstUserId = 1, int $thirdUserId = 3): void
+    public function testAppendFixtures(): void
     {
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -145,17 +145,31 @@ class ConfigMysqlTest extends KernelTestCase
             $user1->getEmail()
         );
 
-        /** @var User $user */
+        /** @var User $user2 */
+        $user2 = $this->userRepository
+            ->findOneBy([
+                'email' => 'alice@bar.com',
+            ])
+        ;
+
+        $this->assertNotNull($user2);
+
+        $this->assertSame(
+            'alice@bar.com',
+            $user2->getEmail()
+        );
+
+        /** @var User $user3 */
         $user3 = $this->userRepository
             ->findOneBy([
-                'email' => 'bar@foo.com',
+                'email' => 'alice@bar.com',
             ])
         ;
 
         $this->assertNotNull($user3);
 
         $this->assertSame(
-            'bar@foo.com',
+            'alice@bar.com',
             $user3->getEmail()
         );
     }
@@ -236,6 +250,8 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
+        $this->getTestContainer()->get('doctrine')->getManager()->clear();
+
         // Reload fixtures
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -301,6 +317,29 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         $this->assertInstanceOf(User::class, $user);
+    }
+
+    /**
+     * Load fixture which has a dependency.
+     */
+    public function testLoadDependentFixtures(): void
+    {
+        $fixtures = $this->databaseTool->loadFixtures([
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+        ]);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $users = $this->userRepository->findAll();
+
+        // The two files with fixtures have been loaded, there are 4 users.
+        $this->assertCount(
+            4,
+            $users
+        );
     }
 
     protected static function getKernelClass(): string

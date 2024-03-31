@@ -34,6 +34,29 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 #[PreserveGlobalState(false)]
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
+    /**
+     * Load fixture which has a dependency.
+     */
+    public function testLoadDependentFixtures(): void
+    {
+        $fixtures = $this->databaseTool->loadFixtures([
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+        ]);
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            $fixtures
+        );
+
+        $users = $this->userRepository->findAll();
+
+        // The two files with fixtures have been loaded, there are 4 users.
+        $this->assertCount(
+            4,
+            $users
+        );
+    }
+
     public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);

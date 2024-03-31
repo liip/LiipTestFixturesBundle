@@ -31,9 +31,10 @@ class LoadUserData extends AbstractFixture
 
         $this->addReference('user', $user);
 
-        $user = clone $this->getReference('user');
-
+        $user = new User();
         $user->setId(2);
+        $user->setName('bob bar');
+        $user->setEmail('bob@bar.com');
 
         $manager->persist($user);
         $manager->flush();

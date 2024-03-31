@@ -1,4 +1,5 @@
 Liip\Acme\Tests\App\Entity\User:
-    id{1..10}:
+    user_id_{1..10}:
+        id: <current()>
         name: <name()>
         email: <email()>

@@ -31,18 +31,19 @@ class LoadDependentUserWithServiceData extends AbstractFixture implements Depend
 
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
-        $user = clone $this->getReference('serviceUser');
-
+        $user = new User();
         $user->setId(3);
+        $user->setName('alice bar');
+        $user->setEmail('alice@bar.com');
         $user->setDummyText($this->dummyService->getText());
 
         $manager->persist($user);
         $manager->flush();
 
-        $user = clone $this->getReference('serviceUser');
-
+        $user = new User();
         $user->setId(4);
+        $user->setName('eve bar');
+        $user->setEmail('eve@bar.com');
 
         $manager->persist($user);
         $manager->flush();

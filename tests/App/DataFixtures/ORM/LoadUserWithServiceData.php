@@ -42,11 +42,10 @@ class LoadUserWithServiceData extends AbstractFixture
         $manager->persist($user);
         $manager->flush();
 
-        $this->addReference('serviceUser', $user);
-
-        $user = clone $this->getReference('serviceUser');
-
+        $user = new User();
         $user->setId(2);
+        $user->setName('bob bar');
+        $user->setEmail('bob@bar.com');
 
         $manager->persist($user);
         $manager->flush();
