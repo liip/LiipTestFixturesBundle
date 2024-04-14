@@ -16,7 +16,7 @@ test-databases and loading fixtures.
 # Documentation
 
 * [Installation](doc/installation.md)
-* [Upgrade to version 2.x](UPGRADE-2.0.md)
+* [Upgrade to version 3.x](UPGRADE-3.0.md)
 * [Configuration](doc/configuration.md)
 * [Database test](doc/database.md)
   * [Usage](doc/database.md#usage)

@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\AppConfigEvents\EventListener;
 
-use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
