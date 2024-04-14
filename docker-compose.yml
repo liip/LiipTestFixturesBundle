@@ -18,7 +18,7 @@ services:
         ports:
             - '11004:5432'
 
-    php-fpm:
+    php:
         build: .
         working_dir: /application
         volumes:
