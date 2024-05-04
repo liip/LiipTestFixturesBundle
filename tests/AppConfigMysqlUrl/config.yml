@@ -2,5 +2,5 @@
 
 doctrine:
     dbal:
-        url: 'mysql://root:root@mariadb:3306/foobar'
+        url: 'mysql://root:root@mariadb:3306/foobar?serverVersion=11'
         driver: pdo_mysql

@@ -40,7 +40,9 @@ final class DatabaseToolCollection
 
     public function add(AbstractDatabaseTool $databaseTool): void
     {
-        $this->items[$databaseTool->getType()][$databaseTool->getDriverName()] = $databaseTool;
+        $driverName = self::normalizeDriverName($databaseTool->getDriverName());
+
+        $this->items[$databaseTool->getType()][$driverName] = $databaseTool;
     }
 
     public function get($omName = null, $registryName = 'doctrine', ?int $purgeMode = null): AbstractDatabaseTool
@@ -49,6 +51,8 @@ final class DatabaseToolCollection
         $registry = $this->container->get($registryName);
         $driverName = ('ORM' === $registry->getName()) ? \get_class($registry->getConnection()->getDatabasePlatform()) : 'default';
 
+        $driverName = self::normalizeDriverName($driverName);
+
         $databaseTool = $this->items[$registry->getName()][$driverName] ?? $this->items[$registry->getName()]['default'];
 
         $databaseTool->setRegistry($registry);
@@ -56,5 +60,18 @@ final class DatabaseToolCollection
         $databaseTool->setPurgeMode($purgeMode);
 
         return $databaseTool;
+    }
+
+    /**
+     * On doctrine/dbal ^4.0, the class is named `SQLitePlatform`.
+     * On doctrine/dbal < 4.0, the class is named `SqlitePlatform`.
+     */
+    private static function normalizeDriverName(string $driverName): string
+    {
+        if ('Doctrine\DBAL\Platforms\SqlitePlatform' === $driverName) {
+            return 'Doctrine\DBAL\Platforms\SQLitePlatform';
+        }
+
+        return $driverName;
     }
 }

@@ -8,3 +8,4 @@ doctrine:
         dbname: acme
         user: root
         password: root
+        server_version: '11'

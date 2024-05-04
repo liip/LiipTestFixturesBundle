@@ -21,21 +21,24 @@ jobs:
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
+            # `theofidry/alice-data-fixtures:1.6.0` and `doctrine/dbal:^4.0` cause issues:
+            # Error: Call to undefined method Doctrine\DBAL\Connection::exec()
+            composer-flags: "require doctrine/dbal:^3.0"
           - php-version: 8.2
             symfony-version: "^7.0"
           - php-version: 8.3
             symfony-version: "^7.0"
 
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:11.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: acme
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: acme
         ports:
           - 3306:3306
       postgresql:
-        image: postgres:9.6
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_PASSWORD: 'postgres'
