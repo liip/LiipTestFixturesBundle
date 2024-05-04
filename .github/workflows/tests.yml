@@ -27,15 +27,15 @@ jobs:
             symfony-version: "^7.0"
 
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:11.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: acme
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: acme
         ports:
           - 3306:3306
       postgresql:
-        image: postgres:9.6
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_PASSWORD: 'postgres'
