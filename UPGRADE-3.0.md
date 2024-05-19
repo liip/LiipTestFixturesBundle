@@ -6,11 +6,8 @@ This is the list of actions that you need to take when upgrading this bundle fro
 ### Upgrade the bundle
 
 ```shell
-composer require --dev liip/test-fixtures-bundle:^3.0.0-alpha3
+composer require --dev liip/test-fixtures-bundle:^3.0.0
 ```
-
-> [!TIP]
-> The version will be `^3.0.0` once a stable release for the `3.x` branch will have been published.
 
 ### Remove `liip_test_fixtures.cache_db`
 
