@@ -8,10 +8,11 @@ This Bundle provides base classes for functional tests to assist in setting up
 test-databases and loading fixtures.
 
 # Versions
-| Version    | Status                           | Requirements               |
-|:-----------|:---------------------------------|:---------------------------|
-| [3.x][3.x] | Next version (released as alpha) | PHP >= 8.1, Symfony >= 5.4 |
-| [2.x][2.x] | Active support                   | PHP >= 7.4, Symfony >= 5.4 |
+
+| Version    | Status                            | Requirements               |
+|:-----------|:----------------------------------|:---------------------------|
+| [3.x][3.x] | Current version, for new features | PHP >= 8.1, Symfony >= 5.4 |
+| [2.x][2.x] | Previous version, no new features | PHP >= 7.4, Symfony >= 5.4 |
 
 # Documentation
 
