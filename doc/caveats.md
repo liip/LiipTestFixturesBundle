@@ -59,3 +59,11 @@ when@test:
     framework:
         test: true
 ```
+
+## LogicException: […] the kernel should only be booted once.
+
+Complete error message:
+
+> LogicException: Booting the kernel before calling "Symfony\Bundle\FrameworkBundle\Test\WebTestCase::createClient()" is not supported, the kernel should only be booted once.
+
+Solution: Call `self::ensureKernelShutdown();` before creating the client.
