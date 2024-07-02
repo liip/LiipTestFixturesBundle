@@ -9,6 +9,10 @@ framework:
 liip_test_fixtures:
     keep_database_and_schema: false
     cache_metadata: true
+    cache_db:
+        sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
+        mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+        mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
 
 services:
     # HautelookAliceBundle: custom Faker provider

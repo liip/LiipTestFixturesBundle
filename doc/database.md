@@ -79,6 +79,9 @@ Methods
 
 It also give access to other helpers:
 
+- `setDatabaseCacheEnabled()` accept `true` or `false` to disable the cache
+  - you can call `$this->databaseTool->withDatabaseCacheEnabled(false)->loadFixtures(…)` to disable the cache on-demand
+
 - `setPurgeMode()` accept `true` or `false` to disable purging the database
   - you can call `$this->databaseTool->withPurgeMode(false)->loadFixtures(…)` to disable the purging on-demand
 
