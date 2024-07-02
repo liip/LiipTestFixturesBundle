@@ -263,4 +263,6 @@ abstract class AbstractDatabaseTool
         return $this->container->hasParameter(self::CACHE_METADATA_PARAMETER_NAME)
             && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);
     }
+
+    abstract protected function getPlatformName(): string;
 }
