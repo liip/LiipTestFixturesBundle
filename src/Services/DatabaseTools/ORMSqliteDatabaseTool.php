@@ -19,6 +19,9 @@ use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 
 /**
@@ -26,7 +29,10 @@ use Liip\TestFixturesBundle\LiipTestFixturesEvents;
  */
 class ORMSqliteDatabaseTool extends ORMDatabaseTool
 {
-    private bool $shouldEnableForeignKeyChecks = false;
+    /**
+     * @var bool
+     */
+    private $shouldEnableForeignKeyChecks = false;
 
     public function getDriverName(): string
     {
@@ -44,6 +50,32 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
         if ($cacheDriver) {
             $cacheDriver->clear();
+        }
+
+        $backupService = $this->getBackupService();
+        if ($backupService && $this->databaseCacheEnabled) {
+            $backupService->init($this->getMetadatas(), $classNames);
+
+            if ($backupService->isBackupActual()) {
+                if (null !== $this->connection) {
+                    $this->connection->close();
+                }
+
+                $this->om->flush();
+                $this->om->clear();
+
+                $event = new PreFixtureBackupRestoreEvent($this->om, $referenceRepository, $backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
+
+                $executor = $this->getExecutor($this->getPurger());
+                $executor->setReferenceRepository($referenceRepository);
+                $backupService->restore($executor);
+
+                $event = new PostFixtureBackupRestoreEvent($backupService->getBackupFilePath());
+                $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE);
+
+                return $executor;
+            }
         }
 
         if (false === $append && false === $this->getKeepDatabaseAndSchemaParameter()) {
@@ -66,6 +98,15 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
         $executor->execute($loader->getFixtures(), true);
+
+        if ($backupService) {
+            $event = new ReferenceSaveEvent($this->om, $executor, $backupService->getBackupFilePath());
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::PRE_REFERENCE_SAVE);
+
+            $backupService->backup($executor);
+
+            $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_REFERENCE_SAVE);
+        }
 
         return $executor;
     }

@@ -20,7 +20,8 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 /**
  * Test PostgreSQL database.
  *
- * The following tests require a connection to a PostgreSQL database.
+ * The following tests require a connection to a PostgreSQL database,
+ * they are disabled by default (see phpunit.xml.dist).
  *
  * In order to run them, you have to set the PostgreSQL connection
  * parameters in the Tests/AppConfigPgsql/config.yml file.
