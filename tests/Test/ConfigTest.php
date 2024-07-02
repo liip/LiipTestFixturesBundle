@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
@@ -44,6 +45,7 @@ class ConfigTest extends KernelTestCase
     private $userRepository;
     /** @var SqliteDatabaseBackup */
     private $sqliteDatabaseBackup;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -62,6 +64,10 @@ class ConfigTest extends KernelTestCase
         $this->sqliteDatabaseBackup = $this->getTestContainer()->get(SqliteDatabaseBackup::class);
 
         $this->assertInstanceOf(SqliteDatabaseBackup::class, $this->sqliteDatabaseBackup);
+
+        $this->entityManager = $this->getTestContainer()->get(EntityManagerInterface::class);
+
+        $this->assertInstanceOf(EntityManagerInterface::class, $this->entityManager);
     }
 
     /**
@@ -135,6 +141,8 @@ class ConfigTest extends KernelTestCase
 
         sleep(2);
 
+        $this->clearEntityManager();
+
         // Reload the fixtures.
         $this->databaseTool->loadFixtures($fixtures);
 
@@ -183,6 +191,8 @@ class ConfigTest extends KernelTestCase
 
         sleep(2);
 
+        $this->clearEntityManager();
+
         // Reload the fixtures.
         $this->databaseTool->loadFixtures($fixtures);
 
@@ -206,6 +216,8 @@ class ConfigTest extends KernelTestCase
         $this->assertSame($user1Salt, $user1->getSalt());
 
         sleep(2);
+
+        $this->clearEntityManager();
 
         // Update the filemtime of the fixture file used as a dependency.
         touch($dependentFixtureFilePath);
@@ -235,6 +247,11 @@ class ConfigTest extends KernelTestCase
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
+    }
+
+    protected function clearEntityManager(): void
+    {
+        $this->entityManager->clear();
     }
 
     protected function tearDown(): void
