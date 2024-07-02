@@ -17,9 +17,10 @@ use Liip\Acme\Tests\AppConfigMysqlUrl\AppConfigMysqlUrlKernel;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
- * Test MySQL database with a configuration by URL.
+ * Test MySQL database with a configuration by url.
  *
- * The following tests require a connection to a MySQL database.
+ * The following tests require a connection to a MySQL database,
+ * they are disabled by default (see phpunit.xml.dist).
  *
  * In order to run them, you have to set the MySQL connection
  * parameters in the Tests/AppConfigMysql/config.yml file.

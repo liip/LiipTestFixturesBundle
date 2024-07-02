@@ -27,7 +27,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 /**
  * Test MySQL database.
  *
- * The following tests require a connection to a MySQL database.
+ * The following tests require a connection to a MySQL database,
+ * they are disabled by default (see phpunit.xml.dist).
  *
  * In order to run them, you have to set the MySQL connection
  * parameters in the Tests/AppConfigMysql/config.yml file.
@@ -208,8 +209,6 @@ class ConfigMysqlTest extends KernelTestCase
             2,
             $this->userRepository->findAll()
         );
-
-        $this->databaseTool->setExcludedDoctrineTables([]);
     }
 
     /**
