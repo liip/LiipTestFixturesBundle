@@ -116,6 +116,9 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             $this->disableForeignKeyChecksIfApplicable();
             $executor->purge();
             $this->enableForeignKeyChecksIfApplicable();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);

@@ -35,10 +35,15 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 #[PreserveGlobalState(false)]
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+    }
+
     public function testLoadFixturesAndCheckBackup(): void
     {
-        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
-
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -105,21 +110,32 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
     }
 
-    public function testLoadFixturesCheckReferences(): void
+    public function testLoadFixturesCheckReferencesByClass(): void
     {
         $this->markTestSkipped('This test is broken right now.');
+
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(1, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $className = 'Liip\Acme\Tests\App\Entity\User';
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(1, $references[$className]);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(2, $references[$className]);
     }
 
     protected static function getKernelClass(): string

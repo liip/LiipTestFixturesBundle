@@ -249,8 +249,6 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        $this->getTestContainer()->get('doctrine')->getManager()->clear();
-
         // Reload fixtures
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',

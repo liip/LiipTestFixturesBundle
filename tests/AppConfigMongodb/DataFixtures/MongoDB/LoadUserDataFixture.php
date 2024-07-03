@@ -32,13 +32,14 @@ class LoadUserDataFixture extends Fixture
         $user->setEmail('foo@bar.com');
 
         $manager->persist($user);
-        $manager->flush();
 
         $this->addReference('user', $user);
 
-        $user = clone $this->getReference('user');
+        $user2 = new User();
+        $user2->setName('alice bar');
+        $user2->setEmail('alice@bar.com');
 
-        $manager->persist($user);
+        $manager->persist($user2);
         $manager->flush();
     }
 }

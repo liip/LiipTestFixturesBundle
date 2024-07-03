@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
@@ -45,7 +44,6 @@ class ConfigTest extends KernelTestCase
     private $userRepository;
     /** @var SqliteDatabaseBackup */
     private $sqliteDatabaseBackup;
-    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -64,10 +62,6 @@ class ConfigTest extends KernelTestCase
         $this->sqliteDatabaseBackup = $this->getTestContainer()->get(SqliteDatabaseBackup::class);
 
         $this->assertInstanceOf(SqliteDatabaseBackup::class, $this->sqliteDatabaseBackup);
-
-        $this->entityManager = $this->getTestContainer()->get(EntityManagerInterface::class);
-
-        $this->assertInstanceOf(EntityManagerInterface::class, $this->entityManager);
     }
 
     /**
@@ -101,8 +95,6 @@ class ConfigTest extends KernelTestCase
             $user1->getName()
         );
 
-        $this->getTestContainer()->get('doctrine')->getManager()->clear();
-
         // Load Data Fixtures with custom loader defined in configuration.
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
@@ -130,9 +122,12 @@ class ConfigTest extends KernelTestCase
 
         $this->databaseTool->setDatabaseCacheEnabled(false);
 
+        // Cache is not up-to-date.
+        $this->assertFalse($this->databaseTool->isDatabaseCacheEnabled());
+
         $this->databaseTool->loadFixtures($fixtures);
 
-        // Load data from database
+        // Load data from database.
         /** @var User $user1 */
         $user1 = $this->userRepository->findOneBy(['id' => 1]);
 
@@ -141,7 +136,8 @@ class ConfigTest extends KernelTestCase
 
         sleep(2);
 
-        $this->clearEntityManager();
+        // Cache is up-to-date, but it won't be used since its usage is disabled.
+        $this->assertTrue($this->sqliteDatabaseBackup->isBackupActual());
 
         // Reload the fixtures.
         $this->databaseTool->loadFixtures($fixtures);
@@ -149,11 +145,13 @@ class ConfigTest extends KernelTestCase
         /** @var User $user1 */
         $user1 = $this->userRepository->findOneBy(['id' => 1]);
 
-        // The salt are not the same because cache were not used
+        // The salt are not the same because the cache was not used.
         $this->assertNotSame($user1Salt, $user1->getSalt());
 
         // Enable the cache again
         $this->databaseTool->setDatabaseCacheEnabled(true);
+
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
     }
 
     /**
@@ -191,7 +189,7 @@ class ConfigTest extends KernelTestCase
 
         sleep(2);
 
-        $this->clearEntityManager();
+        $this->assertTrue($this->sqliteDatabaseBackup->isBackupActual());
 
         // Reload the fixtures.
         $this->databaseTool->loadFixtures($fixtures);
@@ -217,10 +215,10 @@ class ConfigTest extends KernelTestCase
 
         sleep(2);
 
-        $this->clearEntityManager();
-
         // Update the filemtime of the fixture file used as a dependency.
         touch($dependentFixtureFilePath);
+
+        $this->assertFalse($this->sqliteDatabaseBackup->isBackupActual());
 
         $this->databaseTool->loadFixtures($fixtures);
 
@@ -247,11 +245,6 @@ class ConfigTest extends KernelTestCase
     protected static function getKernelClass(): string
     {
         return AppConfigKernel::class;
-    }
-
-    protected function clearEntityManager(): void
-    {
-        $this->entityManager->clear();
     }
 
     protected function tearDown(): void

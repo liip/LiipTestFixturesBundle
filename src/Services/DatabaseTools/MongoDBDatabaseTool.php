@@ -76,6 +76,9 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
             $executor->purge();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
