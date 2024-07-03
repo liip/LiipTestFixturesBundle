@@ -27,7 +27,6 @@ class LoadUserData extends AbstractFixture
         $user->setEmail('foo@bar.com');
 
         $manager->persist($user);
-        $manager->flush();
 
         $this->addReference('user', $user);
 
