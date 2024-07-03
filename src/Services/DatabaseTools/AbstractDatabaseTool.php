@@ -170,6 +170,9 @@ abstract class AbstractDatabaseTool
 
         if (false === $append) {
             $this->cleanDatabase();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $files = $this->locateResources($paths);

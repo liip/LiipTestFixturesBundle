@@ -35,10 +35,15 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 #[PreserveGlobalState(false)]
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+    }
+
     public function testLoadFixturesAndCheckBackup(): void
     {
-        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
-
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
