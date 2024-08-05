@@ -6,10 +6,13 @@ This is the list of actions that you need to take when upgrading this bundle fro
 ### Upgrade the bundle
 
 ```shell
-composer require --dev liip/test-fixtures-bundle:^3.0.0
+composer require --dev liip/test-fixtures-bundle:^3.1.0
 ```
 
 ### Remove `liip_test_fixtures.cache_db`
+
+> [!TIP]
+> Only for `3.0`, this feature has been restored in `3.1`.
 
 ```diff
 # app/config/config_test.yml
@@ -21,6 +24,9 @@ composer require --dev liip/test-fixtures-bundle:^3.0.0
 ```
 
 ### Remove subscriptions to these events
+
+> [!TIP]
+> Only for `3.0`, these events have been restored in `3.1`. 
 
   - `LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE`
   - `LiipTestFixturesEvents::POST_FIXTURE_BACKUP_RESTORE`
