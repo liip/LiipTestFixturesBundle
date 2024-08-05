@@ -30,9 +30,9 @@ jobs:
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
           - php-version: 8.2
-            symfony-version: "^7.0"
+            symfony-version: "^7.1"
           - php-version: 8.3
-            symfony-version: "^7.0"
+            symfony-version: "^7.1"
 
     services:
       mariadb:
