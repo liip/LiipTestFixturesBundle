@@ -45,6 +45,10 @@ jobs:
             symfony-version: "^7.0"
             # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
             composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
+          - php-version: 8.4
+            symfony-version: "^7.0"
+            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
+            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
 
     services:
       mysql:
