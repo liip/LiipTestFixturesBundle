@@ -33,6 +33,8 @@ jobs:
             symfony-version: "^7.1"
           - php-version: 8.3
             symfony-version: "^7.1"
+          - php-version: 8.4
+            symfony-version: "^7.1"
 
     services:
       mariadb:
