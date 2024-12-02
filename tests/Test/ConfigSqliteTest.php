@@ -97,7 +97,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user1 */
-        $user1 = $repository->getReference('user');
+        $user1 = $repository->getReference('user', User::class);
 
         $this->assertSame(1, $user1->getId());
         $this->assertSame('foo bar', $user1->getName());

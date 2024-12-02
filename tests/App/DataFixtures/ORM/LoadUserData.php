@@ -28,14 +28,14 @@ class LoadUserData extends AbstractFixture
 
         $manager->persist($user);
 
-        $this->addReference('user', $user);
+        $user2 = new User();
+        $user2->setId(2);
+        $user2->setName('bob bar');
+        $user2->setEmail('bob@bar.com');
 
-        $user = new User();
-        $user->setId(2);
-        $user->setName('bob bar');
-        $user->setEmail('bob@bar.com');
-
-        $manager->persist($user);
+        $manager->persist($user2);
         $manager->flush();
+
+        $this->addReference('user', $user);
     }
 }
