@@ -22,6 +22,7 @@ namespace Liip\Acme\Tests\Test;
  * with this source code in the file LICENSE.
  */
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
@@ -61,6 +62,16 @@ class ConfigMongodbTest extends KernelTestCase
             $this->markTestSkipped('Need doctrine/mongodb-odm-bundle package.');
         }
 
+        // `doctrine/data-fixtures:^2.0` and `doctrine/mongodb-odm-bundle:^4.4` are not compatible
+        if (class_exists(InstalledVersions::class)) {
+            $fixturesVersion = InstalledVersions::getVersion('doctrine/data-fixtures');
+            $bundleVersion = InstalledVersions::getVersion('doctrine/mongodb-odm-bundle');
+
+            if (null !== $fixturesVersion && null !== $bundleVersion && version_compare($fixturesVersion, '2.0', '>=') && version_compare($bundleVersion, '5.0', '<')) {
+                $this->markTestSkipped(sprintf('The installed versions of doctrine/data-fixtures (%s) and doctrine/mongodb-odm-bundle (%s) are not compatible.', $fixturesVersion, $bundleVersion));
+            }
+        }
+
         parent::setUp();
 
         self::bootKernel([
@@ -93,7 +104,7 @@ class ConfigMongodbTest extends KernelTestCase
             $repository
         );
 
-        $user1 = $repository->getReference('user');
+        $user1 = $repository->getReference('user', User::class);
 
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());

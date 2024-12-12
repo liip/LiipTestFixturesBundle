@@ -93,7 +93,7 @@ class ConfigMysqlTest extends KernelTestCase
             $repository
         );
 
-        $user1 = $repository->getReference('user');
+        $user1 = $repository->getReference('user', User::class);
 
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());
