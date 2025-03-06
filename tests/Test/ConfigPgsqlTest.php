@@ -33,12 +33,16 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
  *
  * @preserveGlobalState disabled
  *
+ * @IgnoreAnnotation("group")
+ *
  * @internal
  */
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
     /**
      * Load fixture which has a dependency.
+     *
+     * @group pgsql
      */
     public function testLoadDependentFixtures(): void
     {
@@ -60,6 +64,9 @@ class ConfigPgsqlTest extends ConfigMysqlTest
         );
     }
 
+    /**
+     * @group pgsql
+     */
     public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
