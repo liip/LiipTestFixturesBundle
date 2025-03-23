@@ -55,18 +55,10 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
-        if (method_exists($config, 'getMetadataCache')) {
-            $cacheDriver = $config->getMetadataCache();
+        $cacheDriver = $config->getMetadataCache();
 
-            if ($cacheDriver) {
-                $cacheDriver->clear();
-            }
-        } else {
-            $cacheDriver = $config->getMetadataCacheImpl();
-
-            if ($cacheDriver) {
-                $cacheDriver->deleteAll();
-            }
+        if ($cacheDriver) {
+            $cacheDriver->clear();
         }
 
         if (false === $this->getKeepDatabaseAndSchemaParameter()) {
@@ -124,6 +116,9 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             $this->disableForeignKeyChecksIfApplicable();
             $executor->purge();
             $this->enableForeignKeyChecksIfApplicable();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
@@ -141,7 +136,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
         return $executor;
     }
 
-    protected function getExecutor(ORMPurger $purger = null): ORMExecutor
+    protected function getExecutor(?ORMPurger $purger = null): ORMExecutor
     {
         return new ORMExecutor($this->om, $purger);
     }
@@ -176,13 +171,9 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
         // Unset url to avoid issue:
         // “An exception occurred in driver: SQLSTATE[HY000] [1049] Unknown database 'test'”
 
-        $tmpConnection = DriverManager::getConnection($params);
+        $tmpConnection = DriverManager::getConnection($params, $this->connection->getConfiguration());
 
-        if (method_exists($tmpConnection, 'createSchemaManager')) {
-            $schemaManager = $tmpConnection->createSchemaManager();
-        } else {
-            $schemaManager = $tmpConnection->getSchemaManager();
-        }
+        $schemaManager = $tmpConnection->createSchemaManager();
 
         // DBAL 4.x does not support creating databases for SQLite anymore; for now we silently ignore this error
         try {
@@ -221,11 +212,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
-        } else {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
-        }
+        $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
 
         $this->shouldEnableForeignKeyChecks = true;
     }
@@ -240,11 +227,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
-        } else {
-            $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
-        }
+        $this->connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
 
         $this->shouldEnableForeignKeyChecks = false;
     }

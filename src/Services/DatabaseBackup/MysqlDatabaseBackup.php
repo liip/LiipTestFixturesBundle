@@ -99,11 +99,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
         $em = $executor->getReferenceRepository()->getManager();
         $connection = $em->getConnection();
 
-        if (method_exists($connection, 'executeQuery')) {
-            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
-        } else {
-            $connection->query('SET FOREIGN_KEY_CHECKS = 0;');
-        }
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
 
         $this->updateSchemaIfNeed($em);
         $truncateSql = [];
@@ -115,29 +111,17 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
             }
         }
         if (!empty($truncateSql)) {
-            if (method_exists($connection, 'executeQuery')) {
-                $connection->executeQuery(implode(';', $truncateSql));
-            } else {
-                $connection->query(implode(';', $truncateSql));
-            }
+            $connection->executeQuery(implode(';', $truncateSql));
         }
 
         // Only run query if it exists, to avoid the following exception:
         // SQLSTATE[42000]: Syntax error or access violation: 1065 Query was empty
         $backup = $this->getBackup();
         if (!empty($backup)) {
-            if (method_exists($connection, 'executeQuery')) {
-                $connection->executeQuery($backup);
-            } else {
-                $connection->query($backup);
-            }
+            $connection->executeQuery($backup);
         }
 
-        if (method_exists($connection, 'executeQuery')) {
-            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1;');
-        } else {
-            $connection->query('SET FOREIGN_KEY_CHECKS = 1;');
-        }
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1;');
 
         if (self::$metadata) {
             // it need for better performance

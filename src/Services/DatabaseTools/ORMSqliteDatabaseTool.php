@@ -46,18 +46,10 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
-        if (method_exists($config, 'getMetadataCache')) {
-            $cacheDriver = $config->getMetadataCache();
+        $cacheDriver = $config->getMetadataCache();
 
-            if ($cacheDriver) {
-                $cacheDriver->clear();
-            }
-        } else {
-            $cacheDriver = $config->getMetadataCacheImpl();
-
-            if ($cacheDriver) {
-                $cacheDriver->deleteAll();
-            }
+        if ($cacheDriver) {
+            $cacheDriver->clear();
         }
 
         $backupService = $this->getBackupService();
@@ -102,6 +94,9 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
             $executor->purge();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
@@ -136,11 +131,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('PRAGMA foreign_keys = 0');
-        } else {
-            $this->connection->query('PRAGMA foreign_keys = 0');
-        }
+        $this->connection->executeQuery('PRAGMA foreign_keys = 0');
 
         $this->shouldEnableForeignKeyChecks = true;
     }
@@ -155,11 +146,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             return;
         }
 
-        if (method_exists($this->connection, 'executeQuery')) {
-            $this->connection->executeQuery('PRAGMA foreign_keys = 1');
-        } else {
-            $this->connection->query('PRAGMA foreign_keys = 1');
-        }
+        $this->connection->executeQuery('PRAGMA foreign_keys = 1');
 
         $this->shouldEnableForeignKeyChecks = false;
     }

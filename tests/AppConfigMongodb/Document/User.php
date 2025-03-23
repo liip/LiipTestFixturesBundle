@@ -21,16 +21,16 @@ class User
     #[ODM\Id]
     private ?string $id = null;
 
-    #[ODM\Field(type: "string")]
+    #[ODM\Field(type: 'string')]
     private string $name;
 
-    #[ODM\Field(type: "string")]
+    #[ODM\Field(type: 'string')]
     private string $salt;
 
-    #[ODM\Field(type: "string")]
+    #[ODM\Field(type: 'string')]
     private string $email;
 
-    #[ODM\Field(type: "string")]
+    #[ODM\Field(type: 'string')]
     private ?string $dummyText = null;
 
     public function __construct()

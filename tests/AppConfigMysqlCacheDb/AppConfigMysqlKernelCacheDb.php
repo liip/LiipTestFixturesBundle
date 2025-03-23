@@ -19,9 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppConfigMysqlKernelCacheDb extends AppConfigMysqlKernel
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
         return __DIR__.'/var/cache/';

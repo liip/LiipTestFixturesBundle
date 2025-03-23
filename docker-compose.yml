@@ -1,7 +1,7 @@
 version: '3.1'
 services:
     mariadb:
-        image: 'mariadb:11.0'
+        image: 'mariadb:11'
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_DATABASE=acme
@@ -18,7 +18,7 @@ services:
         ports:
             - '11004:5432'
 
-    php-fpm:
+    php:
         build: .
         working_dir: /application
         volumes:

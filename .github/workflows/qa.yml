@@ -9,12 +9,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+
       - name: Delete composer files to avoid installing dependencies
         run: rm -v composer.json
+
       - name: PHP-CS-Fixer
-        uses: docker://jakzal/phpqa:1.80.0-php7.4-alpine
+        uses: docker://jakzal/phpqa:1.96.3-php8.2-alpine
         with:
-          args: php-cs-fixer --dry-run --diff --no-interaction --ansi fix
+          args: php-cs-fixer --dry-run --diff --no-interaction --ansi fix --show-progress none
 
   composer-validate:
     name: Composer validate

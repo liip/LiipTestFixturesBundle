@@ -10,52 +10,42 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Symfony 5.4 requires PHP >= 7.2, it will be installed on PHP 7.4
-        # Symfony 6.4 requires PHP >= 8.0, it will be installed on PHP >= 8.0
-        # Symfony 7.0 requires PHP >= 8.2, it will be installed on PHP >= 8.2
+        # the default job will test ^6.4 for all Symfony packages, with PHP 8.2
         php-version: ['8.2']
         composer-flags: ['']
-        symfony-version: ['']
+        symfony-version: ['^6.4']
         mysql-client: [ "default-mysql-client" ]
         include:
-          - php-version: 7.4
+          - php-version: 8.1
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
             composer-flags: "update --prefer-lowest"
-          - php-version: 7.4
-            # add a specific job to test 5.4 for all Symfony packages
-            symfony-version: "^5.4"
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
-          - php-version: 8.1
-            symfony-version: "^5.4"
+            # `theofidry/alice-data-fixtures:1.6.0` and `doctrine/dbal:^4.0` cause issues:
+            # Error: Call to undefined method Doctrine\DBAL\Connection::exec()
+            composer-flags: "require doctrine/dbal:^3.0"
+          - php-version: 8.2
+            symfony-version: "^6.4"
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
           - php-version: 8.2
-            # add a specific job to test ^6.4 for all Symfony packages
-            symfony-version: "^6.4"
-          - php-version: 8.2
-            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
-            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
-          - php-version: 8.2
-            symfony-version: "^7.0"
-            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
-            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
+            symfony-version: "^7.2"
           - php-version: 8.3
-            symfony-version: "^7.0"
-            # Remove doctrine/phpcr-* in order to allow doctrine/persistence v3
-            composer-flags: "remove --dev --no-progress doctrine/phpcr-bundle doctrine/phpcr-odm"
+            symfony-version: "^7.2"
+          - php-version: 8.4
+            symfony-version: "^7.2"
 
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:11.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: acme
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: acme
         ports:
           - 3306:3306
       postgresql:
-        image: postgres:9.6
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_PASSWORD: 'postgres'
@@ -112,10 +102,6 @@ jobs:
           composer require --no-update symfony/flex
           composer config extra.symfony.require "${{ matrix.symfony-version }}"
           composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
-
-      # This is needed to fix builds on Symfony 5.4 where the `annotation_reader` service may not be set up if the Annotations package is not in the production dependencies
-      - name: Move Annotations to require
-        run: composer require --no-update "doctrine/annotations:^1.8.0|^2.0"
 
       - name: Install Composer dependencies
         if: matrix.composer-flags == ''

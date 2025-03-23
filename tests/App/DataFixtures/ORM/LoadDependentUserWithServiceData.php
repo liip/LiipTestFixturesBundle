@@ -29,9 +29,6 @@ class LoadDependentUserWithServiceData extends AbstractFixture implements Depend
         $this->dummyService = $dummyService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
@@ -52,9 +49,6 @@ class LoadDependentUserWithServiceData extends AbstractFixture implements Depend
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [

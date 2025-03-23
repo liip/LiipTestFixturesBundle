@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
@@ -22,13 +21,8 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-
-// BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager')
-    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
-    class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
-}
 
 /**
  * Test MySQL database.
@@ -43,14 +37,9 @@ if (interface_exists('\Doctrine\Persistence\ObjectManager')
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("group")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigMysqlTest extends KernelTestCase
 {
     use ContainerProvider;
@@ -76,11 +65,6 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
 
-    /**
-     * Data fixtures.
-     *
-     * @group mysql
-     */
     public function testLoadEmptyFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([]);
@@ -91,9 +75,6 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
-    /**
-     * @group mysql
-     */
     public function testLoadFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
@@ -112,7 +93,7 @@ class ConfigMysqlTest extends KernelTestCase
             $repository
         );
 
-        $user1 = $repository->getReference('user');
+        $user1 = $repository->getReference('user', User::class);
 
         $this->assertSame('foo bar', $user1->getName());
         $this->assertSame('foo@bar.com', $user1->getEmail());
@@ -131,9 +112,6 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
-    /**
-     * @group mysql
-     */
     public function testAppendFixtures(): void
     {
         $this->databaseTool->loadFixtures([
@@ -202,8 +180,6 @@ class ConfigMysqlTest extends KernelTestCase
      *
      * Purge modes are defined in
      * Doctrine\Common\DataFixtures\Purger\ORMPurger.
-     *
-     * @group mysql
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
@@ -240,8 +216,6 @@ class ConfigMysqlTest extends KernelTestCase
      *
      * Purge modes are defined in
      * Doctrine\Common\DataFixtures\Purger\ORMPurger.
-     *
-     * @group mysql
      */
     public function testLoadFixturesAndPurge(): void
     {
@@ -275,8 +249,6 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        $this->getTestContainer()->get('doctrine')->getManager()->clear();
-
         // Reload fixtures
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -304,8 +276,6 @@ class ConfigMysqlTest extends KernelTestCase
 
     /**
      * Use nelmio/alice.
-     *
-     * @group mysql
      */
     public function testLoadFixturesFiles(): void
     {

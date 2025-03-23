@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Test MySQL database with database caching enabled.
@@ -30,23 +30,20 @@ use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("group")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 {
-    /**
-     * @group mysql
-     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+    }
+
     public function testLoadFixturesAndCheckBackup(): void
     {
-        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
-
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -113,24 +110,32 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
     }
 
-    /**
-     * @group mysql
-     */
-    public function testLoadFixturesCheckReferences(): void
+    public function testLoadFixturesCheckReferencesByClass(): void
     {
         $this->markTestSkipped('This test is broken right now.');
+
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(1, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $className = 'Liip\Acme\Tests\App\Entity\User';
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(1, $references[$className]);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(2, $references[$className]);
     }
 
     protected static function getKernelClass(): string

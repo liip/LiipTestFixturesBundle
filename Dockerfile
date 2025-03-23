@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.3-cli-bookworm
 WORKDIR "/application"
 
 RUN apt-get update \
@@ -20,3 +20,5 @@ RUN apt-get update \
     && rm -rf mongodb-database-tools-*.deb /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
+CMD ["/bin/sh", "-ec", "sleep infinity"]

@@ -13,27 +13,15 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-// BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager')
-    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
-    class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
-}
-
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\AppConfigSqliteUrl\AppConfigSqliteUrlKernel;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Run SQLite tests by using an URL for Doctrine.
  *
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("depends")
- * @IgnoreAnnotation("expectedException")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigSqliteUrlTest extends ConfigSqliteTest
 {
     public static function getKernelClass(): string

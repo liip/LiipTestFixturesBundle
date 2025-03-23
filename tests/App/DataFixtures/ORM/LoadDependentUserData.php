@@ -20,9 +20,6 @@ use Liip\Acme\Tests\App\Entity\User;
 
 class LoadDependentUserData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
@@ -42,9 +39,6 @@ class LoadDependentUserData extends AbstractFixture implements DependentFixtureI
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [

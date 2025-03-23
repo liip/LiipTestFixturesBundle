@@ -20,13 +20,10 @@ use Liip\Acme\Tests\AppConfigMongodb\Document\User;
 
 class LoadUserDataFixture extends Fixture
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         if (!$manager instanceof DocumentManager) {
-            $class = \get_class($manager);
+            $class = $manager::class;
 
             throw new \RuntimeException("Fixture requires a MongoDB ODM DocumentManager instance, instance of '{$class}' given.");
         }
@@ -35,13 +32,14 @@ class LoadUserDataFixture extends Fixture
         $user->setEmail('foo@bar.com');
 
         $manager->persist($user);
+
+        $user2 = new User();
+        $user2->setName('alice bar');
+        $user2->setEmail('alice@bar.com');
+
+        $manager->persist($user2);
         $manager->flush();
 
         $this->addReference('user', $user);
-
-        $user = clone $this->getReference('user');
-
-        $manager->persist($user);
-        $manager->flush();
     }
 }

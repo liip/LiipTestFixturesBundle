@@ -42,18 +42,10 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
-        if (method_exists($config, 'getMetadataCache')) {
-            $cacheDriver = $config->getMetadataCache();
+        $cacheDriver = $config->getMetadataCache();
 
-            if ($cacheDriver) {
-                $cacheDriver->clear();
-            }
-        } else {
-            $cacheDriver = $config->getMetadataCacheImpl();
-
-            if ($cacheDriver) {
-                $cacheDriver->deleteAll();
-            }
+        if ($cacheDriver) {
+            $cacheDriver->clear();
         }
 
         $this->createDatabaseOnce();
@@ -84,6 +76,9 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         $executor->setReferenceRepository($referenceRepository);
         if (false === $append) {
             $executor->purge();
+
+            // Clear the entity manager to avoid the exception `EntityIdentityCollisionException`
+            $this->om->clear();
         }
 
         $loader = $this->fixturesLoaderFactory->getFixtureLoader($classNames);
@@ -101,7 +96,7 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
         return $executor;
     }
 
-    protected function getExecutor(MongoDBPurger $purger = null): MongoDBExecutor
+    protected function getExecutor(?MongoDBPurger $purger = null): MongoDBExecutor
     {
         return new MongoDBExecutor($this->om, $purger);
     }

@@ -19,9 +19,6 @@ use Liip\Acme\Tests\App\Entity\User;
 
 class LoadUserData extends AbstractFixture
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
@@ -30,16 +27,15 @@ class LoadUserData extends AbstractFixture
         $user->setEmail('foo@bar.com');
 
         $manager->persist($user);
+
+        $user2 = new User();
+        $user2->setId(2);
+        $user2->setName('bob bar');
+        $user2->setEmail('bob@bar.com');
+
+        $manager->persist($user2);
         $manager->flush();
 
         $this->addReference('user', $user);
-
-        $user = new User();
-        $user->setId(2);
-        $user->setName('bob bar');
-        $user->setEmail('bob@bar.com');
-
-        $manager->persist($user);
-        $manager->flush();
     }
 }

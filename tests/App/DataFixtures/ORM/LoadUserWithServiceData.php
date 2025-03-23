@@ -31,9 +31,6 @@ class LoadUserWithServiceData extends AbstractFixture
         $this->dummyService = $dummyService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();

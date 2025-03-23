@@ -13,13 +13,6 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-// BC, needed by "theofidry/alice-data-fixtures: <1.3" not compatible with "doctrine/persistence: ^2.0"
-if (interface_exists('\Doctrine\Persistence\ObjectManager')
-    && !interface_exists('\Doctrine\Common\Persistence\ObjectManager')) {
-    class_alias('\Doctrine\Persistence\ObjectManager', '\Doctrine\Common\Persistence\ObjectManager');
-}
-
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
@@ -28,18 +21,14 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- *
- * @IgnoreAnnotation("depends")
- * @IgnoreAnnotation("expectedException")
- *
  * @internal
  */
+#[PreserveGlobalState(false)]
 class ConfigSqliteTest extends KernelTestCase
 {
     use ContainerProvider;
@@ -108,7 +97,7 @@ class ConfigSqliteTest extends KernelTestCase
         );
 
         /** @var User $user1 */
-        $user1 = $repository->getReference('user');
+        $user1 = $repository->getReference('user', User::class);
 
         $this->assertSame(1, $user1->getId());
         $this->assertSame('foo bar', $user1->getName());
@@ -378,9 +367,8 @@ class ConfigSqliteTest extends KernelTestCase
 
     /**
      * Use nelmio/alice with PURGE_MODE_TRUNCATE.
-     *
-     * @depends testLoadFixturesFiles
      */
+    #[Depends('testLoadFixturesFiles')]
     public function testLoadFixturesFilesWithPurgeModeTruncate(): void
     {
         $this->databaseTool->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
