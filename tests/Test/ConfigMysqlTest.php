@@ -140,10 +140,12 @@ class ConfigMysqlTest extends KernelTestCase
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $this->databaseTool->loadFixtures(
+        $referenceRepository = $this->databaseTool->loadFixtures(
             ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
-        );
+        )->getReferenceRepository();
+
+        $this->assertCount(2, $referenceRepository->getReferences());
 
         // Load data from database
         $users = $this->userRepository->findAll();
