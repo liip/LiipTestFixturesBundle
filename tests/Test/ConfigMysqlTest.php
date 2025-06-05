@@ -137,7 +137,13 @@ class ConfigMysqlTest extends KernelTestCase
             true
         )->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $className = 'Liip\Acme\Tests\App\Entity\User';
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(2, $references[$className]);
 
         // Load data from database
         $users = $this->userRepository->findAll();
