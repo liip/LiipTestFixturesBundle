@@ -27,21 +27,29 @@ use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @author Aleksey Tupichenkov <alekseytupichenkov@gmail.com>
  */
-class ORMDatabaseTool extends AbstractDbalDatabaseTool
+class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
 {
     /**
      * @var EntityManager
      */
     protected $om;
 
+    private ?ProxyReferenceRepository $referenceRepository = null;
+
     /**
      * @var bool
      */
     private $shouldEnableForeignKeyChecks = false;
+
+    public function reset()
+    {
+        $this->referenceRepository = null;
+    }
 
     public function getType(): string
     {
@@ -50,7 +58,11 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool
 
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
-        $referenceRepository = new ProxyReferenceRepository($this->om);
+        if (null === $this->referenceRepository || false === $append) {
+            $this->referenceRepository = new ProxyReferenceRepository($this->om);
+        }
+
+        $referenceRepository = $this->referenceRepository;
 
         /** @var Configuration $config */
         $config = $this->om->getConfiguration();

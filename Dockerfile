@@ -8,6 +8,7 @@ RUN apt-get update \
     unzip \
     wget \
     default-mysql-client \
+    postgresql-client \
     && docker-php-ext-install \
         pdo_mysql \
         pdo_pgsql \

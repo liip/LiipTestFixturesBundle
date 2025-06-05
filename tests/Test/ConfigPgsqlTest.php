@@ -30,6 +30,12 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
+ *
+ * @preserveGlobalState disabled
+ *
+ * @IgnoreAnnotation("group")
+ *
  * @internal
  */
 #[PreserveGlobalState(false)]
@@ -37,6 +43,8 @@ class ConfigPgsqlTest extends ConfigMysqlTest
 {
     /**
      * Load fixture which has a dependency.
+     *
+     * @group pgsql
      */
     public function testLoadDependentFixtures(): void
     {
@@ -58,6 +66,9 @@ class ConfigPgsqlTest extends ConfigMysqlTest
         );
     }
 
+    /**
+     * @group pgsql
+     */
     public function testToolType(): void
     {
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);

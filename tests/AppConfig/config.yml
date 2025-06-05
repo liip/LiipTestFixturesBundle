@@ -12,6 +12,7 @@ liip_test_fixtures:
     cache_db:
         sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'
         mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+        pgsql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup'
         mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
 
 services:

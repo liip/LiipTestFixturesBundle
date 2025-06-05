@@ -65,6 +65,12 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
 
+    /**
+     * Data fixtures.
+     *
+     * @group mysql
+     * @group pgsql
+     */
     public function testLoadEmptyFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([]);
@@ -75,6 +81,10 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
+    /**
+     * @group mysql
+     * @group pgsql
+     */
     public function testLoadFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
@@ -112,16 +122,22 @@ class ConfigMysqlTest extends KernelTestCase
         );
     }
 
+    /**
+     * @group mysql
+     * @group pgsql
+     */
     public function testAppendFixtures(): void
     {
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
 
-        $this->databaseTool->loadFixtures(
+        $referenceRepository = $this->databaseTool->loadFixtures(
             ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
             true
-        );
+        )->getReferenceRepository();
+
+        $this->assertCount(2, $referenceRepository->getReferences());
 
         // Load data from database
         $users = $this->userRepository->findAll();
@@ -216,6 +232,9 @@ class ConfigMysqlTest extends KernelTestCase
      *
      * Purge modes are defined in
      * Doctrine\Common\DataFixtures\Purger\ORMPurger.
+     *
+     * @group mysql
+     * @group pgsql
      */
     public function testLoadFixturesAndPurge(): void
     {
@@ -276,6 +295,9 @@ class ConfigMysqlTest extends KernelTestCase
 
     /**
      * Use nelmio/alice.
+     *
+     * @group mysql
+     * @group pgsql
      */
     public function testLoadFixturesFiles(): void
     {

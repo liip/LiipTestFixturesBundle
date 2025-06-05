@@ -1,0 +1,5 @@
+# inherits configuration from ../AppConfigPgsql/config.yml
+
+liip_test_fixtures:
+    cache_db:
+        pgsql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup'

@@ -2,5 +2,5 @@
 
 doctrine:
     dbal:
-        url: 'sqlite:///%kernel.project_dir%/var/app.db'
+        url: 'sqlite:///%kernel.cache_dir%/test.db'
 
