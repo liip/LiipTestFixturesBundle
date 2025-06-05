@@ -127,14 +127,24 @@ class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(1, $referenceRepository->getReferences());
+        $className = 'Liip\Acme\Tests\App\Entity\User';
+
+        $references = $referenceRepository->getReferencesByClass();
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(1, $references[$className]);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
         ])->getReferenceRepository();
 
-        $this->assertCount(2, $referenceRepository->getReferences());
+        $references = $referenceRepository->getReferencesByClass();
+
+        $this->assertArrayHasKey($className, $references);
+
+        $this->assertCount(2, $references[$className]);
     }
 
     protected static function getKernelClass(): string
