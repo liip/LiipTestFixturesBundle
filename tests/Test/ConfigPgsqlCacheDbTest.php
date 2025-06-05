@@ -13,37 +13,45 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Liip\Acme\Tests\App\Entity\User;
-use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use Liip\Acme\Tests\AppConfigPgsqlCacheDb\AppConfigPgsqlKernelCacheDb;
 
 /**
- * Test MySQL database with database caching enabled.
+ * Test PostgreSQL database with database caching enabled.
  *
- * The following tests require a connection to a MySQL database,
+ * The following tests require a connection to a PostgreSQL database,
  * they are disabled by default (see phpunit.xml.dist).
  *
- * In order to run them, you have to set the MySQL connection
- * parameters in the Tests/AppConfigMysql/config.yml file.
+ * In order to run them, you have to set the PostgreSQL connection
+ * parameters in the Tests/AppConfigPgsql/config.yml file.
  *
- * Use Tests/AppConfigMysql/AppConfigMysqlKernelCacheDb.php instead of
+ * Use Tests/AppConfigPgsql/AppConfigPgsqlKernelCacheDb.php instead of
  * Tests/App/AppKernel.php.
  * So it must be loaded in a separate process.
  *
+ * @runTestsInSeparateProcesses
+ *
+ * @preserveGlobalState disabled
+ *
+ * @IgnoreAnnotation("group")
+ *
  * @internal
  */
-#[PreserveGlobalState(false)]
-class ConfigMysqlCacheDbTest extends ConfigMysqlTest
+class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
 {
-    protected function setUp(): void
+    public function testLoadFixturesAndExcludeFromPurge(): void
     {
-        parent::setUp();
-
-        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+        $this->markTestSkipped('This test is not an actual optimization for PostgreSQL.');
     }
 
+    /**
+     * @group pgsql
+     */
     public function testLoadFixturesAndCheckBackup(): void
     {
+        $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
+
         $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
         ]);
@@ -110,7 +118,10 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         );
     }
 
-    public function testLoadFixturesCheckReferencesByClass(): void
+    /**
+     * @group pgsql
+     */
+    public function testLoadFixturesCheckReferences(): void
     {
         $referenceRepository = $this->databaseTool->loadFixtures([
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
@@ -138,6 +149,6 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 
     protected static function getKernelClass(): string
     {
-        return AppConfigMysqlKernelCacheDb::class;
+        return AppConfigPgsqlKernelCacheDb::class;
     }
 }

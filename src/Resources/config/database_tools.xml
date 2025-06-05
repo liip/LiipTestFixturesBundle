@@ -24,6 +24,11 @@
             <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
         </service>
 
+        <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup" public="true">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="Liip\TestFixturesBundle\Services\FixturesLoaderFactory" />
+        </service>
+
         <service id="Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup" public="true">
             <argument type="service" id="service_container" />
             <argument type="service" id="Liip\TestFixturesBundle\Services\MongoDBFixturesLoaderFactory" />

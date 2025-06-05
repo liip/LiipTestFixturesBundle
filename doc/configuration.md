@@ -17,6 +17,7 @@ liip_test_fixtures:
 - `cache_db`: an array with a storage as key and a service as value, examples :
   - `sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'`
   - `mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'`
+  - `pgsql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup'`
   - `mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'`
 
 « [Installation](./installation.md) • [Database](./database.md) »
