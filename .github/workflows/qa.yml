@@ -1,10 +1,10 @@
-name: QA
+name: 🔎 QA
 
 on: [push, pull_request]
 
 jobs:
   php-cs-fixer:
-    name: PHP-CS-Fixer
+    name: 🧹 PHP-CS-Fixer
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
           args: php-cs-fixer --dry-run --diff --no-interaction --ansi fix --show-progress none
 
   composer-validate:
-    name: Composer validate
+    name: 🎵 Composer validate
     runs-on: ubuntu-latest
 
     steps:

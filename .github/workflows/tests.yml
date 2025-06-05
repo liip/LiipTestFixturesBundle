@@ -1,10 +1,10 @@
-name: Tests
+name: 🧪 Tests
 
 on: [push, pull_request]
 
 jobs:
   tests:
-    name: Symfony ${{ matrix.symfony-version }} - PHP ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }} - mysqldump ${{ matrix.mysql-client }}
+    name: 🧪 Symfony ${{ matrix.symfony-version }} - 🐘 ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }} - mysqldump ${{ matrix.mysql-client }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -64,13 +64,13 @@ jobs:
           - 27017:27017
 
     steps:
-      - name: Install mysqldump
+      - name: 📦 Install mysqldump
         run: |
           sudo apt update
           sudo apt install -y -q ${{ matrix.mysql-client }}
           mysqldump --version
 
-      - name: Install mongodb database tools
+      - name: 📦 Install mongodb database tools
         run: |
           wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian92-x86_64-100.3.1.deb
           sudo apt install ./mongodb-database-tools-*.deb
@@ -79,7 +79,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP, with composer and extensions
+      - name: 🐘 Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-version }}
@@ -96,28 +96,28 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-${{ hashFiles('composer.json') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ matrix.symfony-version }}-
 
-      - name: Require Symfony
+      - name: 🎵 Require Symfony
         if: matrix.symfony-version != ''
         run: |
           composer require --no-update symfony/flex
           composer config extra.symfony.require "${{ matrix.symfony-version }}"
           composer require --no-update symfony/framework-bundle=${{ matrix.symfony-version }}
 
-      - name: Install Composer dependencies
+      - name: 🎵 Install Composer dependencies
         if: matrix.composer-flags == ''
         run: composer install
 
-      - name: Install Composer dependencies with options
+      - name: 🎵 Install Composer dependencies with options
         if: matrix.composer-flags != ''
         run: composer ${{ matrix.composer-flags }}
 
-      - name: Show Composer dependencies
+      - name: 🎵 Show Composer dependencies
         run: composer show
 
       - name: Set up hosts file
         run: echo '127.0.0.1 mariadb postgres mongodb' | sudo tee -a /etc/hosts
 
-      - name: Run tests
+      - name: 🧪 Run tests
         # Run tests twice to ensure that tests are idempotent even if database caching is enabled
         run: |
           php ./vendor/bin/phpunit --testdox --process-isolation
