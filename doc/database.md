@@ -134,6 +134,7 @@ For example:
 liip_test_fixtures:
     cache_db:
         mysql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup'
+        pgsql: 'Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup'
         mongodb: 'Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup'
         phpcr: ...
         db2: ...
@@ -141,6 +142,8 @@ liip_test_fixtures:
 ```
 
 **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MysqlDatabaseBackup` requires `mysql-client` installed on server.**
+
+**Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\PgsqlDatabaseBackup` requires `postgresql-client` installed on server.**
 
 **Attention: `Liip\TestFixturesBundle\Services\DatabaseBackup\MongodbDatabaseBackup` requires `mongodb-clients` installed on server.**
  

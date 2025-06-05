@@ -80,6 +80,7 @@ class ConfigMysqlTest extends KernelTestCase
      * Data fixtures.
      *
      * @group mysql
+     * @group pgsql
      */
     public function testLoadEmptyFixtures(): void
     {
@@ -93,6 +94,7 @@ class ConfigMysqlTest extends KernelTestCase
 
     /**
      * @group mysql
+     * @group pgsql
      */
     public function testLoadFixtures(): void
     {
@@ -133,6 +135,7 @@ class ConfigMysqlTest extends KernelTestCase
 
     /**
      * @group mysql
+     * @group pgsql
      */
     public function testAppendFixtures(): void
     {
@@ -244,6 +247,7 @@ class ConfigMysqlTest extends KernelTestCase
      * Doctrine\Common\DataFixtures\Purger\ORMPurger.
      *
      * @group mysql
+     * @group pgsql
      */
     public function testLoadFixturesAndPurge(): void
     {
@@ -308,6 +312,7 @@ class ConfigMysqlTest extends KernelTestCase
      * Use nelmio/alice.
      *
      * @group mysql
+     * @group pgsql
      */
     public function testLoadFixturesFiles(): void
     {
