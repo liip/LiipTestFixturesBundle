@@ -15,6 +15,7 @@ jobs:
         composer-flags: ['']
         symfony-version: ['^6.4']
         mysql-client: [ "default-mysql-client" ]
+        # note: values defined in `matrix` and not in the `include:` section will be empty in jobs
         include:
           - php-version: 8.1
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
@@ -24,7 +25,8 @@ jobs:
             symfony-version: "^5.4"
             # `theofidry/alice-data-fixtures:1.6.0` and `doctrine/dbal:^4.0` cause issues:
             # Error: Call to undefined method Doctrine\DBAL\Connection::exec()
-            composer-flags: "require doctrine/dbal:^3.0"
+            # and avoid error between doctrine/mongodb-odm-bundle and the version of Mongo installed on the CI runner
+            composer-flags: "require doctrine/dbal:^3.0 --ignore-platform-req=ext-mongodb"
           - php-version: 8.2
             symfony-version: "^6.4"
             # add a specific job to test mysqldump from MariaDB
