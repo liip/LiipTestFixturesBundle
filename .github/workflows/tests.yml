@@ -17,6 +17,7 @@ jobs:
         composer-flags: ['']
         symfony-version: ['']
         mysql-client: [ "default-mysql-client" ]
+        # note: values defined in `matrix` and not in the `include:` section will be empty in jobs
         include:
           - php-version: 7.4
             # Use "update" instead of "install" since it allows using the "--prefer-lowest" option
@@ -27,10 +28,14 @@ jobs:
           - php-version: 8.1
             # add a specific job to test ^5.4 for all Symfony packages
             symfony-version: "^5.4"
+           # avoid error between doctrine/mongodb-odm-bundle and the version of Mongo installed on the CI runner
+            composer-flags: "install --ignore-platform-req=ext-mongodb"
           - php-version: 8.1
             symfony-version: "^5.4"
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
+            # avoid error between doctrine/mongodb-odm-bundle and the version of Mongo installed on the CI runner
+            composer-flags: "install --ignore-platform-req=ext-mongodb"
           - php-version: 8.2
             # add a specific job to test ^6.4 for all Symfony packages
             symfony-version: "^6.4"
