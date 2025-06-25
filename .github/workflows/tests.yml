@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    name: 🧪 Symfony ${{ matrix.symfony-version }} - 🐘 ${{ matrix.php-version }} - flags ${{ matrix.composer-flags }} - mysqldump ${{ matrix.mysql-client }}
+    name: 🧪 Symfony ${{ matrix.symfony-version || 'Ø' }} - 🐘 ${{ matrix.php-version }} - 🏳️ ${{ matrix.composer-flags || 'Ø' }} - 💾 ${{ matrix.mysql-client || 'Ø' }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -67,12 +67,12 @@ jobs:
       - name: 📦 Install mysqldump
         run: |
           sudo apt update
-          sudo apt install -y -q ${{ matrix.mysql-client }}
+          sudo apt install -y -q ${{ matrix.mysql-client || 'default-mysql-client' }}
           mysqldump --version
 
       - name: 📦 Install mongodb database tools
         run: |
-          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian92-x86_64-100.3.1.deb
+          wget --quiet https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian92-x86_64-100.3.1.deb
           sudo apt install ./mongodb-database-tools-*.deb
           rm -f mongodb-database-tools-*.deb
 
