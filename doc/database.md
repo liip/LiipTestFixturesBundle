@@ -1,7 +1,7 @@
 Database Tests
 ==============
 
-If you plan on loading fixtures with your tests, make sure you have the
+Make sure you have the
 DoctrineFixturesBundle installed and configured first:
 [Doctrine Fixtures setup and configuration instructions](http://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#setup-and-configuration)
 
