@@ -323,7 +323,7 @@ class ConfigSqliteTest extends KernelTestCase
     /**
      * Use nelmio/alice.
      */
-    public function testLoadFixturesFiles(): void
+    public function testLoadFixturesFiles(): array
     {
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
@@ -362,6 +362,8 @@ class ConfigSqliteTest extends KernelTestCase
         ;
 
         $this->assertIsString($user->getName());
+
+        return $fixtures;
     }
 
     /**
@@ -383,8 +385,24 @@ class ConfigSqliteTest extends KernelTestCase
      */
     public function testLoadFixturesFilesWithPurgeModeTruncate(): void
     {
+        // Load initial fixtures
+        $this->testLoadFixturesFiles();
+
+        $em = $this->getContainer()
+            ->get('doctrine.orm.entity_manager');
+
+        $users = $em->getRepository(User::class)
+            ->findAll();
+
+        // There are 10 users in the database
+        $this->assertSame(
+            10,
+            count($users)
+        );
+
         $this->databaseTool->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
 
+        // Load fixtures with append = true
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ], true);
@@ -397,7 +415,18 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
-        $id = 1;
+        $users = $em->getRepository(User::class)
+            ->findAll();
+
+        // There are only 10 users in the database
+        $this->assertSame(
+            10,
+            count($users)
+        );
+
+        // Auto-increment hasn't been altered, so ids start from 11
+        $id = 11;
+
         /** @var User $user */
         foreach ($fixtures as $user) {
             $this->assertSame($id++, $user->getId());
