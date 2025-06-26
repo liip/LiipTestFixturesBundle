@@ -46,7 +46,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
      */
     private $shouldEnableForeignKeyChecks = false;
 
-    public function reset()
+    public function reset(): void
     {
         $this->referenceRepository = null;
     }
