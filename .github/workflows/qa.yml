@@ -14,7 +14,7 @@ jobs:
         run: rm -v composer.json
 
       - name: PHP-CS-Fixer
-        uses: docker://jakzal/phpqa:1.107-php8.3-alpine
+        uses: docker://jakzal/phpqa:1.111-php8.3-alpine
         with:
           args: php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --dry-run --diff --no-interaction --ansi fix --show-progress none
 
@@ -29,7 +29,7 @@ jobs:
       # the Docker image will install the dependencies automatically
 
       -   name: ✅ PHPStan
-          uses: docker://jakzal/phpqa:1.107-php8.3-alpine
+          uses: docker://jakzal/phpqa:1.111-php8.3-alpine
           with:
             args: phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
           env:
