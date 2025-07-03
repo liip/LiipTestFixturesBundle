@@ -61,5 +61,5 @@ docker-compose exec php bash -c "rm -rf tests/App*/var/cache/*"
 Use it through Docker:
 
 ```bash
-docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.96.3-php8.2-alpine php-cs-fixer --diff --no-interaction --ansi fix --show-progress none
+docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.96.3-php8.2-alpine php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --diff --no-interaction --ansi fix --show-progress none
 ```
