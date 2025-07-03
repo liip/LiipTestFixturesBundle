@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -46,8 +47,11 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
 
     public function backup(AbstractExecutor $executor): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var EntityManager $em */
-        $em = $executor->getReferenceRepository()->getManager();
+        $em = $referenceRepository->getManager();
         $connection = $em->getConnection();
 
         $params = $connection->getParams();
@@ -72,7 +76,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
         // Set password through environment variable to remove warning
         $dbPass = isset($params['password']) && $params['password'] ? 'MYSQL_PWD='.$params['password'].' ' : '';
 
-        $executor->getReferenceRepository()->save($this->getBackupFilePath());
+        $referenceRepository->save($this->getBackupFilePath());
         self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
 
         $mysqldumpOptions = '--no-create-info --skip-triggers --no-create-db --no-tablespaces --compact';
@@ -95,8 +99,11 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var EntityManager $em */
-        $em = $executor->getReferenceRepository()->getManager();
+        $em = $referenceRepository->getManager();
         $connection = $em->getConnection();
 
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
@@ -128,9 +135,9 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
             foreach (self::$metadata as $class => $data) {
                 $em->getMetadataFactory()->setMetadataFor($class, $data);
             }
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+            $referenceRepository->unserialize($this->getReferenceBackup());
         } else {
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+            $referenceRepository->unserialize($this->getReferenceBackup());
             self::$metadata = $em->getMetadataFactory()->getLoadedMetadata();
         }
     }

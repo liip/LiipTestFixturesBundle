@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 
@@ -37,22 +38,28 @@ final class SqliteDatabaseBackup extends AbstractDatabaseBackup
 
     public function backup(AbstractExecutor $executor): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var EntityManager $em */
-        $em = $executor->getReferenceRepository()->getManager();
+        $em = $referenceRepository->getManager();
         $connection = $em->getConnection();
 
-        $executor->getReferenceRepository()->save($this->getBackupFilePath());
+        $referenceRepository->save($this->getBackupFilePath());
         copy($this->getDatabaseName($connection), $this->getBackupFilePath());
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var EntityManager $em */
-        $em = $executor->getReferenceRepository()->getManager();
+        $em = $referenceRepository->getManager();
         $connection = $em->getConnection();
 
         copy($this->getBackupFilePath(), $this->getDatabaseName($connection));
-        $executor->getReferenceRepository()->load($this->getBackupFilePath());
+        $referenceRepository->load($this->getBackupFilePath());
     }
 
     private function getDatabaseName(Connection $connection): string

@@ -134,6 +134,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
@@ -157,6 +158,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
@@ -180,6 +182,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(

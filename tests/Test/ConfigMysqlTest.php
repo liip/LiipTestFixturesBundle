@@ -161,7 +161,7 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        /** @var User $user */
+        /** @var User $user1 */
         $user1 = $this->userRepository
             ->findOneBy([
                 'email' => 'foo@bar.com',
