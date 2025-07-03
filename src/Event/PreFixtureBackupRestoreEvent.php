@@ -25,7 +25,7 @@ class PreFixtureBackupRestoreEvent extends FixtureEvent
     public function __construct(
         ObjectManager $manager,
         ReferenceRepository $executor,
-        string $backupFilePath
+        string $backupFilePath,
     ) {
         $this->manager = $manager;
         $this->repository = $executor;

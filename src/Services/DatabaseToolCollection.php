@@ -34,7 +34,7 @@ final class DatabaseToolCollection
         $this->container = $container;
 
         if (null !== $annotationReader) {
-            throw new \RuntimeException(sprintf('Passing a second argument to the "%s" constructor is not supported since liip/test-fixtures-bundle 3.0.', self::class));
+            throw new \RuntimeException(\sprintf('Passing a second argument to the "%s" constructor is not supported since liip/test-fixtures-bundle 3.0.', self::class));
         }
     }
 

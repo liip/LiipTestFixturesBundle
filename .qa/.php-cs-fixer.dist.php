@@ -11,7 +11,7 @@ HEADER;
 
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__)
+    ->in(dirname(__DIR__))
     ->notPath('/cache/')
 ;
 

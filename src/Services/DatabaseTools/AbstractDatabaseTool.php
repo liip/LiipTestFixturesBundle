@@ -224,7 +224,7 @@ abstract class AbstractDatabaseTool
         foreach ($paths as $path) {
             if ('@' !== $path[0]) {
                 if (!file_exists($path)) {
-                    throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $path));
+                    throw new \InvalidArgumentException(\sprintf('Unable to find file "%s".', $path));
                 }
                 $files[] = $path;
 
