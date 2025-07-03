@@ -63,3 +63,11 @@ Use it through Docker:
 ```bash
 docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.107-php8.3-alpine php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --diff --no-interaction --ansi fix --show-progress none
 ```
+
+## Run PHPStan
+
+Use it through Docker:
+
+```bash
+docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.107-php8.3-alpine phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
+```

@@ -18,6 +18,23 @@ jobs:
         with:
           args: php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --dry-run --diff --no-interaction --ansi fix --show-progress none
 
+  php-stan:
+    name: 🔎 PHPStan
+    runs-on: ubuntu-latest
+
+    steps:
+      -   name: Checkout
+          uses: actions/checkout@v4
+
+      # the Docker image will install the dependencies automatically
+
+      -   name: ✅ PHPStan
+          uses: docker://jakzal/phpqa:1.107-php8.3-alpine
+          with:
+            args: phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
+          env:
+            COMPOSER_IGNORE_PLATFORM_REQ: ext-mongodb
+
   composer-validate:
     name: 🎵 Composer validate
     runs-on: ubuntu-latest

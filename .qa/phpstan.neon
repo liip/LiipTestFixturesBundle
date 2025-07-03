@@ -1,0 +1,12 @@
+includes:
+    # it's provided by the $JAKZAL_IMAGE Docker image
+#    - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-strict-rules/rules.neon
+    - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-doctrine/extension.neon
+
+parameters:
+  level: 0
+  paths:
+    - ./../src
+    - ./../tests
+  excludePaths:
+    - ./../tests/*/var/*
