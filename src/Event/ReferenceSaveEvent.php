@@ -25,7 +25,7 @@ class ReferenceSaveEvent extends FixtureEvent
     public function __construct(
         ObjectManager $manager,
         AbstractExecutor $executor,
-        string $backupFilePath
+        string $backupFilePath,
     ) {
         $this->manager = $manager;
         $this->executor = $executor;

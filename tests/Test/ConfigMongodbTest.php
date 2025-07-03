@@ -65,7 +65,7 @@ class ConfigMongodbTest extends KernelTestCase
             $bundleVersion = InstalledVersions::getVersion('doctrine/mongodb-odm-bundle');
 
             if (null !== $fixturesVersion && null !== $bundleVersion && version_compare($fixturesVersion, '2.0', '>=') && version_compare($bundleVersion, '5.0', '<')) {
-                $this->markTestSkipped(sprintf('The installed versions of doctrine/data-fixtures (%s) and doctrine/mongodb-odm-bundle (%s) are not compatible.', $fixturesVersion, $bundleVersion));
+                $this->markTestSkipped(\sprintf('The installed versions of doctrine/data-fixtures (%s) and doctrine/mongodb-odm-bundle (%s) are not compatible.', $fixturesVersion, $bundleVersion));
             }
         }
 
