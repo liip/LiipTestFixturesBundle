@@ -18,7 +18,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -192,7 +192,7 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
             if (!\in_array($dbName, $schemaManager->listDatabases(), true)) {
                 $schemaManager->createDatabase($dbName);
             }
-        } catch (\Doctrine\DBAL\Platforms\Exception\NotSupported $e) {
+        } catch (\Exception $e) {
         }
 
         $tmpConnection->close();
@@ -246,6 +246,6 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
 
     private function isMysql(): bool
     {
-        return $this->connection->getDatabasePlatform() instanceof MySqlPlatform;
+        return $this->connection->getDatabasePlatform() instanceof MySQLPlatform;
     }
 }

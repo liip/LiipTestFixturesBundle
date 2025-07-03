@@ -15,7 +15,7 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Tools\SchemaTool;
 use Liip\TestFixturesBundle\Event\FixtureEvent;
@@ -36,7 +36,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
     public function getDriverName(): string
     {
-        return SqlitePlatform::class;
+        return SQLitePlatform::class;
     }
 
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
@@ -153,6 +153,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
     private function isSqlite(): bool
     {
-        return $this->connection->getDatabasePlatform() instanceof SqlitePlatform;
+        return $this->connection->getDatabasePlatform() instanceof SQLitePlatform;
     }
 }

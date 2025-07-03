@@ -17,7 +17,6 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
@@ -31,8 +30,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigSqliteTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
     /** @var ObjectRepository */
@@ -44,11 +41,13 @@ class ConfigSqliteTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine')
+        $testContainer = static::getContainer();
+
+        $this->userRepository = $testContainer->get('doctrine')
             ->getRepository(User::class)
         ;
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }

@@ -15,9 +15,9 @@ namespace Liip\TestFixturesBundle\Services\DatabaseTools;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 
 abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
 {
@@ -34,9 +34,9 @@ abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
         $platform = $this->connection->getDatabasePlatform();
 
         // AbstractMySQLPlatform was introduced in DBAL 3.3, keep the MySQLPlatform checks for compatibility with older versions
-        if ($platform instanceof AbstractMySQLPlatform || $platform instanceof MySqlPlatform) {
+        if ($platform instanceof AbstractMySQLPlatform || $platform instanceof MySQLPlatform) {
             return 'mysql';
-        } elseif ($platform instanceof SqlitePlatform) {
+        } elseif ($platform instanceof SQLitePlatform) {
             return 'sqlite';
         } elseif ($platform instanceof PostgreSQLPlatform) {
             return 'pgsql';

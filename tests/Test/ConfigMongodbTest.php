@@ -30,7 +30,6 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Liip\Acme\Tests\AppConfigMongodb\AppConfigMongodbKernel;
 use Liip\Acme\Tests\AppConfigMongodb\DataFixtures\MongoDB\LoadUserDataFixture;
 use Liip\Acme\Tests\AppConfigMongodb\Document\User;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool;
@@ -49,8 +48,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigMongodbTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
@@ -78,10 +75,12 @@ class ConfigMongodbTest extends KernelTestCase
             'environment' => 'mongodb',
         ]);
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine_mongodb')
+        $testContainer = static::getContainer();
+
+        $this->userRepository = $testContainer->get('doctrine_mongodb')
             ->getRepository(User::class);
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get('default', 'doctrine_mongodb');
+        $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get('default', 'doctrine_mongodb');
 
         $this->assertInstanceOf(MongoDBDatabaseTool::class, $this->databaseTool);
     }
