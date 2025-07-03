@@ -14,7 +14,7 @@ jobs:
         run: rm -v composer.json
 
       - name: PHP-CS-Fixer
-        uses: docker://jakzal/phpqa:1.96.3-php8.2-alpine
+        uses: docker://jakzal/phpqa:1.107-php8.3-alpine
         with:
           args: php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --dry-run --diff --no-interaction --ansi fix --show-progress none
 
