@@ -15,7 +15,6 @@ namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -36,8 +35,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigEventsTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,7 +48,9 @@ class ConfigEventsTest extends KernelTestCase
      */
     public function testLoadEmptyFixturesAndCheckEvents(): void
     {
-        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $testContainer = static::getContainer();
+
+        $databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $databaseTool);
 
@@ -62,7 +61,7 @@ class ConfigEventsTest extends KernelTestCase
             $fixtures
         );
 
-        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
+        $eventDispatcher = $testContainer->get('event_dispatcher');
 
         $event = $eventDispatcher->getListeners(LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE);
         $this->assertSame('preFixtureBackupRestore', $event[0][1]);
@@ -88,8 +87,10 @@ class ConfigEventsTest extends KernelTestCase
     #[DataProvider('fixturesEventsProvider')]
     public function testLoadEmptyFixturesAndCheckEventsAreCalled(string $eventName, string $methodName, int $numberOfInvocations, ?bool $withCache = true): void
     {
+        $testContainer = static::getContainer();
+
         /** @var AbstractDatabaseTool $databaseTool */
-        $databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $databaseTool);
 
@@ -101,7 +102,7 @@ class ConfigEventsTest extends KernelTestCase
         ;
 
         // Register to the event
-        $eventDispatcher = $this->getTestContainer()->get('event_dispatcher');
+        $eventDispatcher = $testContainer->get('event_dispatcher');
         $eventDispatcher->addListener(
             $eventName,
             [$mock, $methodName]

@@ -16,7 +16,6 @@ namespace Liip\Acme\Tests\Test;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -36,8 +35,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
     /** @var ObjectRepository */
@@ -51,15 +48,17 @@ class ConfigTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine')
+        $testContainer = static::getContainer();
+
+        $this->userRepository = $testContainer->get('doctrine')
             ->getRepository(User::class)
         ;
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
         $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
 
-        $this->sqliteDatabaseBackup = $this->getTestContainer()->get(SqliteDatabaseBackup::class);
+        $this->sqliteDatabaseBackup = $testContainer->get(SqliteDatabaseBackup::class);
 
         $this->assertInstanceOf(SqliteDatabaseBackup::class, $this->sqliteDatabaseBackup);
     }

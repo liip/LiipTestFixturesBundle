@@ -17,7 +17,6 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
-use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
@@ -42,8 +41,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigMysqlTest extends KernelTestCase
 {
-    use ContainerProvider;
-
     /** @var ObjectRepository */
     protected $userRepository;
 
@@ -56,11 +53,13 @@ class ConfigMysqlTest extends KernelTestCase
 
         self::bootKernel();
 
-        $this->userRepository = $this->getTestContainer()->get('doctrine')
+        $testContainer = static::getContainer();
+
+        $this->userRepository = $testContainer->get('doctrine')
             ->getRepository(User::class)
         ;
 
-        $this->databaseTool = $this->getTestContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
         $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
