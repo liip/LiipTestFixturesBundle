@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Liip\Acme\Tests\AppConfigPgsql\AppConfigPgsqlKernel;
-use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
@@ -43,14 +42,6 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
 #[PreserveGlobalState(false)]
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
-    /**
-     * @group pgsql
-     */
-    public function testToolType(): void
-    {
-        $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
-    }
-
     protected static function getKernelClass(): string
     {
         return AppConfigPgsqlKernel::class;

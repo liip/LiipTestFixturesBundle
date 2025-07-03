@@ -19,7 +19,6 @@ use Liip\Acme\Tests\App\Entity\Setting;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -42,14 +41,11 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigMysqlTest extends KernelTestCase
 {
-    /** @var ObjectRepository */
-    protected $userRepository;
+    protected ObjectRepository $userRepository;
 
-    /** @var ObjectRepository */
-    protected $settingRepository;
+    protected ObjectRepository $settingRepository;
 
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
+    protected ORMDatabaseTool $databaseTool;
 
     protected function setUp(): void
     {
@@ -68,8 +64,6 @@ class ConfigMysqlTest extends KernelTestCase
         ;
 
         $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
-
-        $this->assertInstanceOf(ORMDatabaseTool::class, $this->databaseTool);
     }
 
     /**

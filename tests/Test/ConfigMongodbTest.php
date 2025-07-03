@@ -31,7 +31,6 @@ use Liip\Acme\Tests\AppConfigMongodb\AppConfigMongodbKernel;
 use Liip\Acme\Tests\AppConfigMongodb\DataFixtures\MongoDB\LoadUserDataFixture;
 use Liip\Acme\Tests\AppConfigMongodb\Document\User;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -48,8 +47,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigMongodbTest extends KernelTestCase
 {
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
+    protected MongoDBDatabaseTool $databaseTool;
 
     private DocumentRepository $userRepository;
 
@@ -81,8 +79,6 @@ class ConfigMongodbTest extends KernelTestCase
             ->getRepository(User::class);
 
         $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get('default', 'doctrine_mongodb');
-
-        $this->assertInstanceOf(MongoDBDatabaseTool::class, $this->databaseTool);
     }
 
     public function testLoadFixturesMongodb(): void
