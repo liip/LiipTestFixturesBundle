@@ -43,6 +43,7 @@ class LoadDependentUserData extends AbstractFixture implements DependentFixtureI
     {
         return [
             'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSettingData',
         ];
     }
 }

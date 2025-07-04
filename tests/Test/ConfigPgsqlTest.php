@@ -37,35 +37,12 @@ use PHPUnit\Framework\Attributes\PreserveGlobalState;
  * @IgnoreAnnotation("group")
  *
  * @internal
+ *
+ * @group pgsql
  */
 #[PreserveGlobalState(false)]
 class ConfigPgsqlTest extends ConfigMysqlTest
 {
-    /**
-     * Load fixture which has a dependency.
-     *
-     * @group pgsql
-     */
-    public function testLoadDependentFixtures(): void
-    {
-        $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
-        ]);
-
-        $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
-            $fixtures
-        );
-
-        $users = $this->userRepository->findAll();
-
-        // The two files with fixtures have been loaded, there are 4 users.
-        $this->assertCount(
-            4,
-            $users
-        );
-    }
-
     /**
      * @group pgsql
      */
