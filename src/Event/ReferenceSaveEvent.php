@@ -18,9 +18,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class ReferenceSaveEvent extends FixtureEvent
 {
-    private $manager;
-    private $executor;
-    private $backupFilePath;
+    private ObjectManager $manager;
+    private AbstractExecutor $executor;
+    private string $backupFilePath;
 
     public function __construct(
         ObjectManager $manager,

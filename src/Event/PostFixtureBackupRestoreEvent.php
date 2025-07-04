@@ -15,7 +15,7 @@ namespace Liip\TestFixturesBundle\Event;
 
 class PostFixtureBackupRestoreEvent extends FixtureEvent
 {
-    private $backupFilePath;
+    private string $backupFilePath;
 
     public function __construct(string $backupFilePath)
     {
