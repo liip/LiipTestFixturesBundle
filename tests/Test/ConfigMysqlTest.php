@@ -15,6 +15,7 @@ namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Persistence\ObjectRepository;
+use Liip\Acme\Tests\App\Entity\Setting;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -44,6 +45,9 @@ class ConfigMysqlTest extends KernelTestCase
     /** @var ObjectRepository */
     protected $userRepository;
 
+    /** @var ObjectRepository */
+    protected $settingRepository;
+
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
 
@@ -57,6 +61,10 @@ class ConfigMysqlTest extends KernelTestCase
 
         $this->userRepository = $testContainer->get('doctrine')
             ->getRepository(User::class)
+        ;
+
+        $this->settingRepository = $testContainer->get('doctrine')
+            ->getRepository(Setting::class)
         ;
 
         $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
@@ -345,6 +353,9 @@ class ConfigMysqlTest extends KernelTestCase
 
     /**
      * Load fixture which has a dependency.
+     *
+     * @group mysql
+     * @group pgsql
      */
     public function testLoadDependentFixtures(): void
     {
@@ -363,6 +374,14 @@ class ConfigMysqlTest extends KernelTestCase
         $this->assertCount(
             4,
             $users
+        );
+
+        // Settings have been loaded too
+        $settings = $this->settingRepository->findAll();
+
+        $this->assertCount(
+            2,
+            $settings
         );
     }
 
