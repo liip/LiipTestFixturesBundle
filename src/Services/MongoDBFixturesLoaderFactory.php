@@ -16,17 +16,13 @@ namespace Liip\TestFixturesBundle\Services;
 use Doctrine\Bundle\MongoDBBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Loader;
 use Liip\TestFixturesBundle\FixturesLoaderFactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MongoDBFixturesLoaderFactory implements FixturesLoaderFactoryInterface
 {
-    private ContainerInterface $container;
-
     private ?SymfonyFixturesLoader $loader;
 
-    public function __construct(ContainerInterface $container, ?SymfonyFixturesLoader $loader = null)
+    public function __construct(?SymfonyFixturesLoader $loader = null)
     {
-        $this->container = $container;
         $this->loader = $loader;
     }
 

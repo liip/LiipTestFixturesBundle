@@ -67,8 +67,6 @@ class ConfigTest extends KernelTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
-        $this->assertIsArray($fixtures);
-
         // 10 users are loaded
         $this->assertCount(
             10,

@@ -5,7 +5,7 @@ includes:
   - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-  level: 2
+  level: 4
   paths:
     - ./../src
     - ./../tests
@@ -17,3 +17,13 @@ parameters:
       identifier: property.notFound
       count: 2
       path: ../src/Services/DatabaseTools/AbstractDatabaseTool.php
+    -
+      message: '#^Instanceof between Doctrine\\DBAL\\Platforms\\AbstractPlatform and Doctrine\\DBAL\\Platforms\\MySQLPlatform will always evaluate to false\.$#'
+      identifier: instanceof.alwaysFalse
+      count: 1
+      path: ../src/Services/DatabaseTools/AbstractDbalDatabaseTool.php
+    -
+      message: '#^Property Liip\\Acme\\Tests\\AppConfigMongodb\\Document\\User\:\:\$id \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+      identifier: property.unusedType
+      count: 1
+      path: ../tests/AppConfigMongodb/Document/User.php

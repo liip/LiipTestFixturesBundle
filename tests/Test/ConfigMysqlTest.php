@@ -155,7 +155,7 @@ class ConfigMysqlTest extends KernelTestCase
             $users
         );
 
-        /** @var User $user1 */
+        /** @var User|null $user1 */
         $user1 = $this->userRepository
             ->findOneBy([
                 'email' => 'foo@bar.com',
@@ -169,7 +169,7 @@ class ConfigMysqlTest extends KernelTestCase
             $user1->getEmail()
         );
 
-        /** @var User $user2 */
+        /** @var User|null $user2 */
         $user2 = $this->userRepository
             ->findOneBy([
                 'email' => 'alice@bar.com',
@@ -183,7 +183,7 @@ class ConfigMysqlTest extends KernelTestCase
             $user2->getEmail()
         );
 
-        /** @var User $user3 */
+        /** @var User|null $user3 */
         $user3 = $this->userRepository
             ->findOneBy([
                 'email' => 'alice@bar.com',
@@ -311,8 +311,6 @@ class ConfigMysqlTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadAliceFixture([
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
-
-        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
