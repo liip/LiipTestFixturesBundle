@@ -317,8 +317,6 @@ class ConfigSqliteTest extends KernelTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ]);
 
-        $this->assertIsArray($fixtures);
-
         // 10 users are loaded
         $this->assertCount(
             10,
@@ -341,7 +339,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertIsString($user->getName());
+        $this->assertNotEmpty($user->getName());
 
         $user = $this->userRepository
             ->findOneBy([
@@ -349,7 +347,7 @@ class ConfigSqliteTest extends KernelTestCase
             ])
         ;
 
-        $this->assertIsString($user->getName());
+        $this->assertNotEmpty($user->getName());
     }
 
     /**
@@ -376,8 +374,6 @@ class ConfigSqliteTest extends KernelTestCase
             '@AcmeBundle/DataFixtures/ORM/user.yml',
         ], true);
 
-        $this->assertIsArray($fixtures);
-
         // 10 users are loaded
         $this->assertCount(
             10,
@@ -402,8 +398,6 @@ class ConfigSqliteTest extends KernelTestCase
             ),
         ]);
 
-        $this->assertIsArray($fixtures);
-
         // 10 users are loaded
         $this->assertCount(
             10,
@@ -417,7 +411,7 @@ class ConfigSqliteTest extends KernelTestCase
         /** @var User $user1 */
         $user1 = $fixtures[$fixtureId];
 
-        $this->assertIsString($user1->getEmail());
+        $this->assertNotEmpty($user1->getEmail());
 
         $users = $this->userRepository->findAll();
 
@@ -435,7 +429,7 @@ class ConfigSqliteTest extends KernelTestCase
 
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertIsString($user->getName());
+        $this->assertNotEmpty($user->getName());
     }
 
     /**
@@ -446,8 +440,6 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadAliceFixture([
             __DIR__.'/../App/DataFixtures/ORM/user.yml',
         ]);
-
-        $this->assertIsArray($fixtures);
 
         // 10 users are loaded
         $this->assertCount(
