@@ -15,7 +15,7 @@ namespace Liip\Acme\Tests\AppConfig\DataFixtures\Faker\Provider;
 
 class FooProvider
 {
-    public static function foo($str)
+    public static function foo(string $str): string
     {
         return 'foo'.$str;
     }
