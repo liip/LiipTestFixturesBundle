@@ -145,9 +145,9 @@ abstract class AbstractDatabaseTool
      */
     public function loadAllFixtures(array $groups = []): ?AbstractExecutor
     {
-        /** @var SymfonyFixturesLoader $loader */
         $fixtureClasses = [];
         if ($this->container->has('test.service_container')) {
+            /** @var SymfonyFixturesLoader $loader */
             $loader = $this->container->get('test.service_container')->get('doctrine.fixtures.loader');
             $fixtures = $loader->getFixtures($groups);
             foreach ($fixtures as $fixture) {

@@ -17,7 +17,7 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
-use Doctrine\ODM\MongoDB\Configuration;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
@@ -30,6 +30,9 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
 {
     protected static $databaseCreated = false;
 
+    /** @var DocumentManager */
+    protected $om;
+
     public function getType(): string
     {
         return 'MongoDB';
@@ -39,7 +42,6 @@ class MongoDBDatabaseTool extends AbstractDatabaseTool
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);
 
-        /** @var Configuration $config */
         $config = $this->om->getConfiguration();
 
         $cacheDriver = $config->getMetadataCache();

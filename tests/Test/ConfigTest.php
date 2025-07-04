@@ -18,7 +18,6 @@ use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -35,12 +34,11 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigTest extends KernelTestCase
 {
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
-    /** @var ObjectRepository */
-    private $userRepository;
-    /** @var SqliteDatabaseBackup */
-    private $sqliteDatabaseBackup;
+    protected ORMSqliteDatabaseTool $databaseTool;
+
+    private ObjectRepository $userRepository;
+
+    private SqliteDatabaseBackup $sqliteDatabaseBackup;
 
     protected function setUp(): void
     {
@@ -56,11 +54,7 @@ class ConfigTest extends KernelTestCase
 
         $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
 
-        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
-
         $this->sqliteDatabaseBackup = $testContainer->get(SqliteDatabaseBackup::class);
-
-        $this->assertInstanceOf(SqliteDatabaseBackup::class, $this->sqliteDatabaseBackup);
     }
 
     /**

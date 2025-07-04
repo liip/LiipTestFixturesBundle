@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\TestFixturesBundle\Services\DatabaseBackup;
 
 use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use MongoDB\Driver\Server;
 
@@ -48,8 +49,11 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
 
     public function backup(AbstractExecutor $executor): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var DocumentManager $dm */
-        $dm = $executor->getReferenceRepository()->getManager();
+        $dm = $referenceRepository->getManager();
 
         foreach ($this->getDatabases($dm) as $dbName => $server) {
             /**
@@ -61,14 +65,17 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
             exec("mongodump --quiet --forceTableScan --db {$dbName} --host {$dbHost} --port {$dbPort} --out {$this->getBackupFilePath()}");
         }
 
-        $executor->getReferenceRepository()->save($this->getBackupFilePath());
+        $referenceRepository->save($this->getBackupFilePath());
         self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
     }
 
     public function restore(AbstractExecutor $executor, array $excludedTables = []): void
     {
+        /** @var ProxyReferenceRepository $referenceRepository */
+        $referenceRepository = $executor->getReferenceRepository();
+
         /** @var DocumentManager $dm */
-        $dm = $executor->getReferenceRepository()->getManager();
+        $dm = $referenceRepository->getManager();
 
         foreach ($this->getDatabases($dm) as $dbName => $server) {
             /**
@@ -85,9 +92,9 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
             foreach (self::$metadata as $class => $data) {
                 $dm->getMetadataFactory()->setMetadataFor($class, $data);
             }
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+            $referenceRepository->unserialize($this->getReferenceBackup());
         } else {
-            $executor->getReferenceRepository()->unserialize($this->getReferenceBackup());
+            $referenceRepository->unserialize($this->getReferenceBackup());
             self::$metadata = $dm->getMetadataFactory()->getLoadedMetadata();
         }
     }

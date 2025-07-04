@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -30,10 +30,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigSqliteTest extends KernelTestCase
 {
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
-    /** @var ObjectRepository */
-    private $userRepository;
+    protected ORMSqliteDatabaseTool $databaseTool;
+
+    private EntityRepository $userRepository;
 
     protected function setUp(): void
     {
@@ -48,8 +47,6 @@ class ConfigSqliteTest extends KernelTestCase
         ;
 
         $this->databaseTool = $testContainer->get(DatabaseToolCollection::class)->get();
-
-        $this->assertInstanceOf(ORMSqliteDatabaseTool::class, $this->databaseTool);
     }
 
     public static function getKernelClass(): string
@@ -134,6 +131,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
@@ -157,6 +155,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
@@ -164,7 +163,7 @@ class ConfigSqliteTest extends KernelTestCase
             $repository
         );
 
-        $users = $repository->findAll();
+        $users = $this->userRepository->findAll();
 
         // The fixture group myGroup contains 3 users
         $this->assertCount(
@@ -180,6 +179,7 @@ class ConfigSqliteTest extends KernelTestCase
             $fixtures
         );
 
+        /** @var ProxyReferenceRepository $repository */
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
@@ -187,7 +187,7 @@ class ConfigSqliteTest extends KernelTestCase
             $repository
         );
 
-        $users = $repository->findAll();
+        $users = $this->userRepository->findAll();
 
         // Loading all fixtures results in 12 users.
         $this->assertCount(

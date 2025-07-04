@@ -2,11 +2,18 @@ includes:
     # it's provided by the $JAKZAL_IMAGE Docker image
 #    - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-strict-rules/rules.neon
     - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-doctrine/extension.neon
+    - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-  level: 0
+  level: 2
   paths:
     - ./../src
     - ./../tests
   excludePaths:
     - ./../tests/*/var/*
+  ignoreErrors:
+    -
+      message: '#^Access to an undefined property Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\:\:\$name\.$#'
+      identifier: property.notFound
+      count: 2
+      path: ../src/Services/DatabaseTools/AbstractDatabaseTool.php
