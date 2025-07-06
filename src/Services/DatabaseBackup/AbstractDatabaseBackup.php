@@ -26,14 +26,14 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
     protected FixturesLoaderFactoryInterface $fixturesLoaderFactory;
 
     /**
-     * @var array
+     * @var list<\Doctrine\ORM\Mapping\ClassMetadata<object>>
      */
     protected array $metadatas = [];
 
     /**
      * The fixture classnames.
      *
-     * @var array
+     * @var list<string>
      */
     protected array $classNames = [];
 
@@ -43,6 +43,9 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
         $this->fixturesLoaderFactory = $fixturesLoaderFactory;
     }
 
+    /**
+     * @param list<\Doctrine\ORM\Mapping\ClassMetadata<object>> $metadatas
+     */
     public function init(array $metadatas, array $classNames, bool $append = false): void
     {
         $this->metadatas = $metadatas;
@@ -85,10 +88,10 @@ abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
      * file were being written to, that is, the time when the content of the
      * file was changed.
      *
-     * @param string $class The fully qualified class name of the fixture class to
-     *                      check modification date on
+     * @param object|string $class The fully qualified class name of the fixture class to
+     *                             check modification date on
      */
-    protected function getFixtureLastModified($class): ?\DateTime
+    protected function getFixtureLastModified(object|string $class): ?\DateTime
     {
         $lastModifiedDateTime = null;
 

@@ -19,6 +19,8 @@ interface FixturesLoaderFactoryInterface
 {
     /**
      * Retrieve Doctrine DataFixtures loader.
+     *
+     * @param list<string> $classNames
      */
     public function getFixtureLoader(array $classNames): Loader;
 }

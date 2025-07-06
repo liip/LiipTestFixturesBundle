@@ -25,8 +25,14 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
 {
     protected static string $referenceData;
 
+    /**
+     * @var \Doctrine\ODM\MongoDB\Mapping\ClassMetadata<object>[]
+     */
     protected static array $metadata = [];
 
+    /**
+     * @var list<string>
+     */
     protected static array $databases = [];
 
     public function getBackupFilePath(): string
@@ -108,6 +114,9 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
         return self::$referenceData;
     }
 
+    /**
+     * @return array<string, Server>
+     */
     protected function getDatabases(DocumentManager $dm): array
     {
         if (!self::$databases) {

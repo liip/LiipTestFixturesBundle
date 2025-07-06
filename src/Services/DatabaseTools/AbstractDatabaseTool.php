@@ -57,7 +57,7 @@ abstract class AbstractDatabaseTool
     protected array $excludedDoctrineTables = [];
 
     /**
-     * @var array
+     * @var array<string, \Doctrine\ORM\Mapping\ClassMetadata<object>>
      */
     private static array $cachedMetadatas = [];
 
@@ -122,6 +122,9 @@ abstract class AbstractDatabaseTool
         return $newTool;
     }
 
+    /**
+     * @param list<string> $classNames
+     */
     abstract public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor;
 
     /**
@@ -129,6 +132,8 @@ abstract class AbstractDatabaseTool
      * them, e.g. by the DependentFixtureInterface. The call to this method
      * does the same as running the console command doctrine:fixtures:load,
      * including the use of the group parameter.
+     *
+     * @param list<string> $groups
      */
     public function loadAllFixtures(array $groups = []): ?AbstractExecutor
     {
@@ -146,7 +151,11 @@ abstract class AbstractDatabaseTool
     }
 
     /**
+     * @param list<string> $paths
+     *
      * @throws \BadMethodCallException
+     *
+     * @return array<string, object>
      */
     public function loadAliceFixture(array $paths = [], bool $append = false): array
     {
@@ -167,6 +176,9 @@ abstract class AbstractDatabaseTool
         return $this->container->get($persisterLoaderServiceName)->load($files);
     }
 
+    /**
+     * @param list<string> $excludedDoctrineTables
+     */
     public function setExcludedDoctrineTables(array $excludedDoctrineTables): void
     {
         $this->excludedDoctrineTables = $excludedDoctrineTables;
@@ -200,7 +212,11 @@ abstract class AbstractDatabaseTool
     /**
      * Locate fixture files.
      *
+     * @param list<string> $paths
+     *
      * @throws \InvalidArgumentException if a wrong path is given outside a bundle
+     *
+     * @return list<string>
      */
     protected function locateResources(array $paths): array
     {
@@ -224,6 +240,9 @@ abstract class AbstractDatabaseTool
         return $files;
     }
 
+    /**
+     * @return list<\Doctrine\ORM\Mapping\ClassMetadata<object>>
+     */
     protected function getMetadatas(): array
     {
         if (!$this->getCacheMetadataParameter()) {
@@ -242,13 +261,13 @@ abstract class AbstractDatabaseTool
         return self::$cachedMetadatas[$key];
     }
 
-    protected function getKeepDatabaseAndSchemaParameter()
+    protected function getKeepDatabaseAndSchemaParameter(): bool
     {
         return $this->container->hasParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME)
             && true === $this->container->getParameter(self::KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME);
     }
 
-    protected function getCacheMetadataParameter()
+    protected function getCacheMetadataParameter(): bool
     {
         return $this->container->hasParameter(self::CACHE_METADATA_PARAMETER_NAME)
             && false !== $this->container->getParameter(self::CACHE_METADATA_PARAMETER_NAME);

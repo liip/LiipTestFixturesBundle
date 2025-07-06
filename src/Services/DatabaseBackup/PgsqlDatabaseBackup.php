@@ -77,6 +77,9 @@ final class PgsqlDatabaseBackup extends AbstractDatabaseBackup
         return file_get_contents($this->getBackupFilePath());
     }
 
+    /**
+     * @param array<string, string> $params
+     */
     private function createCommand(string $command, array $params): string
     {
         // doctrine-bundle >= 2.2

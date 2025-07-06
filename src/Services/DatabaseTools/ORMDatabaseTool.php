@@ -56,6 +56,9 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
         return 'ORM';
     }
 
+    /**
+     * @param list<string> $classNames
+     */
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         if (null === $this->referenceRepository || false === $append) {

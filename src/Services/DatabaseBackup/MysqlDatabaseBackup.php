@@ -23,6 +23,9 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 final class MysqlDatabaseBackup extends AbstractDatabaseBackup
 {
+    /**
+     * @var array<string, \Doctrine\ORM\Mapping\ClassMetadata<object>>
+     */
     protected static array $metadata = [];
 
     protected static bool $schemaUpdatedFlag = false;
