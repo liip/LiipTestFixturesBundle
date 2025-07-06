@@ -21,21 +21,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class AbstractDatabaseBackup implements DatabaseBackupInterface
 {
-    protected $container;
+    protected ContainerInterface $container;
 
-    protected $fixturesLoaderFactory;
+    protected FixturesLoaderFactoryInterface $fixturesLoaderFactory;
 
     /**
      * @var array
      */
-    protected $metadatas;
+    protected array $metadatas = [];
 
     /**
      * The fixture classnames.
      *
      * @var array
      */
-    protected $classNames = [];
+    protected array $classNames = [];
 
     public function __construct(ContainerInterface $container, FixturesLoaderFactoryInterface $fixturesLoaderFactory)
     {

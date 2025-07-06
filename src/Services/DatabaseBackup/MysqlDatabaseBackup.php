@@ -23,9 +23,9 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 final class MysqlDatabaseBackup extends AbstractDatabaseBackup
 {
-    protected static $metadata;
+    protected static array $metadata = [];
 
-    protected static $schemaUpdatedFlag = false;
+    protected static bool $schemaUpdatedFlag = false;
 
     public function getBackupFilePath(): string
     {
@@ -142,7 +142,7 @@ final class MysqlDatabaseBackup extends AbstractDatabaseBackup
         }
     }
 
-    protected function getBackup()
+    protected function getBackup(): string
     {
         return file_get_contents($this->getBackupFilePath());
     }

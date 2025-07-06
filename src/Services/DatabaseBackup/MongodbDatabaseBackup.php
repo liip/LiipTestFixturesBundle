@@ -23,11 +23,11 @@ use MongoDB\Driver\Server;
  */
 final class MongodbDatabaseBackup extends AbstractDatabaseBackup
 {
-    protected static $referenceData;
+    protected static string $referenceData;
 
-    protected static $metadata;
+    protected static array $metadata = [];
 
-    protected static $databases;
+    protected static array $databases = [];
 
     public function getBackupFilePath(): string
     {

@@ -28,7 +28,7 @@ use Liip\TestFixturesBundle\LiipTestFixturesEvents;
  */
 class MongoDBDatabaseTool extends AbstractDatabaseTool
 {
-    protected static $databaseCreated = false;
+    protected static bool $databaseCreated = false;
 
     /** @var DocumentManager */
     protected $om;

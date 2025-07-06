@@ -30,49 +30,36 @@ abstract class AbstractDatabaseTool
     public const KEEP_DATABASE_AND_SCHEMA_PARAMETER_NAME = 'liip_test_fixtures.keep_database_and_schema';
     public const CACHE_METADATA_PARAMETER_NAME = 'liip_test_fixtures.cache_metadata';
 
-    protected $container;
+    protected ContainerInterface $container;
 
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     protected FixturesLoaderFactoryInterface $fixturesLoaderFactory;
 
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
+    protected ManagerRegistry $registry;
 
-    /**
-     * @var string|null
-     */
-    protected $omName;
+    protected ?string $omName;
 
-    /**
-     * @var string
-     */
-    protected $registryName = 'doctrine';
+    protected string $registryName = 'doctrine';
 
     /**
      * @var ObjectManager
      */
     protected $om;
 
-    /**
-     * @var int|null
-     */
-    protected $purgeMode;
+    protected ?int $purgeMode;
+
+    protected bool $databaseCacheEnabled = true;
 
     /**
-     * @var bool
+     * @var list<string>
      */
-    protected $databaseCacheEnabled = true;
-
-    protected $excludedDoctrineTables = [];
+    protected array $excludedDoctrineTables = [];
 
     /**
      * @var array
      */
-    private static $cachedMetadatas = [];
+    private static array $cachedMetadatas = [];
 
     public function __construct(ContainerInterface $container, FixturesLoaderFactoryInterface $fixturesLoaderFactory)
     {
