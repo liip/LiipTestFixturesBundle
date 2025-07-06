@@ -133,6 +133,9 @@ class ConfigEventsTest extends KernelTestCase
         $this->testLoadEmptyFixturesAndCheckEventsAreCalled($eventName, $methodName, $numberOfInvocations, false);
     }
 
+    /**
+     * @return iterable<string, array{0: string, 1: string, 2: int}>
+     */
     public static function fixturesEventsProvider(): iterable
     {
         yield 'preFixtureBackupRestore' => [LiipTestFixturesEvents::PRE_FIXTURE_BACKUP_RESTORE, 'preFixtureBackupRestore', 1];

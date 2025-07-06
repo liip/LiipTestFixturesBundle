@@ -18,9 +18,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class PreFixtureBackupRestoreEvent extends FixtureEvent
 {
-    private $manager;
-    private $repository;
-    private $backupFilePath;
+    private ObjectManager $manager;
+    private ReferenceRepository $repository;
+    private string $backupFilePath;
 
     public function __construct(
         ObjectManager $manager,

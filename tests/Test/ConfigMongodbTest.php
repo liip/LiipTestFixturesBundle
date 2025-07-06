@@ -49,6 +49,9 @@ class ConfigMongodbTest extends KernelTestCase
 {
     protected MongoDBDatabaseTool $databaseTool;
 
+    /**
+     * @var DocumentRepository<User>
+     */
     private DocumentRepository $userRepository;
 
     protected function setUp(): void

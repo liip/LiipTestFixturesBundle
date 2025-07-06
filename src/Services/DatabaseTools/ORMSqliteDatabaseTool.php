@@ -39,6 +39,9 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
         return SQLitePlatform::class;
     }
 
+    /**
+     * @param list<string> $classNames
+     */
     public function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor
     {
         $referenceRepository = new ProxyReferenceRepository($this->om);

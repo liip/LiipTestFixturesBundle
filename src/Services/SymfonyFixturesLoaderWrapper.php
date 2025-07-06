@@ -25,12 +25,12 @@ final class SymfonyFixturesLoaderWrapper extends Loader
         $this->symfonyFixturesLoader = $symfonyFixturesLoader;
     }
 
-    public function loadFixturesClass($className): void
+    public function loadFixturesClass(string $className): void
     {
         $this->addFixture($this->symfonyFixturesLoader->getFixture($className));
     }
 
-    public function createFixture($class): FixtureInterface
+    public function createFixture(string $class): FixtureInterface
     {
         return $this->symfonyFixturesLoader->getFixture($class);
     }

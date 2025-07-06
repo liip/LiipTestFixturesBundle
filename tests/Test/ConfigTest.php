@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
@@ -36,7 +36,10 @@ class ConfigTest extends KernelTestCase
 {
     protected ORMSqliteDatabaseTool $databaseTool;
 
-    private ObjectRepository $userRepository;
+    /**
+     * @var EntityRepository<User>
+     */
+    private EntityRepository $userRepository;
 
     private SqliteDatabaseBackup $sqliteDatabaseBackup;
 

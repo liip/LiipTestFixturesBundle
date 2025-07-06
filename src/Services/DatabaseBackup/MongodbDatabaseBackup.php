@@ -23,11 +23,17 @@ use MongoDB\Driver\Server;
  */
 final class MongodbDatabaseBackup extends AbstractDatabaseBackup
 {
-    protected static $referenceData;
+    protected static string $referenceData;
 
-    protected static $metadata;
+    /**
+     * @var \Doctrine\ODM\MongoDB\Mapping\ClassMetadata<object>[]
+     */
+    protected static array $metadata = [];
 
-    protected static $databases;
+    /**
+     * @var list<string>
+     */
+    protected static array $databases = [];
 
     public function getBackupFilePath(): string
     {
@@ -108,6 +114,9 @@ final class MongodbDatabaseBackup extends AbstractDatabaseBackup
         return self::$referenceData;
     }
 
+    /**
+     * @return array<string, Server>
+     */
     protected function getDatabases(DocumentManager $dm): array
     {
         if (!self::$databases) {

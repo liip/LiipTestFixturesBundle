@@ -45,7 +45,7 @@ final class DatabaseToolCollection
         $this->items[$databaseTool->getType()][$driverName] = $databaseTool;
     }
 
-    public function get($omName = null, $registryName = 'doctrine', ?int $purgeMode = null): AbstractDatabaseTool
+    public function get(?string $omName = null, ?string $registryName = 'doctrine', ?int $purgeMode = null): AbstractDatabaseTool
     {
         /** @var ManagerRegistry $registry */
         $registry = $this->container->get($registryName);

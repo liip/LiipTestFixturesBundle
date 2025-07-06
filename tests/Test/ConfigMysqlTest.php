@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
 use Liip\Acme\Tests\App\Entity\Setting;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
@@ -41,9 +41,15 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[PreserveGlobalState(false)]
 class ConfigMysqlTest extends KernelTestCase
 {
-    protected ObjectRepository $userRepository;
+    /**
+     * @var EntityRepository<User>
+     */
+    protected EntityRepository $userRepository;
 
-    protected ObjectRepository $settingRepository;
+    /**
+     * @var EntityRepository<Setting>
+     */
+    protected EntityRepository $settingRepository;
 
     protected ORMDatabaseTool $databaseTool;
 

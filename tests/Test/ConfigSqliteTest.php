@@ -32,6 +32,9 @@ class ConfigSqliteTest extends KernelTestCase
 {
     protected ORMSqliteDatabaseTool $databaseTool;
 
+    /**
+     * @var EntityRepository<User>
+     */
     private EntityRepository $userRepository;
 
     protected function setUp(): void
