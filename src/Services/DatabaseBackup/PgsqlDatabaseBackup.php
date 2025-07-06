@@ -66,9 +66,9 @@ final class PgsqlDatabaseBackup extends AbstractDatabaseBackup
         $connection = $em->getConnection();
         $params = $connection->getParams();
 
-        $this->executeQuery($connection, 'SET session_replication_role = \'replica\';');
+        $connection->executeQuery('SET session_replication_role = \'replica\';');
         exec($this->createCommand('pg_restore --format=t --clean', $params).' '.$this->getBackupFilePath());
-        $this->executeQuery($connection, 'SET session_replication_role = \'origin\';');
+        $connection->executeQuery('SET session_replication_role = \'origin\';');
         $referenceRepository->load($this->getBackupFilePath());
     }
 
@@ -98,14 +98,5 @@ final class PgsqlDatabaseBackup extends AbstractDatabaseBackup
         }
 
         return $command;
-    }
-
-    private function executeQuery($connection, string $query): void
-    {
-        if (method_exists($connection, 'executeQuery')) {
-            $connection->executeQuery($query);
-        } else {
-            $connection->query($query);
-        }
     }
 }
