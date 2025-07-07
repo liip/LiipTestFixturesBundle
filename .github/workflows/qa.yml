@@ -40,8 +40,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@master
-      - name: Composer validate
-        uses: docker://composer:2
-        with:
-          args: composer validate --strict
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ✅ Composer validate
+        run: composer validate --strict
