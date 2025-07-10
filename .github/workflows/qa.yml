@@ -30,10 +30,13 @@ jobs:
 
       -   name: ✅ PHPStan
           uses: docker://jakzal/phpqa:1.111-php8.3-alpine
-          with:
-            args: phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
           env:
-            COMPOSER_IGNORE_PLATFORM_REQ: ext-mongodb
+              COMPOSER_IGNORE_PLATFORM_REQ: ext-mongodb
+              # this will hide the output of the automatic call to `composer install`
+              SHELL_VERBOSITY: -1
+          with:
+              # `SHELL_VERBOSITY=0` will restore the default verbosity, so that PHPStan output the results
+              args: sh -c "SHELL_VERBOSITY=0 phpstan analyse --configuration ./.qa/phpstan.neon --no-progress"
 
   composer-validate:
     name: 🎵 Composer validate
