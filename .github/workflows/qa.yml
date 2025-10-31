@@ -24,7 +24,7 @@ jobs:
 
     steps:
       -   name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@v5
 
       # the Docker image will install the dependencies automatically
 
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: ✅ Composer validate
         run: composer validate --strict
