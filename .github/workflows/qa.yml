@@ -29,7 +29,7 @@ jobs:
       # the Docker image will install the dependencies automatically
 
       -   name: ✅ PHPStan
-          uses: docker://jakzal/phpqa:1.111-php8.3-alpine
+          uses: docker://jakzal/phpqa:1.113.8-php8.4-alpine
           env:
               COMPOSER_IGNORE_PLATFORM_REQ: ext-mongodb
               # this will hide the output of the automatic call to `composer install`
