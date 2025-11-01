@@ -27,3 +27,5 @@ parameters:
       identifier: property.unusedType
       count: 1
       path: ../tests/AppConfigMongodb/Document/User.php
+    -
+      identifier: unset.possiblyHookedProperty
