@@ -28,7 +28,6 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * @runTestsInSeparateProcesses
@@ -40,7 +39,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  *
  * @internal
  */
-class ConfigSqliteTest extends KernelTestCase
+class ConfigSqliteTest extends FixturesTestCase
 {
     use ContainerProvider;
 

@@ -11,6 +11,8 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
+namespace Liip\Acme\Tests\Test;
+
 use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
@@ -21,7 +23,6 @@ use Liip\Acme\Tests\Traits\ContainerProvider;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\MongoDBDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Test MongoDB.
@@ -36,7 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  *
  * @internal
  */
-class ConfigMongodbTest extends KernelTestCase
+class ConfigMongodbTest extends FixturesTestCase
 {
     use ContainerProvider;
 

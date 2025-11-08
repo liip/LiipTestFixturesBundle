@@ -22,7 +22,6 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\PHPCRDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -38,7 +37,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @internal
  */
-class ConfigPhpcrTest extends KernelTestCase
+class ConfigPhpcrTest extends FixturesTestCase
 {
     use ContainerProvider;
 

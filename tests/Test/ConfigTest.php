@@ -22,7 +22,6 @@ use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Tests that configuration has been loaded and users can be logged in.
@@ -42,7 +41,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  *
  * @internal
  */
-class ConfigTest extends KernelTestCase
+class ConfigTest extends FixturesTestCase
 {
     use ContainerProvider;
 
