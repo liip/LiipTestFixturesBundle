@@ -10,10 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # the default job will test ^6.4 for all Symfony packages, with PHP 8.2
+        # the default job will test ^7.4 for all Symfony packages, with PHP 8.2
         php-version: ['8.2']
         composer-flags: ['']
-        symfony-version: ['^6.4']
+        symfony-version: ['^7.4']
         mysql-client: [ "default-mysql-client" ]
         # note: values defined in `matrix` and not in the `include:` section will be empty in jobs
         include:
@@ -29,16 +29,20 @@ jobs:
             composer-flags: "require doctrine/dbal:^3.0 --ignore-platform-req=ext-mongodb"
           - php-version: 8.2
             symfony-version: "^6.4"
+          - php-version: 8.2
+            symfony-version: "^7.4"
             # add a specific job to test mysqldump from MariaDB
             mysql-client: "mariadb-client"
-          - php-version: 8.2
-            symfony-version: "^7.2"
           - php-version: 8.3
-            symfony-version: "^7.2"
+            symfony-version: "^7.4"
           - php-version: 8.4
-            symfony-version: "^7.2"
+            symfony-version: "^7.4"
           - php-version: 8.5
-            symfony-version: "^7.3"
+            symfony-version: "^7.4"
+          - php-version: 8.4
+            symfony-version: "^8.0"
+          - php-version: 8.5
+            symfony-version: "^8.0"
 
     services:
       mariadb:
