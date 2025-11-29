@@ -29,3 +29,14 @@ parameters:
       path: ../tests/AppConfigMongodb/Document/User.php
     -
       identifier: unset.possiblyHookedProperty
+      path: ../tests/Test/
+    -
+      message: '#^Call to method arrayNode\(\) on an unknown class Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder\<Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition\>\.$#'
+      identifier: class.notFound
+      count: 1
+      path: ../src/DependencyInjection/Configuration.php
+    -
+      message: '#^Method Liip\\TestFixturesBundle\\DependencyInjection\\Configuration\:\:getConfigTreeBuilder\(\) return type with generic class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not specify its types\: T$#'
+      identifier: missingType.generics
+      count: 1
+      path: ../src/DependencyInjection/Configuration.php
