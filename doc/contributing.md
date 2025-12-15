@@ -61,7 +61,7 @@ docker-compose exec php bash -c "rm -rf tests/App*/var/cache/*"
 Use it through Docker:
 
 ```bash
-docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.113.8-php8.4-alpine php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --diff --no-interaction --ansi fix --show-progress none
+docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.116.2-php8.4-alpine php-cs-fixer --config=./.qa/.php-cs-fixer.dist.php --diff --no-interaction --ansi fix --show-progress none
 ```
 
 ## Run PHPStan
@@ -69,5 +69,5 @@ docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.113.8-php8.4-a
 Use it through Docker:
 
 ```bash
-docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.113.8-php8.4-alpine phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
+docker run --rm -it --volume .:/app --workdir /app jakzal/phpqa:1.116.2-php8.4-alpine phpstan analyse --configuration ./.qa/phpstan.neon --no-progress
 ```
