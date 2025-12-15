@@ -1,5 +1,5 @@
 includes:
-  # it's provided by the $JAKZAL_IMAGE Docker image
+  # it's provided by the jakzal/phpqa Docker image
 #  - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-strict-rules/rules.neon
   - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-doctrine/extension.neon
   - /tools/.composer/vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
@@ -30,13 +30,3 @@ parameters:
     -
       identifier: unset.possiblyHookedProperty
       path: ../tests/Test/
-    -
-      message: '#^Call to method arrayNode\(\) on an unknown class Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder\<Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition\>\.$#'
-      identifier: class.notFound
-      count: 1
-      path: ../src/DependencyInjection/Configuration.php
-    -
-      message: '#^Method Liip\\TestFixturesBundle\\DependencyInjection\\Configuration\:\:getConfigTreeBuilder\(\) return type with generic class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not specify its types\: T$#'
-      identifier: missingType.generics
-      count: 1
-      path: ../src/DependencyInjection/Configuration.php
