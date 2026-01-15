@@ -36,7 +36,7 @@ abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
         // AbstractMySQLPlatform was introduced in DBAL 3.3, keep the MySQLPlatform checks for compatibility with older versions
         if ($platform instanceof AbstractMySQLPlatform || $platform instanceof MySqlPlatform) {
             return 'mysql';
-        } elseif ($platform instanceof SQLitePlatform) {
+        } elseif ($platform instanceof SqlitePlatform || $platform instanceof SQLitePlatform) {
             return 'sqlite';
         } elseif ($platform instanceof PostgreSQLPlatform) {
             return 'pgsql';
