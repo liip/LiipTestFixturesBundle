@@ -166,6 +166,6 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
 
     private function isSqlite(): bool
     {
-        return $this->connection->getDatabasePlatform() instanceof SQLitePlatform;
+        return $this->connection->getDatabasePlatform() instanceof SqlitePlatform || $this->connection->getDatabasePlatform() instanceof SQLitePlatform;
     }
 }
