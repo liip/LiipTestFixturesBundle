@@ -4,9 +4,12 @@ This is for people who want to contribute to the project.
 ## How to get started
 
 First of all, you need to fork the repository and clone it locally.
-After that, we've prepared a docker setup to help you get started quickly.
+After that, we've prepared a Docker setup to help you get started quickly.
 
-Install docker and docker-compose on your machine, then run the following commands:
+Install `docker` and `docker compose` (or the older version `docker-compose`) on your machine, then run the following commands:
+
+> [!TIP]
+> If you use a Mac with ARM architecture (M1, M2, etc.), you may need to [modify the `docker-compose.yml` file](https://github.com/bitnami/containers/issues/40947#issuecomment-1927013148). Please don’t commit the changes to this file, keep them on your local environment.
 
 ```bash
 docker-compose up --detach
