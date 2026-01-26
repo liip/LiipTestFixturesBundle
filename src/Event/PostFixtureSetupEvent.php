@@ -20,7 +20,7 @@ class PostFixtureSetupEvent extends FixtureEvent
     private ObjectManager $manager;
 
     public function __construct(
-        ObjectManager $manager
+        ObjectManager $manager,
     ) {
         $this->manager = $manager;
     }
