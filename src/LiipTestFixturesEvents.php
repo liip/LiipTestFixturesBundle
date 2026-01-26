@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\TestFixturesBundle;
 
-use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureSetupEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 
@@ -23,7 +23,7 @@ final class LiipTestFixturesEvents
     /** @see PreFixtureBackupRestoreEvent */
     public const PRE_FIXTURE_BACKUP_RESTORE = 'liip_test_fixtures.pre_fixture_backup_restore';
 
-    /** @see FixtureEvent */
+    /** @see PostFixtureSetupEvent */
     public const POST_FIXTURE_SETUP = 'liip_test_fixtures.post_fixture_setup';
 
     /** @see PostFixtureBackupRestoreEvent */

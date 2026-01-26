@@ -15,6 +15,6 @@ namespace Liip\TestFixturesBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class FixtureEvent extends Event
+abstract class FixtureEvent extends Event
 {
 }
