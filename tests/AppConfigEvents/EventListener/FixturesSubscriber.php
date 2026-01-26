@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\AppConfigEvents\EventListener;
 
-use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureSetupEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
@@ -42,9 +42,10 @@ class FixturesSubscriber implements EventSubscriberInterface
         // your code
     }
 
-    public function postFixtureSetup(FixtureEvent $fixture): void
+    public function postFixtureSetup(PostFixtureSetupEvent $postFixtureSetupEvent): void
     {
-        // There are no parameters
+        $manager = $postFixtureSetupEvent->getManager();
+
         // your code
     }
 

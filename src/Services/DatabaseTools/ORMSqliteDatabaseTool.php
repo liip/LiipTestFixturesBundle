@@ -18,8 +18,8 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Tools\SchemaTool;
-use Liip\TestFixturesBundle\Event\FixtureEvent;
 use Liip\TestFixturesBundle\Event\PostFixtureBackupRestoreEvent;
+use Liip\TestFixturesBundle\Event\PostFixtureSetupEvent;
 use Liip\TestFixturesBundle\Event\PreFixtureBackupRestoreEvent;
 use Liip\TestFixturesBundle\Event\ReferenceSaveEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
@@ -90,7 +90,7 @@ class ORMSqliteDatabaseTool extends ORMDatabaseTool
             }
         }
 
-        $event = new FixtureEvent();
+        $event = new PostFixtureSetupEvent($this->om);
         $this->eventDispatcher->dispatch($event, LiipTestFixturesEvents::POST_FIXTURE_SETUP);
 
         $executor = $this->getExecutor($this->getPurger());
