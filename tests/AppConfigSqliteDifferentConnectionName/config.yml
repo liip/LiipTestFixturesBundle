@@ -1,0 +1,19 @@
+# inherits configuration from ../App/config.yml
+
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: 'sqlite:///%kernel.cache_dir%/test.db'
+
+    orm:
+        default_entity_manager: different
+        entity_managers:
+            different:
+                connection: default
+                mappings:
+                    LiipAcme:
+                        dir: "%kernel.project_dir%/Entity"
+                        prefix: 'Liip\Acme\Tests\App\Entity'
+                        is_bundle: false
