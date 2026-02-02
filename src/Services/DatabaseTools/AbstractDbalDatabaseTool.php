@@ -18,6 +18,7 @@ use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
+use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
 {
@@ -26,7 +27,12 @@ abstract class AbstractDbalDatabaseTool extends AbstractDatabaseTool
     public function setObjectManagerName(?string $omName = null): void
     {
         parent::setObjectManagerName($omName);
-        $this->connection = $this->registry->getConnection($omName);
+
+        if ($this->om instanceof EntityManagerInterface) {
+            $this->connection = $this->om->getConnection();
+        } else {
+            $this->connection = $this->registry->getConnection($omName);
+        }
     }
 
     protected function getPlatformName(): string
