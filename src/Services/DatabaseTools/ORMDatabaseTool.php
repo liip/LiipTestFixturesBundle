@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -249,6 +248,6 @@ class ORMDatabaseTool extends AbstractDbalDatabaseTool implements ResetInterface
 
     private function isMysql(): bool
     {
-        return $this->connection->getDatabasePlatform() instanceof MySQLPlatform;
+        return 'mysql' === $this->getPlatformName();
     }
 }
