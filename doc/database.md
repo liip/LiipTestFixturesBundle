@@ -47,8 +47,8 @@ class MyControllerTest extends WebTestCase
 +        // add all your fixtures classes that implement
 +        // Doctrine\Common\DataFixtures\FixtureInterface
 +        $this->databaseTool->loadFixtures([
-+            'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
-+            'Me\MyBundle\DataFixtures\ORM\LoadData'
++            \Bamarni\MainBundle\DataFixtures\ORM\LoadData:class,
++            \Me\MyBundle\DataFixtures\ORM\LoadData:class,
 +        ]);
 
         // you can now run your functional tests with a populated database
@@ -178,8 +178,8 @@ class MyControllerTest extends WebTestCase
         // add all your fixtures classes that implement
         // Doctrine\Common\DataFixtures\FixtureInterface
         $this->databaseTool->loadFixtures([
-            'Bamarni\MainBundle\DataFixtures\ORM\LoadData',
-            'Me\MyBundle\DataFixtures\ORM\LoadData'
+            \Bamarni\MainBundle\DataFixtures\ORM\LoadData::class,
+            \Me\MyBundle\DataFixtures\ORM\LoadData::class',
         ]);
 
         // you can now run your functional tests with a populated database
@@ -213,7 +213,7 @@ to the `setExcludedDoctrineTables` method before loading the fixtures.
 ```php
 $this->databaseTool->setExcludedDoctrineTables(['my_tablename_not_to_be_purged']);
 $this->databaseTool->loadFixtures([
-    'Me\MyBundle\DataFixtures\ORM\LoadData'
+    \Me\MyBundle\DataFixtures\ORM\LoadData::class,
 ]);
 ```
 

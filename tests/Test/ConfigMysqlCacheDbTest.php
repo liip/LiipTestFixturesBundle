@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysqlCacheDb\AppConfigMysqlKernelCacheDb;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -45,7 +47,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
     public function testLoadFixturesAndCheckBackup(): void
     {
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         // Load data from database
@@ -85,7 +87,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
 
         // Load fixtures again
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $users = $this->userRepository->findAll();
@@ -113,7 +115,7 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
     public function testLoadFixturesCheckReferencesByClass(): void
     {
         $referenceRepository = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ])->getReferenceRepository();
 
         $references = $referenceRepository->getReferencesByClass();
@@ -125,8 +127,8 @@ class ConfigMysqlCacheDbTest extends ConfigMysqlTest
         $this->assertCount(1, $references[$className]);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
+            LoadUserData::class,
+            LoadSecondUserData::class,
         ])->getReferenceRepository();
 
         $references = $referenceRepository->getReferencesByClass();

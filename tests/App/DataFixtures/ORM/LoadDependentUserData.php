@@ -42,8 +42,8 @@ class LoadDependentUserData extends AbstractFixture implements DependentFixtureI
     public function getDependencies(): array
     {
         return [
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSettingData',
+            LoadUserData::class,
+            LoadSettingData::class,
         ];
     }
 }

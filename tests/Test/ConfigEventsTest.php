@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Liip\Acme\Tests\AppConfigEvents\AppConfigEventsKernel;
 use Liip\Acme\Tests\AppConfigEvents\EventListener\FixturesSubscriber;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
@@ -57,7 +58,7 @@ class ConfigEventsTest extends KernelTestCase
         $fixtures = $databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -116,7 +117,7 @@ class ConfigEventsTest extends KernelTestCase
         }
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
     }

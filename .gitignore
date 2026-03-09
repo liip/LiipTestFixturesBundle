@@ -10,3 +10,4 @@ vendor
 !.gitkeep
 
 tests/App*/var/
+tests/App*/config/reference.php

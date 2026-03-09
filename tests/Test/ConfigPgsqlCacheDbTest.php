@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigPgsqlCacheDb\AppConfigPgsqlKernelCacheDb;
 
@@ -53,7 +55,7 @@ class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
         $this->assertTrue($this->databaseTool->isDatabaseCacheEnabled());
 
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         // Load data from database
@@ -93,7 +95,7 @@ class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
 
         // Load fixtures again
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $users = $this->userRepository->findAll();
@@ -124,7 +126,7 @@ class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
     public function testLoadFixturesCheckReferences(): void
     {
         $referenceRepository = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ])->getReferenceRepository();
 
         $references = $referenceRepository->getReferencesByClass();
@@ -136,8 +138,8 @@ class ConfigPgsqlCacheDbTest extends ConfigPgsqlTest
         $this->assertCount(1, $references[$className]);
 
         $referenceRepository = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData',
+            LoadUserData::class,
+            LoadSecondUserData::class,
         ])->getReferenceRepository();
 
         $references = $referenceRepository->getReferencesByClass();

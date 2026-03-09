@@ -13,8 +13,13 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityRepository;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData;
 use Liip\Acme\Tests\App\Entity\Setting;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigMysql\AppConfigMysqlKernel;
@@ -83,7 +88,7 @@ class ConfigMysqlTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
     }
@@ -95,18 +100,18 @@ class ConfigMysqlTest extends KernelTestCase
     public function testLoadFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            ProxyReferenceRepository::class,
             $repository
         );
 
@@ -136,12 +141,12 @@ class ConfigMysqlTest extends KernelTestCase
     public function testAppendFixtures(): void
     {
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $referenceRepository = $this->databaseTool->loadFixtures(
-            ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
-            true
+            [LoadSecondUserData::class],
+            true,
         )->getReferenceRepository();
 
         $references = $referenceRepository->getReferencesByClass();
@@ -208,16 +213,17 @@ class ConfigMysqlTest extends KernelTestCase
      * Data fixtures and purge.
      *
      * Purge modes are defined in
-     * Doctrine\Common\DataFixtures\Purger\ORMPurger.
+     *
+     * @see ORMPurger
      */
     public function testLoadFixturesAndExcludeFromPurge(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -244,7 +250,8 @@ class ConfigMysqlTest extends KernelTestCase
      * Data fixtures and purge.
      *
      * Purge modes are defined in
-     * Doctrine\Common\DataFixtures\Purger\ORMPurger.
+     *
+     * @see ORMPurger
      *
      * @group mysql
      * @group pgsql
@@ -252,11 +259,11 @@ class ConfigMysqlTest extends KernelTestCase
     public function testLoadFixturesAndPurge(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -283,7 +290,7 @@ class ConfigMysqlTest extends KernelTestCase
 
         // Reload fixtures
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $users = $this->userRepository->findAll();
@@ -358,11 +365,11 @@ class ConfigMysqlTest extends KernelTestCase
     public function testLoadDependentFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            LoadDependentUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
