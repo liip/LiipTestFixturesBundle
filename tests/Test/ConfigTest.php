@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Liip\Acme\Tests\Test;
 
 use Doctrine\ORM\EntityRepository;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfig\AppConfigKernel;
 use Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup;
@@ -111,7 +112,7 @@ class ConfigTest extends KernelTestCase
     public function testCacheCanBeDisabled(): void
     {
         $fixtures = [
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            LoadDependentUserData::class,
         ];
 
         $this->databaseTool->setDatabaseCacheEnabled(false);
@@ -154,7 +155,7 @@ class ConfigTest extends KernelTestCase
     public function testBackupIsRefreshed(): void
     {
         $fixtures = [
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            LoadDependentUserData::class,
         ];
 
         $this->databaseTool->loadFixtures($fixtures);

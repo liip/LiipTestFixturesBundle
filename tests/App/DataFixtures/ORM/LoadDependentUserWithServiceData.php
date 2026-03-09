@@ -52,7 +52,7 @@ class LoadDependentUserWithServiceData extends AbstractFixture implements Depend
     public function getDependencies(): array
     {
         return [
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserWithServiceData',
+            LoadUserWithServiceData::class,
         ];
     }
 }

@@ -13,9 +13,14 @@ declare(strict_types=1);
 
 namespace Liip\Acme\Tests\Test;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityRepository;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserWithServiceData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData;
+use Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData;
 use Liip\Acme\Tests\App\Entity\User;
 use Liip\Acme\Tests\AppConfigSqlite\AppConfigSqliteKernel;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -62,7 +67,7 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadFixtures([]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
     }
@@ -72,7 +77,7 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadFixtures();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
     }
@@ -80,18 +85,18 @@ class ConfigSqliteTest extends KernelTestCase
     public function testLoadFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            ProxyReferenceRepository::class,
             $repository
         );
 
@@ -130,7 +135,7 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadAllFixtures(['wrongGroup']);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -138,7 +143,7 @@ class ConfigSqliteTest extends KernelTestCase
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            ProxyReferenceRepository::class,
             $repository
         );
 
@@ -154,7 +159,7 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadAllFixtures(['myGroup']);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -162,7 +167,7 @@ class ConfigSqliteTest extends KernelTestCase
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            ProxyReferenceRepository::class,
             $repository
         );
 
@@ -178,7 +183,7 @@ class ConfigSqliteTest extends KernelTestCase
         $fixtures = $this->databaseTool->loadAllFixtures();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -186,7 +191,7 @@ class ConfigSqliteTest extends KernelTestCase
         $repository = $fixtures->getReferenceRepository();
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\ProxyReferenceRepository',
+            ProxyReferenceRepository::class,
             $repository
         );
 
@@ -202,12 +207,12 @@ class ConfigSqliteTest extends KernelTestCase
     public function testAppendFixtures(): void
     {
         $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadUserData',
+            LoadUserData::class,
         ]);
 
         $this->databaseTool->loadFixtures(
-            ['Liip\Acme\Tests\App\DataFixtures\ORM\LoadSecondUserData'],
-            true
+            [LoadSecondUserData::class],
+            true,
         );
 
         // Load data from database
@@ -263,11 +268,11 @@ class ConfigSqliteTest extends KernelTestCase
     public function testLoadDependentFixtures(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserData',
+            LoadDependentUserData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
@@ -286,11 +291,11 @@ class ConfigSqliteTest extends KernelTestCase
     public function testLoadDependentFixturesWithDependencyInjected(): void
     {
         $fixtures = $this->databaseTool->loadFixtures([
-            'Liip\Acme\Tests\App\DataFixtures\ORM\LoadDependentUserWithServiceData',
+            LoadDependentUserWithServiceData::class,
         ]);
 
         $this->assertInstanceOf(
-            'Doctrine\Common\DataFixtures\Executor\ORMExecutor',
+            ORMExecutor::class,
             $fixtures
         );
 
