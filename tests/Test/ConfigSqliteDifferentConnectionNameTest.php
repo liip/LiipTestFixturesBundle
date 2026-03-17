@@ -24,7 +24,6 @@ use Liip\TestFixturesBundle\Event\PostFixtureSetupEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
