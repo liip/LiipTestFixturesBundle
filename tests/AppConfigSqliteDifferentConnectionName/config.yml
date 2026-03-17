@@ -6,6 +6,8 @@ doctrine:
         connections:
             default:
                 url: 'sqlite:///%kernel.cache_dir%/test.db'
+            additional:
+                url: 'sqlite:///%kernel.cache_dir%/test_additional.db'
 
     orm:
         default_entity_manager: different
@@ -17,3 +19,15 @@ doctrine:
                         dir: "%kernel.project_dir%/Entity"
                         prefix: 'Liip\Acme\Tests\App\Entity'
                         is_bundle: false
+            additional:
+                connection: additional
+                mappings:
+                    LiipAcme:
+                        dir: "%kernel.project_dir%/../AppConfigSqliteDifferentConnectionName/Entity"
+                        prefix: 'Liip\Acme\Tests\AppConfigSqliteDifferentConnectionName\Entity'
+                        is_bundle: false
+
+services:
+    Liip\Acme\Tests\AppConfigSqliteDifferentConnectionName\DataFixtures\ORM\:
+        resource: 'DataFixtures/ORM/*'
+        tags: [ 'doctrine.fixture.orm' ]
