@@ -23,6 +23,7 @@ use Liip\Acme\Tests\AppConfigSqliteDifferentConnectionName\Entity\Queue;
 use Liip\TestFixturesBundle\Event\PostFixtureSetupEvent;
 use Liip\TestFixturesBundle\LiipTestFixturesEvents;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Liip\TestFixturesBundle\Services\DatabaseTools\ORMSqliteDatabaseTool;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -79,6 +80,9 @@ class ConfigSqliteDifferentConnectionNameTest extends ConfigSqliteTest
         );
     }
 
+    /**
+     * @return iterable<array{0:string,1:string}>
+     */
     public static function objectManagerNameViaEventDataProvider(): iterable
     {
         yield [self::MAIN_ENTITY_MANAGER_NAME, self::MAIN_CONNECTION_NAME];
@@ -122,7 +126,7 @@ class ConfigSqliteDifferentConnectionNameTest extends ConfigSqliteTest
         return AppConfigSqliteDifferentConnectionNameKernel::class;
     }
 
-    private function getDatabaseTool(string $omName): ORMSqliteDatabaseTool
+    private function getDatabaseTool(string $omName): AbstractDatabaseTool
     {
         $testContainer = static::getContainer();
 
