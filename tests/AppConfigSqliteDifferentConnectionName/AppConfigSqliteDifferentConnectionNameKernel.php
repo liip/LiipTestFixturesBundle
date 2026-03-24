@@ -29,7 +29,7 @@ class AppConfigSqliteDifferentConnectionNameKernel extends AppKernel
         // Load the default file.
         parent::configureContainer($container, $loader);
 
-        // Load the file with MySQL configuration
+        // Load the file with 2 entity managers
         $loader->load(__DIR__.'/config.yml');
     }
 }
