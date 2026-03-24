@@ -35,9 +35,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ConfigSqliteDifferentConnectionNameTest extends ConfigSqliteTest
 {
     private const MAIN_ENTITY_MANAGER_NAME = 'different';
-    private const ADDITIONAL_ENTITY_MANAGER_NAME = 'additional';
-
     private const MAIN_CONNECTION_NAME = 'default';
+
+    private const ADDITIONAL_ENTITY_MANAGER_NAME = 'additional';
     private const ADDITIONAL_CONNECTION_NAME = 'additional';
 
     /**
